@@ -522,6 +522,24 @@ function setWrong(w) { localStorage.setItem(LS_WRONG,JSON.stringify(w)); }
 function getProgress() { return JSON.parse(localStorage.getItem(LS_PROGRESS)||'{}'); }
 function setProgress(p) { localStorage.setItem(LS_PROGRESS,JSON.stringify(p)); }
 
+/* ----------------------------------------------------------------
+   作答记录：会话态 / 累计统计态分离（2026-09-11 修复）
+   旧缺陷：模拟考核误读全局 localStorage 历史 → 进场即显示「已答对/曾答错」、
+   题号导航提前染色、成绩单把练习与往场算进本次（实测正确数>题数、未答为负、
+   分数超满分、正确率>100%）。
+   三态口径：
+     · sessionResults()       本场逐题作答（quizState.results）＝「本次」唯一真源
+     · sessionScopedAnswers() 视图用作答集：考核=仅本场；练习模式=全局历史（原行为）
+     · recordAnswer()         仍写全局 store → 错题集与统计口径不变
+   ---------------------------------------------------------------- */
+function sessionResults() {
+  const r = (quizState && quizState.results) || {};
+  return Object.keys(r).map(id => ({id, ua:r[id].ua, ok:r[id].ok, ts:r[id].ts}));
+}
+function sessionScopedAnswers() {
+  return (quizState && quizState.mode === 'exam') ? sessionResults() : getAnswers();
+}
+
 function recordAnswer(qId, userAnswer, isCorrect) {
   const answers = getAnswers();
   answers.push({id:qId,ua:userAnswer,ok:isCorrect,ts:Date.now()});
@@ -687,7 +705,8 @@ function renderQuiz() {
   const q = quizState.questions[quizState.currentIdx];
   const isHot = q.t === 'hot';
   const isLast = quizState.currentIdx === quizState.questions.length-1;
-  const answers = getAnswers();
+  // 考核=仅本场作答；练习模式=全局历史（含本场）——防练习记录串进考核视图
+  const answers = sessionScopedAnswers();
   const prevAnswers = answers.filter(a=>a.id===q.id);
   const everCorrect = prevAnswers.some(a=>a.ok);
   const everWrong = prevAnswers.some(a=>!a.ok);
@@ -870,6 +889,9 @@ function submitAnswer() {
   const correct = isAnswerCorrect(q, userAns);
   if(!quizState.submitted) quizState.submitted={};
   quizState.submitted[q.id]=true;
+  // 本场作答留痕（考核判分唯一依据；不与全局统计混用）
+  if(!quizState.results) quizState.results={};
+  quizState.results[q.id]={ua:[...userAns], ok:correct, ts:Date.now()};
   recordAnswer(q.id, userAns, correct);
   renderQuiz();
   updateSubmitButton();
@@ -893,6 +915,8 @@ function jumpToQuestion(idx) {
   renderQuiz();
 }
 function exitQuiz() {
+  // 考核中途退出必须停表：否则过期计时器归零时会把之后的练习页改写成「考核成绩单」
+  if(quizState && quizState.mode==='exam') stopExamTimer();
   if(quizState && quizState.mode!=='exam') {
     setProgress({mode:quizState.mode,domain:quizState.domain||null,idx:quizState.currentIdx,time:Date.now()});
   }
@@ -964,51 +988,67 @@ function startExam() {
   });
   selected = shuffle(selected);
   const _exam = generateShuffledOptions(selected);
-  quizState = {mode:'exam',domain:null,questions:selected,currentIdx:0,answered:{},submitted:{},shuffledOptions:_exam.opts,shuffledAnswers:_exam.newAnswers};
+  quizState = {mode:'exam',domain:null,questions:selected,currentIdx:0,answered:{},submitted:{},results:{},shuffledOptions:_exam.opts,shuffledAnswers:_exam.newAnswers};
   quizState.examStartTime = Date.now();
   quizState.examDuration = EXAM_MIN * 60;
+  // 场次标识：计时回调据此判定「本场是否仍在进行」，防过期计时器串场
+  quizState.examToken = 'ex-' + Date.now() + '-' + Math.random().toString(36).slice(2,8);
   navigate('quiz');
   startExamTimer();
 }
 
 let examTimerInterval = null;
+function stopExamTimer() {
+  if(examTimerInterval) { clearInterval(examTimerInterval); examTimerInterval = null; }
+}
 function startExamTimer() {
   let secs = quizState.examDuration;
+  const token = quizState.examToken;
   const timerEl = document.getElementById('quizTimer');
   if(!timerEl) return;
-  if(examTimerInterval) clearInterval(examTimerInterval);
+  stopExamTimer();
   examTimerInterval = setInterval(() => {
+    // 场次校验：已退出或已换场（新 token）立即自毁
+    if(!quizState || quizState.mode!=='exam' || quizState.examToken!==token) { stopExamTimer(); return; }
     secs--;
     const m = Math.floor(secs/60), s = secs%60;
     const el = document.getElementById('quizTimer');
     if(el) el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
     if(secs<=60 && el) el.classList.add('warning');
-    if(secs<=0) {
-      clearInterval(examTimerInterval);
-      examTimerInterval = null;
-      finishExam();
-    }
+    if(secs<=0) { stopExamTimer(); finishExam(token); }
   }, 1000);
 }
 
-function finishExam() {
-  if(examTimerInterval) { clearInterval(examTimerInterval); examTimerInterval = null; }
-  if(quizState) renderExamResult();
+function finishExam(token) {
+  stopExamTimer();
+  // 只对「发起本场计时」的考核会话生效
+  if(quizState && quizState.mode==='exam' && (token===undefined || quizState.examToken===token)) renderExamResult();
 }
 
 function renderExamResult() {
-  if(examTimerInterval) { clearInterval(examTimerInterval); examTimerInterval = null; }
-  const answers = getAnswers();
-  const qIds = quizState.questions.map(q=>q.id);
-  const relevant = answers.filter(a=>qIds.includes(a.id));
-  const correct = relevant.filter(a=>a.ok).length;
-  const wrong = relevant.filter(a=>!a.ok).length;
-  const unanswered = quizState.questions.length - relevant.length;
-  const total = quizState.questions.length;
+  if(!quizState) return;
+  stopExamTimer();
+  const qs = quizState.questions;
+  const results = quizState.results || {};
+  const total = qs.length;
+  // 逐题按本场作答判分；全局历史与往场作答一律不计
+  let correct = 0, wrong = 0, unanswered = 0;
+  const domStat = {};
+  DOMAIN_KEYS.forEach(d => domStat[d] = {n:0, cor:0});
+  qs.forEach(q => {
+    if(!domStat[q.d]) domStat[q.d] = {n:0, cor:0};
+    domStat[q.d].n++;
+    const r = results[q.id];
+    if(!r) unanswered++;
+    else if(r.ok) { correct++; domStat[q.d].cor++; }
+    else wrong++;
+  });
+  // 不变量自校验：正确 + 错误 + 未答 必须等于试卷题数
+  if(correct + wrong + unanswered !== total) console.warn('[exam] 判分不变量异常', {correct, wrong, unanswered, total});
   const el = document.getElementById('page-quiz');
-  const pct = Math.round(correct/total*100);
+  const pct = total ? Math.round(correct/total*100) : 0;
   // 1000-point scale, 700 to pass
-  const scaledScore = Math.round(correct/total*1000);
+  const scaledScore = total ? Math.round(correct/total*1000) : 0;
   const passed = scaledScore >= EXAM_PASS;
   // Time used
   const timeUsed = quizState.examStartTime ? Math.round((Date.now()-quizState.examStartTime)/1000) : 0;
@@ -1017,11 +1057,9 @@ function renderExamResult() {
   // Domain breakdown
   let domainHtml = '';
   for(const d of DOMAIN_KEYS) {
-    const dQs = quizState.questions.filter(q=>q.d===d);
-    const dAns = relevant.filter(a=>dQs.some(q=>q.id===a.id));
-    const dCor = dAns.filter(a=>a.ok).length;
-    const dPct = dQs.length ? Math.round(dCor/dQs.length*100) : 0;
-    domainHtml += `<tr><td>Domain ${d}: ${DOMAIN_NAMES[d]}</td><td>${dQs.length}</td><td>${dCor}</td><td style="color:${dPct>=70?'var(--correct)':'var(--wrong)'}">${dPct}%</td></tr>`;
+    const dd = domStat[d] || {n:0, cor:0};
+    const dPct = dd.n ? Math.round(dd.cor/dd.n*100) : 0;
+    domainHtml += `<tr><td>Domain ${d}: ${DOMAIN_NAMES[d]}</td><td>${dd.n}</td><td>${dd.cor}</td><td style="color:${dPct>=70?'var(--correct)':'var(--wrong)'}">${dPct}%</td></tr>`;
   }
 
   el.innerHTML = `<div class="header"><button class="back-btn" onclick="exitExam()">←</button><h1>📋 考核成绩单</h1></div>
