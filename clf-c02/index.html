@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="light">
 <title>学习材料</title>
 <style>
-/* ===== KB-074 页面规范：首页目录 + 章级分页 SPA（非单一长页） ===== */
+/* ===== 页面结构：首页目录 + 章级分页 SPA（非单一长页） ===== */
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif;background:#f1f5f9;color:#1e293b;font-size:17px;line-height:1.7}
 .wrap{max-width:1200px;margin:0 auto;padding:24px 28px 60px}
@@ -189,8 +189,8 @@ table{border-collapse:collapse;width:100%;font-size:16px}
 .footer a{color:#4f46e5;text-decoration:none}
 @media(max-width:768px){.ptbl th,.ptbl td{font-size:13px}.mdbody th,.mdbody td{font-size:13px}}
 
-/* ===== 章面板 v6 布局：左侧常驻目录槽 + 正文列（KB-074 模块 13 升级，2026-09-09 CLF v6 落地） =====
-   拍板三要（老徐 2026-09-09）：① 正文 #### 知识点块提升为 h3 三级标题（d.n.m 编号+锚点，见下方 .mh3）
+/* ===== 章面板 v6 布局：左侧常驻目录槽 + 正文列 =====
+   三条布局约定：① 正文 #### 知识点块提升为 h3 三级标题（d.n.m 编号+锚点，见下方 .mh3）
    ② 左侧目录两级（节 ▸ 知识点，单开手风琴 + 滚动自动跟读）③ 左右两侧任何分辨率留白，目录常驻不遮正文：
    ≥1200px：.panel 栅格 [236px 目录槽 | 正文列]，目录 sticky 常驻；<1200px：目录槽变左侧抽屉（☰+遮罩）。 */
 body.chapView .wrap{max-width:1420px}
@@ -237,7 +237,7 @@ body.chapView .wrap{max-width:1420px}
 }
 /* 阅读进度（吸顶条底部细线 + 百分比）：v6 新增
    注意：此处不再声明 position，78 行的 .ch-topnav{position:sticky;top:0} 保持生效——
-   v6 曾误加 position:relative 覆盖导致吸顶丢失（2026-09-09 老徐反馈窄屏换章节要滚回顶，v6.1 修复） */
+   早前版本曾误加 position:relative 覆盖导致吸顶丢失（窄屏换章节要滚回顶），v6.1 已修复 */
 .ch-topnav{overflow:hidden}
 .ch-topnav .rd-fill{position:absolute;left:0;bottom:0;height:3px;width:0%;background:linear-gradient(90deg,#4f46e5,#a855f7);border-radius:0 3px 3px 0;transition:width .12s linear;z-index:2}
 .tn-title{flex:1;min-width:0}
@@ -248,7 +248,7 @@ body.chapView .wrap{max-width:1420px}
 .mdbody h3.mh3{font-size:17px;font-weight:700;color:#3730a3;margin:26px 0 10px;padding:4px 0 7px;border-bottom:1px dashed #e9d5ff;display:flex;align-items:baseline;gap:8px;line-height:1.5;scroll-margin-top:78px}
 .mdbody .h3no{flex-shrink:0;display:inline-block;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:6px;padding:2px 8px;font-variant-numeric:tabular-nums;letter-spacing:.4px;line-height:1.6}
 .mdbody h4.sec-h.sec-lead-h{font-size:13px;color:#94a3b8;border-left-color:#d4d4d8;font-weight:600;letter-spacing:.5px;margin:18px 0 8px}
-/* ===== 移动适配 v1.3（2026-09-09，KB-074 移动适配要求：断点档/触控/safe-area/图灯箱；桌面样式零删除零改动，全部追加） ===== */
+/* ===== 移动适配 v1.3：断点档 / 触控 / safe-area / 图灯箱；桌面样式零删除零改动，全部追加 ===== */
 html{color-scheme:light}
 body{-webkit-tap-highlight-color:transparent}
 /* 图灯箱（P1=A）：等效字号 <9.5px 的正文图点击放大到原始 viewBox 尺寸，可横滑+双指缩放 */
@@ -347,13 +347,13 @@ body{-webkit-tap-highlight-color:transparent}
 
 /* quizView 底部导航占位 */
 #quizView #app{padding-bottom:84px}
-/* 顶栏吸顶并限宽与 #app 对齐（2026-09-09：原无 max-width 撑满视口 1440，内容 720 居中，视觉脱落） */
+/* 顶栏吸顶并限宽与 #app 对齐（原无 max-width 撑满视口 1440，内容 720 居中，视觉脱落） */
 #quizView .qz-topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;max-width:720px;margin:0 auto 10px;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border:1px solid #e5e7eb;border-radius:12px;padding:8px 14px;font-size:14px;font-weight:600;color:#1a1a2e;box-shadow:0 1px 8px rgba(0,0,0,.06)}
 #quizView .qz-topbar button{background:#fff;border:1.5px solid #4361ee;color:#4361ee;font-size:13px;font-weight:600;border-radius:8px;padding:5px 14px;cursor:pointer;white-space:nowrap}
 #quizView .qz-topbar button:hover{background:#eef2ff}
 /* 吸顶后顶栏与视口右缘保持留白（sticky 定位到 top:0 时仍随 #quizView 水平居中） */
 @media(max-width:764px){#quizView .qz-topbar{margin:0 10px 10px}}
-/* ===== 移动适配 v1.3（2026-09-09，KB-074 移动适配要求）：safe-area / 点按区 / 防双击缩放；桌面零改动 ===== */
+/* ===== 移动适配 v1.3：safe-area / 点按区 / 防双击缩放；桌面零改动 ===== */
 #quizView .bottom-nav{padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
 #quizView .option-item,#quizView .nav-item,#quizView .qnav-item,#quizView .qz-topbar button,#quizView .domain-card,#quizView .setting-btn,#quizView .btn-primary,#quizView .btn-secondary{touch-action:manipulation}
 @media(max-width:480px){
@@ -441,6 +441,7 @@ function isIndependentToken(text, idx, term) {
 }
 
 // 将解析正文中的术语高亮为可点击 span，返回 HTML
+function fmtExp(s){ let t=(s===undefined||s===null)?'':String(s); t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); t=t.replace(/\n/g,'<br>'); t=t.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>'); return t; }
 function highlightGlossaryTerms(text) {
   if(!text) return text;
   const sortedKeys = getGlossarySortedKeys();
@@ -523,7 +524,7 @@ function getProgress() { return JSON.parse(localStorage.getItem(LS_PROGRESS)||'{
 function setProgress(p) { localStorage.setItem(LS_PROGRESS,JSON.stringify(p)); }
 
 /* ----------------------------------------------------------------
-   作答记录：会话态 / 累计统计态分离（2026-09-11 修复）
+   作答记录：会话态 / 累计统计态分离（修复）
    旧缺陷：模拟考核误读全局 localStorage 历史 → 进场即显示「已答对/曾答错」、
    题号导航提前染色、成绩单把练习与往场算进本次（实测正确数>题数、未答为负、
    分数超满分、正确率>100%）。
@@ -767,7 +768,7 @@ function renderQuiz() {
     html += `<div class="explanation show">
       <div class="result-badge ${cls}">${badge}</div>
       <div class="exp-text"><strong>正确答案：</strong>${formatAnswer(q)}</div>
-      <div class="exp-text" style="margin-top:8px"><strong>解析：</strong>${highlightGlossaryTerms(q.e)}</div>
+      <div class="exp-text" style="margin-top:8px"><strong>解析：</strong>${highlightGlossaryTerms(fmtExp(q.e))}</div>
       ${q.s?`<div class="exp-source">来源：${q.s}</div>`:''}
       ${gHtml}
     </div>`;
@@ -797,7 +798,7 @@ function getOptionsHTML(q, userAns, finished, correct, shuffledAns) {
       <div style="font-weight:600;color:var(--primary);margin-bottom:8px">🖱 本题为拖拽/操作题（HOTSPOT）</div>
       <div style="font-size:13px;line-height:1.7;color:var(--text2)">本题无标准 A/B/C/D 选项，答题形式为图形拖拽/区域选择。题目与图形见源 PDF 原图，答案请参照源文件。</div>`;
     if(q.e) {
-      html += `<div style="margin-top:10px;font-size:13px;line-height:1.7;color:var(--text2);border-top:1px solid var(--border);padding-top:10px"><strong>解析/提示：</strong><br>${highlightGlossaryTerms(q.e)}</div>`;
+      html += `<div style="margin-top:10px;font-size:13px;line-height:1.7;color:var(--text2);border-top:1px solid var(--border);padding-top:10px"><strong>解析/提示：</strong><br>${highlightGlossaryTerms(fmtExp(q.e))}</div>`;
     }
     html += `</div>`;
     return html;
@@ -1399,6 +1400,7 @@ const chapBox = document.getElementById('chapters');
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function inlineMd(s){
   let t = esc(s);
+  t = t.replace(/\n/g,'<br>');
   t = t.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
   t = t.replace(/`([^`]+)`/g,'<code>$1</code>');
   return t;
@@ -1817,7 +1819,7 @@ function detachSpy(resetAct){
 }
 
 /* ============ 章末练习 ============ */
-/* 答案/题型归一化（2026-09-10 修复：双科数据格式不一致导致章末练习失效）
+/* 答案/题型归一化（修复：双科数据格式不一致导致章末练习失效）
    数据真源存在两种历史格式：
      CLF  a = ["C"] / ["B","E"]   t = 'single' / 'multiple'
      AIF  a = "B"   / "AE"        t = '单选' / '多选'
@@ -1829,7 +1831,7 @@ function normAns(v){
   if(Array.isArray(v)) return v.map(x=>String(x).trim().toUpperCase()).filter(x=>/^[A-Z]$/.test(x));
   const raw = String(v).trim();
   /* 严格形态：整串只允许字母与分隔符。防从说明文字里误提字母
-     （历史案例：AIF D5-030 答案字段为「⚠️待核（…见源PDF）」→ 误提出 P/D/F） */
+     （历史案例：某题答案字段为「⚠️待核（…见源PDF）」→ 误提出 P/D/F） */
   if(!/^[A-Za-z][A-Za-z,，、;；\s]*$/.test(raw)) return [];
   return raw.toUpperCase().replace(/[^A-Z]/g, '').split('').filter(Boolean);
 }
@@ -1859,8 +1861,8 @@ function renderQuiz(d, qs){
   let h = '<div class="quiz-hdr"><span>✅ 本章练习（'+nAns+' 题）'+naTip+'</span><span class="quiz-score" id="qscore-'+d+'">正确 0/'+nAns+'</span></div>';
   qs.forEach((q,qi)=>{
     const multi = isMultiQ(q);
-    /* 不可作答防御（2026-09-10）：答案或选项缺失时不渲染答题交互，
-       避免学员点击后被误判（历史案例：AIF D5-030 配对题占位形态） */
+    /* 不可作答防御：答案或选项缺失时不渲染答题交互，
+       避免学员点击后被误判（历史案例：配对题占位形态） */
     if(!isAnswerable(q)){
       h += '<div class="qi qi-na" data-d="'+d+'" data-qid="'+esc(q.id||(d+'-'+qi))+'" data-qi="'+qi+'" data-na="1">'
         + '<div class="qmeta"><span class="qbadge">第 '+(qi+1)+' 题</span><span class="qtype">特殊题型</span></div>'
@@ -1913,7 +1915,7 @@ function judge(qi){
   const d = qi.dataset.d;
   const ans = normAns((findQ(d, qi.dataset.qid) || {}).a);
   const sel = Array.from(qi.querySelectorAll('.opt.sel')).map(o=>o.dataset.l);
-  /* 防复发：答案数据异常时大声报错，不得静默判错（2026-09-10） */
+  /* 防复发：答案数据异常时大声报错，不得静默判错 */
   if(!ans.length){
     const r = qi.querySelector('.qres');
     r.className = 'qres show err';
@@ -2046,7 +2048,7 @@ function kbShowQuiz(){
   home.style.display = 'none';
   chapBox.style.display = 'none';
   const f = document.querySelector('.footer'); if(f) f.style.display = 'none';
-  // 修复 2026-09-09：.wrap 外壳仅藏子元素会残留 padding（24+60px），把题库顶栏顶离顶部 84px
+  // 修复：.wrap 外壳仅藏子元素会残留 padding（24+60px），把题库顶栏顶离顶部 84px
   // → 外壳自身一并隐藏，保证进入题库视图即贴顶
   const w = document.querySelector('.wrap'); if(w) w.style.display = 'none';
   const qv = document.getElementById('quizView');
@@ -2075,7 +2077,7 @@ window.kbShowLearnHome = kbShowLearnHome;
 })();
 </script>
 <script>
-/* 图灯箱（2026-09-09 移动适配 P1=A）：正文图当前渲染等效字号 <9.5px 时点击可放大到原始 viewBox 尺寸
+/* 图灯箱（移动适配 P1=A）：正文图当前渲染等效字号 <9.5px 时点击可放大到原始 viewBox 尺寸
    等效字号 = 图内最小 text 字号 × (当前渲染宽 ÷ viewBox 宽)；桌面可读图不触发，不打断阅读 */
 (function(){
   'use strict';
