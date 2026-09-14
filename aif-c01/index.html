@@ -1519,7 +1519,8 @@ function buildHome(){
   document.getElementById('hdrBadge').textContent = (meta.level || 'Foundational') + ' · ' + meta.exam + (meta.cnName ? ' · ' + meta.cnName : '');
   document.getElementById('hdrTitle').textContent = meta.title || '学习材料';
   const qTot = chapters.reduce((a,c)=>a+(c.practice||[]).length,0);
-  document.getElementById('hdrSub').textContent = chapters.length + ' 章节 · ' + qTot + ' 题章末练习' + (HAS_QUIZ ? ' · ' + QUIZ_TOTAL + ' 题完整题库' : '') + ' · 14 天学习计划';
+  const _pd = (meta.plan||[]).reduce((m,p)=>Math.max(m, parseInt(p.day,10)||0), 0);
+  document.getElementById('hdrSub').textContent = chapters.length + ' 章节 · ' + qTot + ' 题章末练习' + (HAS_QUIZ ? ' · ' + QUIZ_TOTAL + ' 题完整题库' : '') + (_pd ? ' · ' + _pd + ' 天学习计划' : '');
 
   /* 统计 3 格 */
   document.getElementById('ov').innerHTML =
@@ -1584,9 +1585,10 @@ function buildHome(){
     const c = e.target.closest('.domain-chip'); if(c) go(parseInt(c.dataset.d,10));
   });
 
-  /* 14 天计划卡 */
+  /* 学习计划卡（天数按 meta.plan 实际最大 day 推导，勿写死） */
   const plan = meta.plan || [];
-  let ph = '<div class="cs-title">📅 14 天学习计划</div>';
+  const planDays = plan.reduce((m,p)=>Math.max(m, parseInt(p.day,10)||0), 0);
+  let ph = '<div class="cs-title">📅 ' + (planDays ? planDays + ' 天学习计划' : '学习计划') + '</div>';
   ph += '<div class="tbl-wrap"><table class="ptbl"><thead><tr><th>天</th><th>领域</th><th>学习内容</th><th>重点</th></tr></thead><tbody>';
   plan.forEach(p=>{
     ph += '<tr><td><span class="day">Day '+esc(p.day)+'</span></td>'
