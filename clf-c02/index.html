@@ -1628,9 +1628,11 @@ function buildHome(){
   let ph = '<div class="cs-title">📅 ' + (planDays ? planDays + ' 天学习计划' : '学习计划') + '</div>';
   ph += '<div class="tbl-wrap"><table class="ptbl"><thead><tr><th>天</th><th>领域</th><th>学习内容</th><th>重点</th></tr></thead><tbody>';
   plan.forEach(p=>{
+    const dom = (typeof p.domain === 'number')
+      ? '<button class="chip chip-p" data-d="'+p.domain+'">域 '+p.domain+'</button>'
+      : '综合';
     ph += '<tr><td><span class="day">Day '+esc(p.day)+'</span></td>'
-      + '<td><button class="chip chip-p" data-d="'+esc(p.domain)+'">域 '+esc(p.domain)+'</button></td>'
-      + '<td>'+esc(p.topic||'')+'</td><td class="focus">'+esc(p.focus||'')+'</td></tr>';
+      + '<td>'+dom+'</td><td>'+esc(p.topic||'')+'</td><td class="focus">'+esc(p.focus||'')+'</td></tr>';
   });
   ph += '</tbody></table></div>';
   document.getElementById('planCard').innerHTML = ph;
