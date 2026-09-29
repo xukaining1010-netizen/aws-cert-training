@@ -337,7 +337,7 @@ body{-webkit-tap-highlight-color:transparent}
   <div id="chapters" style="display:none"></div>
 
   <footer class="footer">
-    <div>本学习材料依据 AWS 官方考纲组织 · 正文含虚构教学场景，无真实客户信息 · 学习进度与答题记录自动保存在本机浏览器</div>
+    <div id="footNote">本学习材料依据 AWS 官方考纲组织 · 正文含虚构教学场景，无真实客户信息 · 学习进度与答题记录自动保存在本机浏览器</div>
   </footer>
 </div>
 
@@ -1393,6 +1393,12 @@ const QUIZ_TOTAL = 346;
 (function(){
 'use strict';
 const DATA = (typeof LEARNING_DATA !== 'undefined' && LEARNING_DATA) ? LEARNING_DATA : null;
+
+// R5: meta.footerNote overrides default footer (AWS default kept when absent)
+if (DATA && DATA.meta && DATA.meta.footerNote) {
+  var fn = document.getElementById('footNote');
+  if (fn) { fn.textContent = DATA.meta.footerNote; }
+}
 
 /* ============ 常量与工具 ============ */
 const EXAM = DATA ? (DATA.meta.exam || 'CERT').toLowerCase() : 'cert';   // clf-c02

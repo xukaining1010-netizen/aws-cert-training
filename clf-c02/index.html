@@ -117,6 +117,16 @@ table{border-collapse:collapse;width:100%;font-size:16px}
 .mdbody tbody tr:last-child td{border-bottom:none}
 /* 图块（v2.1 图文同流） */
 .fig-block{background:#f8f7ff;border:1px solid #ddd6fe;border-radius:12px;padding:14px 16px;margin:0 0 14px}
+.fig-placeholder{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:#fbfafd;border:1.6px dashed #c4b5fd;border-radius:12px;padding:12px 16px;margin:0 0 14px}
+.fig-img{background:#f8f7ff;border:1px solid #ddd6fe;border-radius:12px;padding:10px 12px;margin:0 0 14px;text-align:center}
+.fig-img img{max-width:100%;height:auto;border-radius:8px}
+.fig-img figcaption{font-size:12px;color:#64748b;margin-top:6px;line-height:1.5}
+.mdbody .inline-img{max-width:100%;height:auto;vertical-align:middle;border-radius:6px;margin:0 2px}
+.mdbody .img-bad{display:inline-block;background:#fef2f2;border:1px dashed #ef4444;color:#b91c1c;font-size:13px;padding:1px 8px;border-radius:6px}
+.fig-placeholder .fp-num{background:#7c3aed;color:#fff;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.fig-placeholder .fp-type{background:#ede9fe;color:#6d28d9;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.fig-placeholder .fp-alt{color:#334155;font-size:14px;flex:1 1 auto;min-width:120px}
+.fig-placeholder .fp-note{color:#94a3b8;font-size:12px;white-space:nowrap;border:1px dashed #cbd5e1;border-radius:6px;padding:2px 8px}
 .fig-title{font-size:13px;font-weight:700;color:#4f46e5;text-align:center;margin-bottom:10px}
 .fig-body{overflow-x:auto}
 .fig-body svg{display:block;margin:0 auto;height:auto}
@@ -287,6 +297,7 @@ body{-webkit-tap-highlight-color:transparent}
   .task-list{font-size:15px;padding-left:18px}
   .tbl-wrap table{min-width:430px}
   .fig-block{padding:10px 9px;border-radius:10px}
+  .fig-placeholder{padding:10px 12px}
   .fig-title{font-size:12px;margin-bottom:8px}
   .fig-caption{font-size:11px;margin-top:8px}
   .quiz-box{padding:14px 13px}
@@ -337,7 +348,7 @@ body{-webkit-tap-highlight-color:transparent}
   <div id="chapters" style="display:none"></div>
 
   <footer class="footer">
-    <div>本学习材料依据 AWS 官方考纲组织 · 正文含虚构教学场景，无真实客户信息 · 学习进度与答题记录自动保存在本机浏览器</div>
+    <div id="footNote">本学习材料依据 AWS 官方考纲组织 · 正文含虚构教学场景，无真实客户信息 · 学习进度与答题记录自动保存在本机浏览器</div>
   </footer>
 </div>
 
@@ -1394,6 +1405,12 @@ const QUIZ_TOTAL = 719;
 'use strict';
 const DATA = (typeof LEARNING_DATA !== 'undefined' && LEARNING_DATA) ? LEARNING_DATA : null;
 
+// R5: meta.footerNote overrides default footer (AWS default kept when absent)
+if (DATA && DATA.meta && DATA.meta.footerNote) {
+  var fn = document.getElementById('footNote');
+  if (fn) { fn.textContent = DATA.meta.footerNote; }
+}
+
 /* ============ 常量与工具 ============ */
 const EXAM = DATA ? (DATA.meta.exam || 'CERT').toLowerCase() : 'cert';   // clf-c02
 const STORE_KEY = EXAM + '-v2';                                          // 进度键：clf-c02-v2
@@ -1402,11 +1419,16 @@ const home = document.getElementById('home');
 const chapBox = document.getElementById('chapters');
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function imgSrcOk(src){ return /^(?:[\w.-]+\/)*[\w.-]+\.(?:png|jpe?g|webp|gif|svg)$/i.test(src); }
 function inlineMd(s){
   let t = esc(s);
   t = t.replace(/\n/g,'<br>');
   t = t.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
   t = t.replace(/`([^`]+)`/g,'<code>$1</code>');
+  t = t.replace(/!\[([^\]]*)\]\(([^()\s]+)\)/g, function(m0, alt, src){
+    if(!imgSrcOk(src)) return '<span class="img-bad" title="非法图源">🖼 非法图源：'+src+'</span>';
+    return '<img class="inline-img" loading="lazy" alt="'+alt.replace(/"/g,'&quot;')+'" src="'+src+'">';
+  });
   return t;
 }
 function isTblSep(ln){ const core = ln.replace(/^\s*\|/,'').replace(/\|\s*$/,''); if(!core.includes('-')) return false; return /^[\s:\-|]+$/.test(ln) && /-/.test(ln); }
@@ -1414,14 +1436,24 @@ function loadProg(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || 
 function saveProg(p){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(p)); }catch(e){} }
 
 /* ============ 块级 md 渲染（段落/引用/表格/列表/图占位符） ============ */
-function renderBlocks(seg, figs){
+function renderBlocks(seg, figs, fctr){
+  fctr = fctr || {n:0};
   const lines = seg.replace(/\r/g,'').split('\n');
   let html = ''; let i = 0; const n = lines.length;
   while(i < n){
     const ln = lines[i]; const s = ln.trim();
     if(s === ''){ i++; continue; }
     const fm = s.match(/^\[\[fig:([\w-]+)\]\]$/);
-    if(fm){ const f = (figs||{})[fm[1]]; if(f) html += figHtml(f); i++; continue; }
+    if(fm){ const f = (figs||{})[fm[1]]; if(f){ if(fctr) fctr.n++; html += figHtml(f); } i++; continue; }
+    const fp = s.match(/^【图：(.+?)｜(概念图|截图)】$/);
+    if(fp){ fctr.n++; html += '<div class="fig-placeholder" data-figtype="'+fp[2]+'"><span class="fp-num">图 '+fctr.n+'</span><span class="fp-type">'+fp[2]+'</span><span class="fp-alt">'+esc(fp[1])+'</span><span class="fp-note">真图待补</span></div>'; i++; continue; }
+    const ib = s.match(/^!\[([^\]]*)\]\(([^()\s]+)\)$/);
+    if(ib){
+      const ialt = ib[1], isrc = ib[2];
+      if(imgSrcOk(isrc)){ html += '<figure class="fig-img"><img loading="lazy" alt="'+ialt.replace(/"/g,'&quot;')+'" src="'+isrc+'"><figcaption>'+esc(ialt)+'</figcaption></figure>'; }
+      else { html += '<div class="fig-placeholder"><span class="fp-type">非法图源</span><span class="fp-alt">'+esc(ialt)+' ← '+esc(isrc)+'</span><span class="fp-note">检查路径与扩展名</span></div>'; }
+      i++; continue;
+    }
     if(s.startsWith('|') && i+1 < n && isTblSep(lines[i+1].trim())){
       let rows = [];
       while(i < n && lines[i].trim().startsWith('|')){ rows.push(lines[i].trim()); i++; }
@@ -1451,7 +1483,7 @@ function renderBlocks(seg, figs){
     let para = [];
     while(i < n){
       const t = lines[i].trim();
-      if(t === '' || t.startsWith('|') || t.startsWith('>') || /^[-*]\s+/.test(t) || /^\d+[.、]\s+/.test(t) || /^#{1,6}\s/.test(t) || /^\[\[fig:[\w-]+\]\]$/.test(t)) break;
+      if(t === '' || t.startsWith('|') || t.startsWith('>') || /^[-*]\s+/.test(t) || /^\d+[.、]\s+/.test(t) || /^#{1,6}\s/.test(t) || /^\[\[fig:[\w-]+\]\]$/.test(t) || /^【图：[^｜]*｜(?:概念图|截图)】$/.test(t) || /^!\[[^\]]*\]\([^()\s]+\)$/.test(t)) break;
       para.push(t); i++;
     }
     if(para.length) html += '<p>'+inlineMd(para.join(' '))+'</p>';
@@ -1486,20 +1518,21 @@ function kpListOf(body){
   parseSectionBlocks(body).forEach(b=>{ if(b.type===SUB_KP){ m++; kps.push({ m:m, title:b.title }); } });
   return kps;
 }
-function renderSectionBody(md, figs, d, n){
+function renderSectionBody(md, figs, d, n, fctr){
+  fctr = fctr || {n:0};
   const blocks = parseSectionBlocks(md);
   let h = ''; let kp = 0;
   for(const b of blocks){
-    if(b.type === SUB_RAW){ h += renderBlocks(b.body, figs); continue; }
+    if(b.type === SUB_RAW){ h += renderBlocks(b.body, figs, fctr); continue; }
     if(b.type === SUB_KP){
       kp++;
       h += '<h3 class="mh3" id="sec-'+d+'-'+n+'-'+kp+'"><span class="h3no">'+d+'.'+n+'.'+kp+'</span><span>'+inlineMd(b.title)+'</span></h3>'
-         + renderBlocks(b.body, figs);
+         + renderBlocks(b.body, figs, fctr);
       continue;
     }
-    if(b.type === SUB_CASE){ h += '<div class="case-card"><h4 class="sec-h">案例</h4>'+renderBlocks(b.body, figs)+'</div>'; continue; }
-    if(b.type === SUB_MEM){ h += '<div class="mem-card"><h4 class="sec-h">记忆要点</h4>'+renderBlocks(b.body, figs)+'</div>'; continue; }
-    h += '<h4 class="sec-h'+(b.type===SUB_LEAD?' sec-lead-h':'')+'">'+inlineMd(b.title)+'</h4>'+renderBlocks(b.body, figs);
+    if(b.type === SUB_CASE){ h += '<div class="case-card"><h4 class="sec-h">案例</h4>'+renderBlocks(b.body, figs, fctr)+'</div>'; continue; }
+    if(b.type === SUB_MEM){ h += '<div class="mem-card"><h4 class="sec-h">记忆要点</h4>'+renderBlocks(b.body, figs, fctr)+'</div>'; continue; }
+    h += '<h4 class="sec-h'+(b.type===SUB_LEAD?' sec-lead-h':'')+'">'+inlineMd(b.title)+'</h4>'+renderBlocks(b.body, figs, fctr);
   }
   return h;
 }
@@ -1670,18 +1703,19 @@ function buildPanels(){
       h += '<li><a href="#sec-'+d+'-'+(si+1)+'"><span class="tl-id">'+d+'.'+(si+1)+'</span>'+esc(s.h)+'</a></li>';
     });
     h += '</ul></div>';
+    const fctr = {n:0};   /* P0 图位占位：章内编号计数器（占位框与成品图统一计数） */
     /* 章节正文：h2 节 + 节内 h3 知识点块（d.n.m 编号） */
     h += '<div class="card-s"><div class="cs-title">📖 章节正文</div><div class="mdbody">';
     secs.forEach((s,si)=>{
       h += '<section class="sec-block" id="sec-'+d+'-'+(si+1)+'" style="scroll-margin-top:78px">'
         + '<h2 class="mh2">'+d+'.'+(si+1)+'　'+esc(s.h)+'</h2>'
-        + renderSectionBody(s.body || '', figsById(s.figures), d, si+1) + '</section>';
+        + renderSectionBody(s.body || '', figsById(s.figures), d, si+1, fctr) + '</section>';
       if(si < secs.length-1) h += '<hr class="panel-hr">';
     });
     h += '</div></div>';
     if(ch.tips){
-      h += '<div class="tips-card"><div class="tc-title">📌 本领域考试重点提示</div>' + renderBlocks(ch.tips.points||'')
-        + '<div class="tc-title" style="margin-top:14px">🔗 关联 AWS 服务</div>' + renderBlocks(ch.tips.services||'') + '</div>';
+      h += '<div class="tips-card"><div class="tc-title">📌 本领域考试重点提示</div>' + renderBlocks(ch.tips.points||'', null, fctr)
+        + '<div class="tc-title" style="margin-top:14px">🔗 关联 AWS 服务</div>' + renderBlocks(ch.tips.services||'', null, fctr) + '</div>';
     }
     h += '<div class="quiz-box" id="quiz-d'+d+'"></div>';
     h += '</div></div>';   /* end ch-main / end panel */
