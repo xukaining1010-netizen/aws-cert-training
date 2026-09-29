@@ -838,7 +838,7 @@ function getOptionsHTML(q, userAns, finished, correct, shuffledAns) {
       </div>`;
     });
     html += `</div>`;
-    if(isMulti && !finished) html += `<div style="font-size:13px;color:var(--text2);margin-top:-12px;margin-bottom:16px">多选——请选择所有正确答案后提交（至少选2项）</div>`;
+    if(isMulti && !finished) html += `<div style="font-size:13px;color:var(--text2);margin-top:-12px;margin-bottom:16px">多选——请选择所有正确答案后提交（至少选 2 项）</div>`;
   }
   return html;
 }
@@ -899,7 +899,7 @@ function submitAnswer() {
   let userAns = quizState.answered && quizState.answered[q.id];
   if(!userAns) return;
   if(q.t==='multiple' && userAns.length < 2) {
-    alert('多选题至少选择2个答案，当前只选了' + userAns.length + '个');
+    alert('多选题至少选择 2 个答案，当前只选了' + userAns.length + '个');
     return;
   }
   const correct = isAnswerCorrect(q, userAns);
@@ -1290,7 +1290,7 @@ function renderSettings() {
       <h3>ℹ️ 关于</h3>
       <div style="padding:14px;background:var(--card);border-radius:12px;border:1px solid var(--border)">
         <p style="font-weight:600">${EXAM} 刷题小工具 v1.0</p>
-        <p style="font-size:13px;color:var(--text2);margin-top:4px">题库：${QUESTIONS.length}题（${DOMAIN_KEYS.length}个Domain）</p>
+        <p style="font-size:13px;color:var(--text2);margin-top:4px">题库：${QUESTIONS.length} 题（${DOMAIN_KEYS.length} 个 Domain）</p>
         <p style="font-size:13px;color:var(--text2)">存储：浏览器本地 (localStorage)</p>
         <p style="font-size:13px;color:var(--text2);margin-top:4px">题库来源：第三方中文翻译整理，以 AWS 官方学习材料为准</p>
       </div>
