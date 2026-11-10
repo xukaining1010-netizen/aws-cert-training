@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>学习材料</title>
+<style>
+/* ===== 页面结构：首页目录 + 章级分页 SPA（非单一长页） ===== */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif;background:#f1f5f9;color:#1e293b;font-size:17px;line-height:1.7}
+.wrap{max-width:1200px;margin:0 auto;padding:24px 28px 60px}
+@media(max-width:768px){.wrap{padding:16px 14px 48px}}
+
+/* ===== 首页 ===== */
+.hdr{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:12px;padding:30px 32px 26px;margin-bottom:18px}
+.hdr-badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.5px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);padding:3px 12px;border-radius:20px;margin-bottom:10px}
+.hdr h1{font-size:24px;font-weight:800;line-height:1.4}
+.hdr-sub{font-size:13px;opacity:.9;margin-top:8px}
+.ov{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.ov-item{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.ov-num{font-size:28px;font-weight:800;color:#4f46e5;line-height:1.2}
+.ov-lbl{font-size:12px;color:#64748b;margin-top:4px}
+@media(max-width:768px){.ov{grid-template-columns:repeat(2,1fr)}}
+
+.card-s{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.cs-title{font-size:18px;font-weight:700;color:#374151;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #f1f5f9}
+
+/* 章节目录卡 */
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.ch-card{background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px 16px;cursor:pointer;transition:.2s;margin-bottom:0}
+.ch-card:hover{border-color:#7c3aed;transform:translateY(-2px);box-shadow:0 4px 12px rgba(79,70,229,.12)}
+.ch-card.done{border-color:#16a34a}
+.cc-num{font-size:11px;font-weight:700;margin-bottom:3px}
+.cc-title{font-size:15px;font-weight:700;color:#1e293b;margin-bottom:6px}
+.cc-meta{font-size:13px;color:#64748b}
+.cc-prog{margin-top:8px}
+.pm{display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:3px}
+.pbar{height:5px;background:#e2e8f0;border-radius:3px;overflow:hidden}
+.pfill{height:100%;border-radius:3px;transition:width .4s}
+
+/* 考试速览 */
+.exam-quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.eq-item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 10px;text-align:center}
+.eq-num{font-size:20px;font-weight:800;color:#4f46e5;line-height:1.2}
+.eq-sub{font-size:10.5px;color:#64748b;margin-top:2px}
+.eq-lbl{font-size:11px;color:#64748b;margin-top:5px}
+.exam-two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:10px}
+@media(max-width:768px){.exam-two-col{grid-template-columns:1fr}}
+.exam-sub-t{font-size:14px;font-weight:700;color:#374151;margin:4px 0 10px}
+.exam-domain-tbl{width:100%;border-collapse:collapse;font-size:15px}
+.exam-domain-tbl th{background:linear-gradient(180deg,#f5f3ff,#ede9fe);color:#4338ca;padding:9px 12px;text-align:left;font-weight:700}
+.exam-domain-tbl td{padding:9px 12px;border-bottom:1px solid #e9d5ff;vertical-align:middle}
+.exam-domain-tbl tr:nth-child(even) td{background:#faf5ff}
+.domain-chip{display:inline-block;border-radius:20px;padding:2px 11px;font-size:12px;font-weight:700;background:#ede9fe;color:#5b21b6;cursor:pointer;border:none;transition:.15s}
+.domain-chip:hover{background:#ddd6fe}
+.exam-info-list{font-size:15px;color:#374151;margin:0 0 12px 18px}
+.exam-info-list li{margin-bottom:6px;line-height:1.7}
+.exam-steps{display:flex;align-items:stretch;flex-wrap:wrap;gap:6px;font-size:14px}
+.step-block{background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:9px 12px;font-size:13px;color:#4338ca;flex:1 1 150px;text-align:center;display:flex;flex-direction:column;justify-content:center}
+.step-block b{display:block;font-size:13px}
+.step-block span{display:block;font-size:11.5px;color:#6d28d9;margin-top:3px}
+.step-arrow{color:#a78bfa;font-weight:700;font-size:16px;padding:0 4px;flex:0 0 auto;align-self:center}
+details.exam-faq{margin-top:12px;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px;background:#f8fafc}
+details.exam-faq summary{font-size:14px;font-weight:700;color:#374151;cursor:pointer}
+details.exam-faq p{margin:9px 0 0;font-size:14px;color:#475569;line-height:1.75}
+
+/* 14 天计划 */
+.ptbl{width:100%;border-collapse:collapse;font-size:15px}
+.ptbl th{background:#f8fafc;padding:11px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e2e8f0;font-size:14px}
+.ptbl td{padding:10px 12px;border-bottom:1px solid #f8fafc;vertical-align:middle}
+.ptbl tr:last-child td{border-bottom:none}
+.day{display:inline-block;background:#ede9fe;color:#5b21b6;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:700}
+.chip{display:inline-block;border-radius:20px;padding:2px 10px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:.15s}
+.chip-p{background:#ede9fe;color:#5b21b6}.chip-p:hover{background:#ddd6fe}
+.focus{font-size:12px;color:#64748b}
+
+/* ===== 章面板 ===== */
+.ch-topnav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);padding:8px 18px;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:12px}
+.back-btn{background:#fff;border:1.5px solid #4f46e5;color:#4f46e5;font-size:13px;font-weight:600;border-radius:8px;padding:5px 14px;cursor:pointer;white-space:nowrap;transition:.15s}
+.back-btn:hover{background:#ede9fe}
+.tn-title{font-size:15px;font-weight:700;color:#1e293b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ch-hdr{color:#fff;padding:20px 22px 16px;border-radius:12px 12px 0 0;margin-bottom:0}
+.ch-badge{font-size:13px;font-weight:700;opacity:.9;margin-bottom:5px;display:block}
+.ch-title{font-size:22px;font-weight:800}
+.panel{margin-bottom:14px}
+.task-list{padding-left:22px;font-size:16px;color:#374151;line-height:2.0}
+.task-list li::marker{color:#a78bfa}
+.task-list a{color:#374151;text-decoration:none}
+.task-list a:hover{color:#4f46e5}
+.tl-id{display:inline-block;min-width:38px;font-weight:700;color:#4f46e5;margin-right:6px}
+.panel-hr{border:none;border-top:1px solid #e2e8f0;margin:14px 0}
+
+/* ===== 正文排版（规范 B） ===== */
+.mdbody .sec-block h2.mh2{font-size:19px;font-weight:700;color:#4f46e5;margin:4px 0 12px;padding:10px 0 8px;border-top:1px solid #e2e8f0}
+.mdbody p{font-size:17px;color:#374151;margin-bottom:14px;line-height:1.9}
+.mdbody ul,.mdbody ol{font-size:17px;color:#374151;padding-left:24px;margin-bottom:12px}
+.mdbody li{margin-bottom:8px;line-height:1.9}
+.mdbody blockquote{border-left:3px solid #a78bfa;padding:10px 16px;background:#f5f3ff;font-size:15px;color:#5b21b6;margin:0 0 14px;border-radius:0 6px 6px 0;line-height:1.8}
+.mdbody code{font-size:13px;color:#4f46e5;background:#f1f5f9;padding:2px 7px;border-radius:4px}
+.mdbody h4.sec-h{font-size:17px;font-weight:600;color:#374151;margin:24px 0 10px;padding-left:12px;border-left:3px solid #a78bfa;line-height:1.4}
+.mdbody .case-card,.mdbody .mem-card{border-radius:10px;padding:13px 16px;margin-bottom:14px}
+.mdbody .case-card{background:#fff8e6;border:1px solid #ecd9a0}
+.mdbody .mem-card{background:#eef3ff;border:1px solid #b9c9f7}
+.mdbody .case-card h4.sec-h,.mdbody .mem-card h4.sec-h{border-left:none;padding-left:0;margin:0 0 8px;font-size:14px;font-weight:700}
+.mdbody .case-card h4.sec-h{color:#9a7b1e}
+.mdbody .mem-card h4.sec-h{color:#4361ee}
+.mdbody .case-card p,.mdbody .mem-card p{font-size:15px}
+.mdbody .case-card ul,.mdbody .mem-card ul{margin-bottom:0;font-size:15px}
+/* 表格（规范 C） */
+.tbl-wrap{overflow-x:auto;margin:0 0 14px;border:1px solid #e9d5ff;border-radius:10px}
+.tbl-wrap table{min-width:480px}
+table{border-collapse:collapse;width:100%;font-size:16px}
+.mdbody th,.mdbody td{padding:11px 16px;text-align:left;border-bottom:1px solid #e9d5ff;vertical-align:top;line-height:1.6}
+.mdbody thead th{background:linear-gradient(180deg,#f5f3ff,#ede9fe);color:#4338ca;font-weight:700;font-size:15px;white-space:nowrap}
+.mdbody tbody tr:nth-child(even) td{background:#faf5ff}
+.mdbody tbody tr:last-child td{border-bottom:none}
+/* 图块（v2.1 图文同流） */
+.fig-block{background:#f8f7ff;border:1px solid #ddd6fe;border-radius:12px;padding:14px 16px;margin:0 0 14px}
+.fig-placeholder{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:#fbfafd;border:1.6px dashed #c4b5fd;border-radius:12px;padding:12px 16px;margin:0 0 14px}
+.fig-img{background:#f8f7ff;border:1px solid #ddd6fe;border-radius:12px;padding:10px 12px;margin:0 0 14px;text-align:center}
+.fig-img img{max-width:100%;height:auto;border-radius:8px}
+.fig-img figcaption{font-size:12px;color:#64748b;margin-top:6px;line-height:1.5}
+.mdbody .inline-img{max-width:100%;height:auto;vertical-align:middle;border-radius:6px;margin:0 2px}
+.mdbody .img-bad{display:inline-block;background:#fef2f2;border:1px dashed #ef4444;color:#b91c1c;font-size:13px;padding:1px 8px;border-radius:6px}
+.fig-placeholder .fp-num{background:#7c3aed;color:#fff;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.fig-placeholder .fp-type{background:#ede9fe;color:#6d28d9;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.fig-placeholder .fp-alt{color:#334155;font-size:14px;flex:1 1 auto;min-width:120px}
+.fig-placeholder .fp-note{color:#94a3b8;font-size:12px;white-space:nowrap;border:1px dashed #cbd5e1;border-radius:6px;padding:2px 8px}
+.fig-title{font-size:13px;font-weight:700;color:#4f46e5;text-align:center;margin-bottom:10px}
+.fig-body{overflow-x:auto}
+.fig-body svg{display:block;margin:0 auto;height:auto}
+.fig-caption{font-size:12px;color:#6b7280;text-align:center;margin-top:10px;font-style:italic}
+/* 手绘图 CSS 类（兼容） */
+.compare-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.compare-tbl th{padding:9px 12px;font-weight:700;font-size:12px;text-align:center}
+.compare-tbl td{padding:8px 12px;border:1px solid #e2e8f0;font-size:13px;vertical-align:top;line-height:1.5}
+.compare-tbl tr:nth-child(even) td{background:#faf9ff}
+.flow-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;padding:8px 0}
+.flow-node{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;text-align:center;min-width:80px}
+.flow-node.light{background:linear-gradient(135deg,#ede9fe,#ddd6fe);color:#4338ca}
+.flow-node.green{background:linear-gradient(135deg,#06d6a0,#059669);color:#fff}
+.flow-arrow{color:#a78bfa;font-size:18px;font-weight:700;flex-shrink:0}
+.cycle-wrap{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+.cycle-step{display:flex;flex-direction:column;align-items:center;gap:4px}
+.cycle-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+.cycle-label{font-size:11px;color:#374151;text-align:center;max-width:70px;line-height:1.3}
+.cycle-arrow{color:#a78bfa;font-size:16px;align-self:flex-start;margin-top:6px}
+.stair-wrap{display:flex;align-items:flex-end;gap:8px;padding:8px 0;justify-content:center;flex-wrap:wrap}
+.stair-item{display:flex;flex-direction:column;align-items:center;gap:6px}
+.stair-bar{background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:6px 6px 0 0;width:80px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;padding:4px}
+.stair-label{font-size:11px;color:#374151;text-align:center;max-width:80px;line-height:1.3}
+
+/* 域尾提示卡 */
+.tips-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;margin:0 0 14px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.tips-card .tc-title{font-size:15px;font-weight:700;margin-bottom:10px;color:#374151}
+.tips-card table{font-size:14px}
+.tips-card th{padding:9px 12px;font-size:13px}
+.tips-card td{padding:9px 12px;font-size:14px;line-height:1.6}
+
+/* ===== 章末练习 quiz-box（模块 10） ===== */
+.quiz-box{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px 22px;margin:18px 0 14px;box-shadow:0 1px 4px rgba(0,0,0,.05);scroll-margin-top:78px}
+.quiz-hdr{display:flex;align-items:baseline;gap:14px;font-size:18px;font-weight:700;color:#374151;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid #f1f5f9}
+.quiz-score{font-size:14px;font-weight:700;color:#4f46e5;margin-left:auto;white-space:nowrap}
+.qi{border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.qi.done{background:#fafafa}
+.qmeta{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.qbadge{background:#ede9fe;color:#5b21b6;border-radius:6px;padding:2px 9px;font-size:12px;font-weight:700}
+.qtype{font-size:11px;border-radius:12px;padding:1px 9px;font-weight:600}
+.qtype-s{background:#e0f2fe;color:#0369a1}
+.qtype-m{background:#fce7f3;color:#be185d}
+.qstem{font-size:16px;color:#1e293b;margin-bottom:10px;line-height:1.8}
+.qstem code{font-size:13px;color:#4f46e5;background:#f1f5f9;padding:2px 7px;border-radius:4px}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{background:#fff;border:1.5px solid #e2e8f0;border-radius:9px;padding:11px 14px;font-size:15.5px;color:#374151;cursor:pointer;transition:.15s;line-height:1.6;display:flex;gap:10px;align-items:flex-start}
+.opt:hover{border-color:#a78bfa}
+.opt .ol{font-weight:700;color:#4f46e5;flex-shrink:0}
+.opt.sel{border-color:#4f46e5;background:#ede9fe}
+.opt.cor{border-color:#16a34a;background:#dcfce7}
+.opt.wrg{border-color:#dc2626;background:#fee2e2}
+.opt.shc{border-color:#16a34a;background:#f0fdf4}
+.qi.done .opt{cursor:default;pointer-events:none}
+.qrow{margin-top:10px;display:flex;align-items:center;gap:12px}
+.qbtn{background:#4f46e5;color:#fff;font-size:12px;font-weight:600;border:none;border-radius:7px;padding:7px 18px;cursor:pointer;transition:.15s}
+.qbtn:hover{background:#4338ca}
+.qbtn:disabled{background:#cbd5e1;cursor:default}
+.qres{display:none;flex:1;border-radius:6px;padding:10px 14px;font-size:14px;line-height:1.7}
+.qres.ok{background:#dcfce7;color:#15803d}
+.qres.err{background:#fee2e2;color:#b91c1c}
+.qres.na{background:#fef3c7;color:#b45309}
+.qres.show{display:block}
+/* 长串防溢出：overflow-wrap:anywhere 仅在 token 放不下时词内断行，普通文本断词行为不变；
+   根治 SCP JSON/ARN 等不可断长串撑破移动端面板（SAP-C02 实测 sw=448→390） */
+.mdbody,.quiz-box,.qi,.qstem,.opts,.opt{overflow-wrap:anywhere}
+.qstem code,.opt code{white-space:pre-wrap;word-break:break-all}
+.score-box{display:none;text-align:center;background:#f5f3ff;border-radius:10px;padding:22px 16px;margin-top:16px}
+.score-box.show{display:block}
+.score-num{font-size:32px;font-weight:700;color:#4f46e5;line-height:1.3}
+.score-lbl{font-size:13px;color:#6d28d9;margin-top:4px}
+.score-box .sb-tip{font-size:12px;color:#64748b;margin-top:8px;line-height:1.7}
+
+.footer{margin-top:26px;padding:18px 10px 0;border-top:1px solid #e2e8f0;color:#64748b;font-size:12.5px;text-align:center;line-height:1.9}
+.footer a{color:#4f46e5;text-decoration:none}
+@media(max-width:768px){.ptbl th,.ptbl td{font-size:13px}.mdbody th,.mdbody td{font-size:13px}}
+
+/* ===== 章面板 v6 布局：左侧常驻目录槽 + 正文列 =====
+   三条布局约定：① 正文 #### 知识点块提升为 h3 三级标题（d.n.m 编号+锚点，见下方 .mh3）
+   ② 左侧目录两级（节 ▸ 知识点，单开手风琴 + 滚动自动跟读）③ 左右两侧任何分辨率留白，目录常驻不遮正文：
+   ≥1200px：.panel 栅格 [236px 目录槽 | 正文列]，目录 sticky 常驻；<1200px：目录槽变左侧抽屉（☰+遮罩）。 */
+body.chapView .wrap{max-width:1420px}
+.panel{display:grid;grid-template-columns:236px minmax(0,1fr);gap:20px;align-items:start;margin-bottom:14px}
+.ch-side{position:sticky;top:14px;min-width:0;z-index:30}
+.side-close{display:none}
+.toc-open-btn{display:none}
+.side-mask{position:fixed;inset:0;background:rgba(15,23,42,.42);z-index:85;opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
+.side-mask.show{opacity:1;visibility:visible}
+.ch-toc{background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 6px 24px rgba(15,23,42,.06);overflow:hidden}
+.ch-toc .toc-hd{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:10px 12px;border-bottom:1px solid #f1f5f9}
+.ch-toc .th-title{font-size:13px;font-weight:800;color:#4f46e5;white-space:nowrap}
+.ch-toc .th-meta{font-size:11px;color:#94a3b8;font-weight:600;white-space:nowrap}
+.ch-toc .toc-body{max-height:calc(100vh - 46px);overflow-y:auto;padding:8px}
+.toc-list{list-style:none;margin:0;padding:0}
+.toc-list a{display:flex;align-items:baseline;gap:6px;padding:5px 6px;border-radius:7px;color:#475569;text-decoration:none;line-height:1.45;font-size:13px;transition:.12s}
+.toc-list a:hover{background:#f5f3ff;color:#4f46e5}
+.toc-list a.act{background:#ede9fe;color:#3730a3;font-weight:600}
+.toc-list .tl-id{font-size:11.5px;font-weight:700;color:#a78bfa;flex-shrink:0;font-variant-numeric:tabular-nums}
+.toc-list a.act .tl-id{color:#4f46e5}
+.toc-t{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.toc-sec>a.toc-sec-link{font-weight:600;color:#334155;padding-top:6px;padding-bottom:6px}
+.toc-sec>a .toc-ar{margin-left:auto;flex-shrink:0;font-size:9px;color:#94a3b8;transition:transform .18s}
+.toc-sec.open>a .toc-ar{transform:rotate(90deg);color:#4f46e5}
+.toc-sub{list-style:none;margin:0;padding:0 0 3px;display:none}
+.toc-sec.open>.toc-sub{display:block}
+.toc-sub a{padding:3px 6px 3px 20px;font-size:12.5px;color:#64748b;line-height:1.4}
+.toc-sub a .tl-id{font-size:11px;color:#c4b5fd}
+/* 目录尾【本章练习】入口（v6.2 新增）：独立条目，虚线分隔，点击滚到章末练习区 #quiz-dX */
+.toc-quiz{margin-top:7px;padding-top:3px;border-top:1px dashed #ddd6fe}
+.toc-quiz>a.toc-quiz-link{font-weight:700;color:#6d28d9;padding-top:6px;padding-bottom:6px}
+.toc-quiz>a .tl-id{color:#a78bfa}
+.toc-quiz>a.act .tl-id{color:#6d28d9}
+@media(max-width:1199px){
+  .panel{display:block}
+  .ch-side{position:fixed;left:0;top:0;bottom:0;width:280px;z-index:90;background:#fff;border-right:1px solid #e2e8f0;box-shadow:0 0 44px rgba(15,23,42,.18);transform:translateX(-102%);transition:transform .22s ease;padding:10px;overflow-y:auto}
+  .ch-side.open{transform:none}
+  .ch-side .ch-toc{border:none;box-shadow:none;border-radius:0}
+  .ch-toc .toc-body{max-height:none;padding-right:4px}
+  .toc-open-btn{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1.5px solid #4f46e5;color:#4f46e5;font-size:12.5px;font-weight:600;border-radius:8px;padding:4px 10px;cursor:pointer;transition:.15s;white-space:nowrap}
+  .toc-open-btn:hover{background:#ede9fe}
+  .side-close{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:none;background:#f1f5f9;color:#64748b;border-radius:7px;font-size:12px;cursor:pointer;font-weight:700;flex-shrink:0}
+  .side-close:hover{background:#e2e8f0;color:#1e293b}
+}
+/* 阅读进度（吸顶条底部细线 + 百分比）：v6 新增
+   注意：此处不再声明 position，78 行的 .ch-topnav{position:sticky;top:0} 保持生效——
+   早前版本曾误加 position:relative 覆盖导致吸顶丢失（窄屏换章节要滚回顶），v6.1 已修复 */
+.ch-topnav{overflow:hidden}
+.ch-topnav .rd-fill{position:absolute;left:0;bottom:0;height:3px;width:0%;background:linear-gradient(90deg,#4f46e5,#a855f7);border-radius:0 3px 3px 0;transition:width .12s linear;z-index:2}
+.tn-title{flex:1;min-width:0}
+#readPct{margin-left:auto;font-size:11px;font-weight:800;color:#4f46e5;white-space:nowrap;flex-shrink:0}
+@media(max-width:768px){.ch-topnav{gap:8px;padding:8px 10px}.toc-open-btn{padding:3px 8px;font-size:12px}#readPct{font-size:10px}}
+
+/* ===== v6 三级标题（节内知识点）：#### 知识点块 → h3，带 d.n.m 编号与锚点 ===== */
+.mdbody h3.mh3{font-size:17px;font-weight:700;color:#3730a3;margin:26px 0 10px;padding:4px 0 7px;border-bottom:1px dashed #e9d5ff;display:flex;align-items:baseline;gap:8px;line-height:1.5;scroll-margin-top:78px}
+.mdbody .h3no{flex-shrink:0;display:inline-block;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:6px;padding:2px 8px;font-variant-numeric:tabular-nums;letter-spacing:.4px;line-height:1.6}
+.mdbody h4.sec-h.sec-lead-h{font-size:13px;color:#94a3b8;border-left-color:#d4d4d8;font-weight:600;letter-spacing:.5px;margin:18px 0 8px}
+/* ===== 移动适配 v1.3：断点档 / 触控 / safe-area / 图灯箱；桌面样式零删除零改动，全部追加 ===== */
+html{color-scheme:light}
+body{-webkit-tap-highlight-color:transparent}
+/* 图灯箱（P1=A）：等效字号 <9.5px 的正文图点击放大到原始 viewBox 尺寸，可横滑+双指缩放 */
+.fig-lightbox{position:fixed;inset:0;z-index:400;background:rgba(15,23,42,.9);display:none;align-items:center;justify-content:center;padding:12px}
+.fig-lightbox.show{display:flex}
+.fig-lightbox .lb-stage{max-width:97vw;max-height:94vh;overflow:auto;background:#fff;border-radius:10px;padding:10px;box-shadow:0 12px 48px rgba(0,0,0,.4);-webkit-overflow-scrolling:touch}
+.fig-lightbox .lb-stage svg{display:block;margin:0 auto}
+.fig-lightbox .lb-close{position:absolute;top:10px;right:10px;width:36px;height:36px;border:none;border-radius:50%;background:rgba(255,255,255,.92);color:#1e293b;font-size:17px;font-weight:700;cursor:pointer;z-index:2;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+@media(max-width:520px){.fig-body svg{cursor:zoom-in}}
+@media(max-width:480px){
+  .wrap{padding:12px 12px 44px}
+  .hdr{padding:20px 18px 18px;margin-bottom:14px}
+  .hdr h1{font-size:20px}
+  .ov{gap:10px;margin-bottom:14px}
+  .card-s{padding:14px 14px}
+  .cs-title{font-size:16.5px;margin-bottom:12px}
+  .ch-card{padding:12px 13px}
+  .ch-topnav{gap:6px;padding:6px 8px;border-radius:10px}
+  .ch-topnav .back-btn{padding:4px 9px;font-size:12px}
+  .tn-title{font-size:13.5px}
+  #readPct{font-size:9.5px}
+  .ch-hdr{padding:16px 16px 13px}
+  .ch-title{font-size:19px}
+  .mdbody p,.mdbody ul,.mdbody ol{font-size:15.5px;line-height:1.85}
+  .mdbody li{margin-bottom:6px}
+  .mdbody h2.mh2{font-size:17.5px;margin:3px 0 10px;padding:8px 0 6px}
+  .mdbody h3.mh3{font-size:16px;margin:20px 0 8px;padding:3px 0 6px}
+  .mdbody h4.sec-h{font-size:15.5px;margin:18px 0 8px}
+  .mdbody blockquote{padding:8px 12px;font-size:14px}
+  .mdbody .case-card,.mdbody .mem-card{padding:10px 12px}
+  .mdbody .case-card p,.mdbody .mem-card p,.mdbody .case-card ul,.mdbody .mem-card ul{font-size:14px}
+  .task-list{font-size:15px;padding-left:18px}
+  .tbl-wrap table{min-width:430px}
+  .fig-block{padding:10px 9px;border-radius:10px}
+  .fig-placeholder{padding:10px 12px}
+  .fig-title{font-size:12px;margin-bottom:8px}
+  .fig-caption{font-size:11px;margin-top:8px}
+  .quiz-box{padding:14px 13px}
+  .quiz-hdr{font-size:16px;margin-bottom:13px}
+  .qi{padding:11px 12px}
+  .qstem{font-size:15px;line-height:1.75}
+  .opt{padding:10px 12px;font-size:15px}
+  .qres{font-size:13px}
+  .score-num{font-size:26px}
+  .ptbl{font-size:13px}
+  .ptbl th,.ptbl td{padding:8px 9px}
+  .exam-info-list{font-size:14px}
+  .exam-domain-tbl{font-size:13.5px}
+  .exam-domain-tbl th,.exam-domain-tbl td{padding:7px 9px}
+  .step-block{flex-basis:120px;padding:8px 10px;font-size:12px}
+  .ch-toc .th-meta{display:none}
+  .toc-open-btn{font-size:12px;padding:3px 8px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ══════ 首页（目录 + 统计 + 考试说明 + 计划）══════ -->
+  <div id="home">
+    <header class="hdr">
+      <span class="hdr-badge" id="hdrBadge">CERT</span>
+      <h1 id="hdrTitle">学习材料</h1>
+      <div class="hdr-sub" id="hdrSub"></div>
+    </header>
+    <div class="ov" id="ov"></div>
+    <div class="card-s">
+      <div class="cs-title">📚 章节目录</div>
+      <div class="ch-grid" id="chGrid"></div>
+    </div>
+    <div class="card-s" id="examCard"></div>
+    <div class="card-s" id="planCard"></div>
+
+    <!-- 题库刷题入口卡（合体产物显示；构建注入 QUIZ_TOTAL>0 时启用） -->
+    <div class="card-s" id="quizEntry" style="display:none">
+      <div class="cs-title">📝 题库刷题</div>
+      <div id="quizEntryDesc" style="font-size:15px;color:#475569;line-height:1.9"></div>
+      <button class="qbtn" id="quizEntryBtn" style="margin-top:12px;padding:10px 28px;font-size:14px">进入题库刷题 →</button>
+    </div>
+  </div>
+
+  <!-- ══════ 章正文区（分页面板，同一时刻只显示一个）══════ -->
+  <div id="chapters" style="display:none"></div>
+
+  <footer class="footer">
+    <div id="footNote">本学习材料依据 AWS 官方考纲组织 · 正文含虚构教学场景，无真实客户信息 · 学习进度与答题记录自动保存在本机浏览器</div>
+  </footer>
+</div>
+
+<!-- ══════ 题库刷题视图（构建期并入 quiz-embed.html + 题库数据；纯学习科此区为空）══════ -->
+<style>
+/* ===== 题库刷题（并入视图，作用域 #quizView 内）===== */
+#quizView *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}#quizView{--bg:#f5f7fa;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--primary:#4361ee;--primary2:#3a56d4;--correct:#06d6a0;--wrong:#ef476f;--border:#e5e7eb;--shadow:0 2px 12px rgba(0,0,0,.08)}#quizView.dark{--bg:#0f1629;--card:#1a2342;--text:#e0e0e0;--text2:#8892b0;--primary:#4cc9f0;--primary2:#3bb8dd;--correct:#06d6a0;--wrong:#ef476f;--border:#2a3555;--shadow:0 2px 12px rgba(0,0,0,.3)}#app{max-width:720px;margin:0 auto;padding:16px}#quizView .page{display:none}#quizView .page.active{display:block}#quizView .header{display:flex;align-items:center;justify-content:space-between;padding:12px 0 16px}#quizView .header h1{font-size:20px;font-weight:700}#quizView .theme-btn{background:none;border:none;font-size:22px;cursor:pointer;padding:4px 8px;border-radius:8px}#quizView .theme-btn:hover{background:var(--border)}#quizView .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);max-width:720px;width:100%;background:var(--card);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0 12px;z-index:100}#quizView .nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:var(--text2);font-size:11px;cursor:pointer;padding:4px 12px;border-radius:8px;transition:.2s}#quizView .nav-item .nav-icon{font-size:20px;line-height:1}#quizView .nav-item.active{color:var(--primary)}#quizView .nav-item:hover{background:var(--border)}#quizView .stat-card, #quizView .domain-card, #quizView .btn-primary, #quizView .btn-secondary{border-radius:12px;padding:16px;background:var(--card);box-shadow:var(--shadow);border:1px solid var(--border)}#quizView .btn-primary{background:var(--primary);color:#fff;border:none;font-size:16px;font-weight:600;padding:14px 24px;cursor:pointer;text-align:center;display:block;width:100%;transition:.2s}#quizView .btn-primary:hover{background:var(--primary2);transform:translateY(-1px)}#quizView .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}#quizView .btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border);font-size:14px;padding:10px 18px;cursor:pointer}#quizView .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}#quizView .stat-card{text-align:center;padding:14px}#quizView .stat-card .stat-num{font-size:24px;font-weight:700;color:var(--primary)}#quizView .stat-card .stat-label{font-size:12px;color:var(--text2);margin-top:2px}#quizView .domain-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}#quizView .domain-card{padding:14px;cursor:pointer;transition:.2s}#quizView .domain-card:hover{border-color:var(--primary);transform:translateY(-1px)}#quizView .domain-card .d-name{font-size:13px;font-weight:600}#quizView .domain-card .d-weight{font-size:11px;color:var(--text2)}#quizView .domain-card .d-bar{height:6px;background:var(--border);border-radius:3px;margin:8px 0 4px;overflow:hidden}#quizView .domain-card .d-bar-fill{height:100%;background:var(--primary);border-radius:3px;transition:width .5s}#quizView .domain-card .d-pct{font-size:12px;color:var(--primary);font-weight:600}#quizView .action-btns{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}#quizView .recent-wrong{padding:12px;background:var(--card);border-radius:12px;border:1px solid var(--border)}#quizView .recent-wrong h3{font-size:14px;margin-bottom:8px;color:var(--text2)}#quizView .recent-wrong li{font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);cursor:pointer;list-style:none}#quizView .recent-wrong li:last-child{border:none}#quizView .recent-wrong li:hover{color:var(--primary)}#quizView .quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}#quizView .back-btn{background:none;border:none;font-size:24px;cursor:pointer;padding:4px;color:var(--text)}#quizView .quiz-progress{font-size:13px;color:var(--text2);margin-left:auto}#quizView .quiz-meta{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}#quizView .quiz-meta span{font-size:12px;padding:4px 10px;border-radius:20px;background:var(--border);color:var(--text2)}#quizView .quiz-meta .domain-tag{background:var(--primary);color:#fff}#quizView .question-text{font-size:18px;line-height:1.6;margin-bottom:20px;font-weight:500}#quizView .question-text,#quizView .option-item,#quizView .options-list,#quizView .explanation{overflow-wrap:anywhere}#quizView .options-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}#quizView .option-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--card);border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:.2s;font-size:15px;line-height:1.5}#quizView .option-item:hover{border-color:var(--primary)}#quizView .option-item.selected{border-color:var(--primary);background:rgba(67,97,238,.08)}#quizView .option-item.correct{border-color:var(--correct);background:rgba(6,214,160,.08)}#quizView .option-item.wrong{border-color:var(--wrong);background:rgba(239,71,111,.08)}#quizView .option-item .opt-label{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;background:var(--border);flex-shrink:0}#quizView .option-item.selected .opt-label{background:var(--primary);color:#fff}#quizView .option-item.correct .opt-label{background:var(--correct);color:#fff}#quizView .option-item.wrong .opt-label{background:var(--wrong);color:#fff}#quizView .option-item.multi .opt-label{border-radius:4px}#quizView .quiz-buttons{display:flex;gap:10px;margin-bottom:16px}#quizView .quiz-buttons .btn-primary, #quizView .quiz-buttons .btn-secondary{flex:1;text-align:center}#quizView .explanation{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;display:none}#quizView .glossary{margin-top:14px;padding:12px;background:var(--bg);border-radius:10px;border:1px solid var(--border);max-height:300px;overflow-y:auto}#quizView .glossary-title{font-size:13px;font-weight:600;margin-bottom:8px;color:var(--primary)}#quizView .glossary-item{padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.6}#quizView .glossary-item:last-child{border:none;padding-bottom:0}#quizView .glossary-term{font-weight:600;color:var(--text)}#quizView .glossary-def{color:var(--text2)}#quizView .explanation.show{display:block}#quizView .explanation .result-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-weight:600;font-size:14px;margin-bottom:10px}#quizView .explanation .result-badge.correct{background:rgba(6,214,160,.15);color:var(--correct)}#quizView .explanation .result-badge.wrong{background:rgba(239,71,111,.15);color:var(--wrong)}#quizView .explanation .exp-text{font-size:14px;line-height:1.7;color:var(--text2)}#quizView .explanation .exp-source{font-size:12px;color:var(--text2);margin-top:8px;font-style:italic}#quizView .qnav{background:var(--card);border-radius:12px;padding:12px;border:1px solid var(--border);margin-top:12px}#quizView .qnav h4{font-size:13px;color:var(--text2);margin-bottom:8px}#quizView .qnav-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}#quizView .qnav-item{aspect-ratio:1;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;transition:.2s;background:var(--bg)}#quizView .qnav-item:hover{border-color:var(--primary)}#quizView .qnav-item.done-correct{background:var(--correct);color:#fff;border-color:var(--correct)}#quizView .qnav-item.done-wrong{background:var(--wrong);color:#fff;border-color:var(--wrong)}#quizView .qnav-item.current{border-color:var(--primary);border-width:2px;font-weight:700}#quizView .wrong-stats{display:flex;gap:12px;margin-bottom:16px}#quizView .wrong-stats .stat-card{flex:1}#quizView .wrong-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}#quizView .wrong-tab{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:13px;cursor:pointer}#quizView .wrong-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}#quizView .wrong-item{padding:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:10px}#quizView .wrong-item .wi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}#quizView .wrong-item .wi-domain{font-size:12px;padding:2px 8px;border-radius:10px;background:var(--border)}#quizView .wrong-item .wi-actions{display:flex;gap:8px;margin-top:8px}#quizView .wrong-item .wi-actions button{font-size:12px;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;color:var(--text)}#quizView .wrong-item .wi-actions button:hover{background:var(--border)}#quizView .stats-chart{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}#quizView .stats-chart h3{font-size:14px;margin-bottom:12px}#quizView canvas{width:100%!important;height:200px!important;border-radius:8px}#quizView .stats-table{width:100%;border-collapse:collapse;font-size:13px}#quizView .stats-table th, #quizView .stats-table td{padding:10px 8px;text-align:center;border-bottom:1px solid var(--border)}#quizView .stats-table th{color:var(--text2);font-weight:500}#quizView .settings-section{margin-bottom:20px}#quizView .settings-section h3{font-size:15px;margin-bottom:12px;color:var(--text2)}#quizView .setting-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:12px;cursor:pointer;width:100%;font-size:14px;color:var(--text);margin-bottom:8px;transition:.2s}#quizView .setting-btn:hover{border-color:var(--primary)}#quizView .setting-btn.danger{color:var(--wrong)}#quizView .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:.3s}#quizView .modal-overlay.show{opacity:1;pointer-events:auto}#quizView .modal-box{background:var(--card);border-radius:16px;padding:24px;max-width:360px;width:90%;text-align:center}#quizView .modal-box h3{font-size:18px;margin-bottom:10px}#quizView .modal-box p{font-size:14px;color:var(--text2);margin-bottom:20px;line-height:1.6}#quizView .modal-btns{display:flex;gap:10px}#quizView .modal-btns button{flex:1;padding:12px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer}#quizView .modal-btns .btn-cancel{background:var(--border);color:var(--text)}#quizView .modal-btns .btn-confirm{background:var(--wrong);color:#fff}#quizView .timer{font-size:14px;font-weight:600;color:var(--primary);margin-left:auto}#quizView .timer.warning{color:var(--wrong);animation:pulse 1s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}#quizView .footer-note{font-size:11px;color:var(--text2);text-align:center;padding:12px 0 4px;line-height:1.6}#quizView /* Glossary term highlight */
+.gloss-term{color:var(--primary);font-weight:600;border-bottom:1px dashed var(--primary);cursor:pointer;padding:0 1px;border-radius:3px;transition:background .15s}#quizView .gloss-term:hover{background:rgba(67,97,238,.12)}#quizView.dark .gloss-term:hover{background:rgba(76,201,240,.15)}#quizView /* Glossary tooltip popup */
+.gloss-tip{position:fixed;z-index:300;max-width:320px;min-width:220px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.18);padding:14px 16px;font-size:13px;line-height:1.6;color:var(--text);display:none}#quizView .gloss-tip .gt-term{font-weight:700;color:var(--primary);font-size:14px;margin-bottom:4px}#quizView .gloss-tip .gt-def{color:var(--text2)}#quizView .gloss-tip .gt-close{position:absolute;top:6px;right:8px;background:none;border:none;font-size:16px;cursor:pointer;color:var(--text2);padding:2px 6px;border-radius:6px}#quizView .gloss-tip .gt-close:hover{background:var(--border);color:var(--text)}@media(max-width:480px){#app{padding:12px}#quizView .stats-grid{gap:8px}#quizView .stat-card{padding:10px}#quizView .stat-card .stat-num{font-size:20px}#quizView .domain-grid{gap:8px}#quizView .qnav-grid{grid-template-columns:repeat(7,1fr)}#quizView .question-text{font-size:16px}
+}
+
+/* quizView 底部导航占位 */
+#quizView #app{padding-bottom:84px}
+/* 顶栏吸顶并限宽与 #app 对齐（原无 max-width 撑满视口 1440，内容 720 居中，视觉脱落） */
+#quizView .qz-topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;max-width:720px;margin:0 auto 10px;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border:1px solid #e5e7eb;border-radius:12px;padding:8px 14px;font-size:14px;font-weight:600;color:#1a1a2e;box-shadow:0 1px 8px rgba(0,0,0,.06)}
+#quizView .qz-topbar button{background:#fff;border:1.5px solid #4361ee;color:#4361ee;font-size:13px;font-weight:600;border-radius:8px;padding:5px 14px;cursor:pointer;white-space:nowrap}
+#quizView .qz-topbar button:hover{background:#eef2ff}
+/* 吸顶后顶栏与视口右缘保持留白（sticky 定位到 top:0 时仍随 #quizView 水平居中） */
+@media(max-width:764px){#quizView .qz-topbar{margin:0 10px 10px}}
+/* ===== 移动适配 v1.3：safe-area / 点按区 / 防双击缩放；桌面零改动 ===== */
+#quizView .bottom-nav{padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+#quizView .option-item,#quizView .nav-item,#quizView .qnav-item,#quizView .qz-topbar button,#quizView .domain-card,#quizView .setting-btn,#quizView .btn-primary,#quizView .btn-secondary{touch-action:manipulation}
+@media(max-width:480px){
+  #quizView .option-item{min-height:44px;padding:12px 14px;font-size:15px}
+  #quizView .qz-topbar{padding:7px 10px;font-size:13px;border-radius:10px}
+  #quizView .qz-topbar button{font-size:12px;padding:4px 10px}
+  #quizView .bottom-nav .nav-item{padding:5px 8px}
+  #quizView .explanation{padding:13px 12px}
+  #quizView .explanation .exp-text{font-size:13.5px;line-height:1.75}
+  #quizView .question-text{font-size:16px;line-height:1.65}
+  #quizView .btn-primary{padding:13px 20px;font-size:15px}
+  #quizView .quiz-header{margin-bottom:10px}
+}
+</style>
+<div id="quizView" style="display:none">
+<div class="qz-topbar"><button id="qzExitBtn" onclick="kbShowLearnHome()">← 返回学习目录</button><span id="qzTopTitle">题库刷题</span></div>
+<div id="app"></div>
+<div class="bottom-nav" id="bottomNav">
+  <button class="nav-item" data-page="dashboard"><span class="nav-icon">🏠</span>仪表盘</button>
+  <button class="nav-item" data-page="quiz"><span class="nav-icon">📝</span>刷题</button>
+  <button class="nav-item" data-page="wrongbook"><span class="nav-icon">❌</span>错题</button>
+  <button class="nav-item" data-page="stats"><span class="nav-icon">📊</span>统计</button>
+  <button class="nav-item" data-page="settings"><span class="nav-icon">⚙</span>设置</button><button class="nav-item" data-page="learn" title="返回学习目录"><span class="nav-icon">📚</span>学习</button>
+</div>
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <h3 id="modalTitle">确认</h3>
+    <p id="modalText">确定要执行此操作吗？</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">取消</button>
+      <button class="btn-confirm" id="modalConfirmBtn" onclick="closeModal()">确认</button>
+    </div>
+  </div>
+</div>
+<div class="gloss-tip" id="glossTip">
+  <button class="gt-close" onclick="closeGlossTip()">✕</button>
+  <div class="gt-term" id="glossTipTerm"></div>
+  <div class="gt-def" id="glossTipDef"></div>
+</div>
+</div>
+<script>
+// 题库数据注入区（构建系统自动注入，含考试元信息与题目全集，勿手改）
+const QUIZ_META = {"exam":"GH-300","title":"GitHub Copilot 认证 题库","lang":"zh","updated":"2026-10-31","domains":{"1":"负责任地使用 Copilot","2":"使用 Copilot 功能","3":"数据与架构","4":"提示工程与上下文","5":"提升开发生产力","6":"隐私、排除与保障"},"weights":{"1":"15–20%","2":"25–30%","3":"10–15%","4":"10–15%","5":"10–15%","6":"10–15%"},"examParams":{"count":60,"countNote":"🔴 官方未公布固定题数；60 为第三方估计（约 60 计分 + 10–15 不计分预试），以官方为准","minutes":100,"pass":700},"footerNote":"题库来源：原创练习（基于 GH-300 官方考纲）；Domain 为按官方考纲归类。","sourceNote":"题库来源：原创编写，依据 Microsoft Learn GH-300 Study Guide（skills measured 2026-08-07）。","total":88};
+const QUIZ_QUESTIONS = [{"id":"D1-01","d":1,"t":"single","q":"为什么 GH-300 强调「必须验证 AI 输出」？","o":[{"l":"A","t":"因为 Copilot 总是返回最优解"},{"l":"B","t":"因为 LLM 是概率性输出，可能产生幻觉或引用已废弃/不存在的 API，未经运行与测试不可假定正确"},{"l":"C","t":"因为 Microsoft 强制要求签署验证声明"},{"l":"D","t":"因为 Copilot 不生成可执行代码"}],"a":["B"],"e":"✅ 正确：LLM 是概率性生成系统，输出的是「最可能的下一段文本」，不是经过验证的结论。它会幻觉出不存在的 API、按训练截止日前的旧版本写法生成、在缺少上下文时自行猜测业务语义，因此 Copilot 给出的代码未经编译、运行、测试与评审，不能假定正确。\n\n❌ A：Copilot 给的是候选方案而非最优解，正确性取决于上下文是否充分、模型是否见过类似模式，与「总是最优」相反。\n❌ C：微软没有任何「签署验证声明」的强制流程；验证是工程纪律与责任归属问题，不是行政手续。\n❌ D：Copilot 生成的恰恰是可执行代码，正因为它能跑起来、看起来合理，才更需要验证——「能编译」和「逻辑正确」是两件事。\n\n📌 关键概念：考试里凡是把「AI 产出」当成可信输入的选项都是错的；正确立场永远是「先假设它可能错，再用测试与评审去证伪」。\n🔗 依据：GitHub Docs · Responsible use of GitHub Copilot features","s":"原创-基于官方考纲 D1.T5"},{"id":"D1-02","d":1,"t":"multiple","q":"以下哪些属于负责任 AI 的潜在危害缓解措施？（多选）","o":[{"l":"A","t":"人工审查并验证生成代码"},{"l":"B","t":"启用内容排除，防止敏感文件进入上下文"},{"l":"C","t":"直接合入未测试的生成代码以提速"},{"l":"D","t":"建立团队 Copilot 使用规范"}],"a":["A","B","D"],"e":"✅ 正确 A：人工审查与验证是缓解幻觉、偏见、不安全代码最直接的手段，也是所有缓解措施的兜底项。\n✅ 正确 B：内容排除（content exclusion）从输入端切断敏感文件进入上下文，属于预防型缓解。\n✅ 正确 D：团队使用规范把「哪些场景能用、产物如何验证、谁负责签字」写成制度，属于流程型缓解。\n\n❌ C：直接合入未测试的生成代码是典型的反面做法，它把风险从「可拦截」变成「已上线」，是危害的来源而非缓解。\n\n📌 关键概念：缓解措施分三层——输入端（内容排除、最小上下文）、输出端（过滤、公共代码匹配、扫描）、流程端（评审、测试、规范）。选项只要能归入其中一层且方向正确，通常就是对的。\n🔗 依据：GitHub Docs · Responsible use of GitHub Copilot features；Excluding content from GitHub Copilot","s":"原创-基于官方考纲 D1.T4"},{"id":"D1-03","d":1,"t":"single","q":"团队让 Copilot 按内部规范生成一段 Terraform 配置，返回的写法引用了该 provider 在三年前就已移除的参数。对这段输出的最准确解释是？","o":[{"l":"A","t":"模型的训练数据存在截止时间，对截止之后发生的版本变更不了解，会按旧版本写法生成"},{"l":"B","t":"Copilot 只在离线模式下才会读取过期文档，联网时不会出现这种问题"},{"l":"C","t":"说明该仓库的内容排除规则配置有误，把 provider 文档也排除了"},{"l":"D","t":"这属于 IP 赔偿覆盖的情形，可以直接使用而不必修改"}],"a":["A"],"e":"✅ 正确 A：Copilot 依赖训练数据中的代码与文档模式，训练截止之后的 API 变更、弃用、新语法它并不知晓，因此会自信地按旧版本生成——这不是故障，是生成式模型的固有局限。\n\n❌ B：Copilot 不能离线运行，联网是前提；联网只解决「能不能用」，不解决「知识是否过期」。\n❌ C：内容排除只影响你能不能让它读到某文件，不会让它「读到过期文档」；方向搞反了。\n❌ D：IP 赔偿解决的是第三方主张知识产权时的法律费用承担，与代码是否过时无关，且赔偿不等于免于修正。\n\n📌 关键概念：遇到「模型给出过时/不存在的写法」，先归因到训练数据时效，再归因到上下文不足，最后才怀疑配置——这个归因顺序在域 1、域 3 反复考。\n🔗 依据：GitHub Docs · Responsible use of GitHub Copilot features（Limitations of generative AI）","s":"原创-基于官方考纲 D1.T2"},{"id":"D1-04","d":1,"t":"single","q":"当 Copilot 生成的代码引入了已知的不安全依赖或漏洞模式时，责任应如何处理？","o":[{"l":"A","t":"由 GitHub 完全承担赔偿责任，开发者无责"},{"l":"B","t":"开发者/团队仍负最终责任，须通过扫描、评审与测试识别并消除风险"},{"l":"C","t":"只要使用了企业版就自动免疫所有漏洞"},{"l":"D","t":"责任自动转移给模型提供商，无需人工检查"}],"a":["B"],"e":"✅ 正确：Copilot 是辅助工具，生成代码一旦被你接受并进入代码库，质量、安全与合规责任就落在开发者与团队身上，必须通过依赖扫描、SAST、代码评审与测试来识别并消除风险。\n\n❌ A：GitHub 不承担代码质量责任。企业版的 IP 赔偿只针对「第三方主张你侵犯其知识产权」这一种法律风险，且附条件，不是对漏洞、故障、数据损失的兜底。\n❌ C：企业版不会让漏洞消失，它提供的是策略管控、审计、内容排除与数据保护能力，属于治理增强，不是技术免疫。\n❌ D：责任不会随工具转移给模型提供商；「谁提交，谁负责」是软件工程的基本归属。\n\n📌 关键概念：把「IP 赔偿」和「质量责任」分清是本题的核心——赔偿＝法律费用承担（有条件、仅付费计划）；质量＝开发者始终负责。考试常用这两者互相冒充。\n🔗 依据：GitHub Docs · GitHub Copilot 责任使用指引；Copilot 计划与 IP 赔偿条款","s":"原创-基于官方考纲 D1.T5"},{"id":"D1-05","d":1,"t":"single","q":"关于「幻觉（hallucination）」，最准确的描述是？","o":[{"l":"A","t":"Copilot 故意编造错误信息以误导用户"},{"l":"B","t":"模型在缺乏依据时生成看似合理但错误或无依据的内容"},{"l":"C","t":"仅指语法错误"},{"l":"D","t":"只在离线模式才会出现"}],"a":["B"],"e":"✅ 正确：幻觉指模型在缺乏依据时仍生成看似合理、语气自信的内容——不存在的库、编造的函数签名、张冠李戴的配置项。它是概率生成的副产物，不是恶意，也无法通过「再问一次」根除，只能靠验证。\n\n❌ A：模型没有欺骗意图，它只是在做「最可能的续写」，把它拟人化为「故意误导」是概念错误。\n❌ C：语法错误属于代码缺陷，幻觉可能语法完全合法、逻辑完全错误，危害更大。\n❌ D：幻觉与是否离线无关（Copilot 本身也不能离线运行），联网与否都不消除幻觉。\n\n📌 关键概念：区分三个概念——幻觉（编造不存在的东西）、过时（存在但版本旧）、偏见（存在但系统性倾向）。答题时看清题干问的是哪一个。\n🔗 依据：GitHub Docs · Responsible use of GitHub Copilot features","s":"原创-基于官方考纲 D1.T2"},{"id":"D1-06","d":1,"t":"multiple","q":"为缓解 AI 输出中的偏见（bias）问题，推荐的做法包括？（多选）","o":[{"l":"A","t":"在人工评审中主动检查偏见与不公内容"},{"l":"B","t":"对关键决策场景保留人工判断，不盲目采纳"},{"l":"C","t":"把全部决策直接交给模型自动执行以提升效率"},{"l":"D","t":"使用多元、代表性数据审视产出"}],"a":["A","B","D"],"e":"✅ 正确 A：偏见往往不体现在报错上，只能靠人工评审主动检查输出是否对某类群体、地区、场景存在系统性不利。\n✅ 正确 B：高风险决策（风控、招聘、信贷、权限判定）必须保留人工判断，这是人在回路（human-in-the-loop）的核心要求。\n✅ 正确 D：用多元、有代表性的数据审视产出，能暴露训练数据偏差在业务数据上的具体表现。\n\n❌ C：把决策权整体交给模型自动执行，等于放弃人工判断与可问责性，是偏见放大而非缓解。\n\n📌 关键概念：公平性缓解的四个动作——审查输出、保留人工、代表性数据、可追溯记录。凡是「全自动」「无需人工」的选项在负责任的 AI 语境下基本可直接排除。\n🔗 依据：Microsoft Learn · Responsible AI principles（Fairness / Reliability & Safety / Privacy / Inclusiveness / Transparency / Accountability）","s":"原创-基于官方考纲 D1.T4"},{"id":"D1-07","d":1,"t":"single","q":"关于 GitHub Copilot 企业版的 IP 赔偿（IP indemnity）条款，正确的是？","o":[{"l":"A","t":"所有版本（含免费 Individual）均自动提供无条件 IP 赔偿"},{"l":"B","t":"企业版（Business/Enterprise）在合规使用前提下提供 IP 赔偿，但需满足条款条件"},{"l":"C","t":"赔偿涵盖任何使用方式下的全部损失"},{"l":"D","t":"IP 赔偿与版本无关，仅取决于代码是否通过编译"}],"a":["B"],"e":"✅ 正确：IP 赔偿由 Copilot Business 与 Copilot Enterprise 提供，不是所有计划都有，且必须同时满足两个条件——① 公共代码匹配过滤（suggestions matching public code / duplication detection）处于启用状态；② 该建议在使用时未被你修改。任一条件不满足，赔偿不适用。\n\n❌ A：Free、Pro、Pro+ 等个人计划不提供 IP 赔偿，「无条件、所有版本」两处都错。\n❌ C：赔偿范围是第三方知识产权主张的辩护与和解费用，不是「任何使用方式下的全部损失」——数据泄露、业务损失、安全事件一律不覆盖。\n❌ D：赔偿与「是否编译通过」毫无关系，把它和 IP 赔偿挂钩是把质量与法律风险混为一谈。\n\n📌 关键概念：IP 赔偿三要素——计划门槛（Business/Enterprise）、过滤器开启、建议未被修改。这三条在域 1 和域 6 都会考，且常以「只要买了企业版就有赔偿」的错误选项出现。\n🔗 依据：GitHub Docs · GitHub Copilot plans 与 IP indemnity 条款","s":"原创-基于官方考纲 D1.T5"},{"id":"D1-08","d":1,"t":"single","q":"在代码评审（code review）流程中，Copilot 的定位应是？","o":[{"l":"A","t":"完全替代人工评审，取消人工复核"},{"l":"B","t":"作为辅助手段加速评审，但最终质量与责任仍由人工把控"},{"l":"C","t":"仅用于自动合并 PR，无需评审"},{"l":"D","t":"只能评审文档，不能评审代码"}],"a":["B"],"e":"✅ 正确：Copilot Code Review 的定位是加速而非替代——它做初筛（格式、明显缺陷、缺失测试、可疑模式），人做终审（业务语义、架构影响、安全与合规判断），最终签字责任在人。\n\n❌ A：取消人工复核等于把质量责任交给概率模型，与负责任的 AI 使用直接冲突。\n❌ C：自动合并绕过评审环节，风险最高，任何场景下都不是推荐做法。\n❌ D：Copilot Code Review 正是针对代码改动做评审，不是只能评审文档。\n\n📌 关键概念：评估任何 Copilot 功能时都套同一句话——「它缩短了人的工作量，但没有转移人的责任」。这句话能同时判断代码评审、测试生成、文档生成、安全建议四类题。\n🔗 依据：GitHub Docs · About GitHub Copilot code review","s":"原创-基于官方考纲 D1.T5"},{"id":"D1-09","d":1,"t":"multiple","q":"以下哪些是验证 Copilot 生成代码的恰当步骤？（多选）","o":[{"l":"A","t":"阅读并理解生成逻辑"},{"l":"B","t":"编译/运行并在真实环境测试"},{"l":"C","t":"编写或补充单元测试覆盖关键路径"},{"l":"D","t":"直接合入生产分支以节省时间"}],"a":["A","B","C"],"e":"✅ 正确 A：先读懂再采用是第一关——不理解逻辑就合入，等于把不可维护的代码放进代码库。\n✅ 正确 B：编译、运行并在贴近真实的环境验证，是发现「能跑但不对」的唯一方式。\n✅ 正确 C：补充覆盖关键路径与边界条件的测试，把这次的验证固化为可重复的回归保护。\n\n❌ D：为节省时间直接合入生产分支，跳过全部验证环节，与负责任使用完全相反。\n\n📌 关键概念：验证四步可记为「读—跑—测—审」。注意 D 是这类题最常用的反面选项，题干只要出现「以提速为由跳过验证」，必错。\n🔗 依据：GitHub Docs · Responsible use of GitHub Copilot features","s":"原创-基于官方考纲 D1.T5"},{"id":"D1-10","d":1,"t":"single","q":"发布/共享由 Copilot 参与生成的代码时，负责任的做法是？","o":[{"l":"A","t":"无需说明 AI 参与，视为完全原创"},{"l":"B","t":"遵循所在团队/项目的许可与署名规范，并确认无泄漏机密或第三方权利冲突"},{"l":"C","t":"只要能运行即可，无需考虑许可"},{"l":"D","t":"必须向公众声明每一行由 AI 生成"}],"a":["B"],"e":"✅ 正确：共享或发布含 Copilot 产出代码时，责任在发布方——须确认① 符合团队与项目的许可、署名与开源合规要求；② 未泄露公司机密、密钥、客户数据；③ 未引入第三方权利冲突（这也是公共代码匹配过滤存在的意义）。\n\n❌ A：视为完全原创、不履行合规检查，正是许可与机密风险的主要来源。\n❌ C：「能运行就行」完全忽略许可与合规，在对外交付、开源发布、客户项目里都不可接受。\n❌ D：业界并无「逐行声明 AI 生成」的普遍强制要求；是否需要披露取决于所在组织规范与项目许可，把它说成必须义务是过度推断。\n\n📌 关键概念：对外发布场景永远看三件事——许可合规、机密边界、第三方权利。这条同时适用于人工代码与 AI 生成代码。\n🔗 依据：GitHub Docs · Copilot 责任使用指引；开源许可合规实践","s":"原创-基于官方考纲 D1.T4"},{"id":"D1-11","d":1,"t":"single","q":"负责任 AI 的核心原则中，「透明（transparency）」主要指？","o":[{"l":"A","t":"模型内部权重完全公开"},{"l":"B","t":"让用户理解 AI 的能力边界与局限，并对产出保持可解释与可问责"},{"l":"C","t":"代码必须开源"},{"l":"D","t":"只在训练数据中透明"}],"a":["B"],"e":"✅ 正确：透明（transparency）在 AI 语境下指使用者能理解系统能做什么、不能做什么、为什么给出这个结果，以及在出问题时能找到责任主体——即「能力边界可理解 + 产出可解释 + 责任可追溯」。\n\n❌ A：开源模型权重属于模型开放程度问题，与 Copilot 使用场景的透明度不是一回事，Copilot 也不是开源权重模型。\n❌ C：代码是否开源是项目的分发选择，与 AI 透明度概念无关。\n❌ D：透明不是只在训练数据层面成立；对使用者而言，最相关的是交互透明度与责任透明度。\n\n📌 关键概念：六项负责任 AI 原则常被互换出题——公平（不歧视）、可靠与安全（可验证）、隐私与安全（数据边界）、包容（可用性）、透明（可理解）、问责（有人负责）。看清题干落在哪一项。\n🔗 依据：Microsoft Learn · Responsible AI principles","s":"原创-基于官方考纲 D1.T1"},{"id":"D1-12","d":1,"t":"single","q":"Copilot 返回了包含恶意构造载荷的代码片段，被客户端直接拦截而未能显示。这属于哪一层保障机制在工作？","o":[{"l":"A","t":"平台侧的内容安全过滤：对仇恨、色情、暴力与恶意代码等有害输出做强制拦截，用户不可关闭"},{"l":"B","t":"内容排除（content exclusion）：管理员事先把该文件加入了排除列表"},{"l":"C","t":"公共代码匹配过滤：该片段与公开代码高度相似"},{"l":"D","t":"IP 赔偿条款：由 GitHub 承担由此产生的法律责任"}],"a":["A"],"e":"✅ 正确：Copilot 在服务端与客户端都有内容安全过滤层，用于拦截有害与恶意内容，它是平台强制的保障措施，个人与组织都无法通过设置关闭。\n\n❌ B：内容排除作用在输入侧（哪些文件不许被读），不会拦下模型已经返回的片段。\n❌ C：公共代码过滤只处理「与公开代码高度匹配」的知识产权风险，与恶意载荷无关。\n❌ D：IP 赔偿是事后的法律费用承担机制，不是运行时的技术拦截。\n\n📌 关键概念：四层防护各管一段，别混——安全过滤（有害内容，强制）、内容排除（输入，可配）、公共代码过滤（输出，可配）、IP 赔偿（事后法律，有条件）。题干问「已返回但被拦下」就是安全过滤。\n🔗 依据：GitHub Docs · Responsible use of GitHub Copilot features","s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D1-13","d":1,"t":"single","q":"Copilot 生成的鉴权中间件通过了编译，单元测试也全绿，团队准备直接上线。从负责任使用的角度看，还缺什么？","o":[{"l":"A","t":"还缺安全专项检查：编译与功能测试通过不等于无漏洞，需做依赖扫描、静态分析并复核鉴权边界"},{"l":"B","t":"什么都不缺，编译与测试都通过就说明代码正确"},{"l":"C","t":"还缺让 Copilot 再解释一遍这段代码，解释通了就可以上线"},{"l":"D","t":"还缺把该文件加入内容排除，避免下次被读到"}],"a":["A"],"e":"✅ 正确：编译只证明语法与类型正确，测试只证明被覆盖的路径行为符合预期，两者都覆盖不到「权限绕过、越权访问、密钥硬编码、不安全的默认配置」这类问题。安全敏感代码（鉴权、加密、支付）必须额外做 SAST、依赖扫描与人工安全复核。\n\n❌ B：「编译通过与测试通过＝正确」是本题要破除的核心误解，测试覆盖率与安全性没有必然关系。\n❌ C：让它自己解释自己的产出，属于自证，无法发现它共同的盲区，不能替代独立检查。\n❌ D：内容排除是隐私配置，与代码是否安全无关。\n\n📌 关键概念：验证的层次要分层说清——语法（编译）→ 功能（测试）→ 安全（扫描与人工复核）→ 合规（许可与数据）。跳过任何一层都算验证不完整，而题干若只说「编译通过」，缺的通常是后两层。\n🔗 依据：GitHub Docs · Responsible use of GitHub Copilot features（validating output）","s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D1-14","t":"multiple","q":"团队准备把一段业务代码和一批数据贴进 Copilot Chat 排查问题。以下哪些内容在贴入前必须先处理或不应贴入？（多选）","o":[{"l":"A","t":"未脱敏的真实客户个人信息（手机号、身份证号、住址）"},{"l":"B","t":"生产环境的密钥、连接串与访问令牌"},{"l":"C","t":"已在仓库公开目录中、且属于本项目自有的通用工具函数"},{"l":"D","t":"与客户签署的保密合同原文条款"}],"a":["A","B","D"],"e":"✅ 正确 A：真实个人信息属于受保护数据，贴入对话即构成对外传输，必须先脱敏（替换为等长假值并保持结构）。\n✅ 正确 B：密钥与令牌一旦进入对话日志就应视为已泄露，正确做法是轮换后再讨论代码结构，绝不贴原值。\n✅ 正确 D：合同原文受保密条款约束，通常禁止向第三方系统传输，应改为描述性说明或脱敏摘要。\n\n❌ C：项目自有、已在仓库内公开的通用工具函数本身不构成敏感数据，贴入排查属于正常使用。\n\n📌 关键概念：判断能不能贴，只问三句——是不是真实个人信息、是不是凭据、是不是受合同约束。三类都涉及「贴出去就收不回来」，所以判断标准是「是否可控」，而不是「是否重要」。\n🔗 依据：GitHub Docs · 数据使用与隐私说明；企业数据分级管理要求","d":1,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D1-15","t":"single","q":"组织在向 GitHub 主张 IP 赔偿时被拒。以下哪一项最不可能是被拒的原因？","o":[{"l":"A","t":"公共代码匹配过滤（重复检测）在相关成员账号上处于关闭状态"},{"l":"B","t":"产生该代码的计划不在赔偿覆盖范围内（如个人计划）"},{"l":"C","t":"该段建议在被采用前被开发者修改过"},{"l":"D","t":"该段代码通过编译并已在生产运行"}],"a":["D"],"e":"✅ 正确（选「最不可能」）：代码是否通过编译、是否已上线，与 IP 赔偿的适用条件毫无关系。赔偿看的是计划范围、过滤器状态、建议是否被修改这三件事。\n\n❌ A：过滤器未开启是赔偿失效的典型原因之一——赔偿的前提正是「已启用重复检测」。\n❌ B：计划不在覆盖范围（个人计划）直接导致不适用。\n❌ C：建议被修改后使用，通常也超出赔偿承诺的边界。\n\n📌 关键概念：赔偿三条件背下来——计划（Business/Enterprise）＋ 过滤器开启 ＋ 建议未修改。这三条之外的因素（是否编译、是否上线、代码行数、开发语言）都无关。反向题（问「哪个不是原因」）在考试里常见，判断方式是逐一比对三个条件。\n🔗 依据：GitHub Docs · GitHub Copilot IP indemnity 条款","d":1,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D1-16","t":"single","q":"一次由 AI 辅助生成的变更引发了线上事故，事后复盘需要回答「这个改动是谁批准上线的」。最应该在平时建立什么机制？","o":[{"l":"A","t":"在评审与发布流程中留痕：谁审阅、谁批准、依据了哪些验证结果，并把 AI 参与情况记录在变更说明中"},{"l":"B","t":"禁止使用 Copilot，从源头消除这类变更"},{"l":"C","t":"要求 Copilot 对每次生成的代码签名以示负责"},{"l":"D","t":"只要在代码里加一行「本文件由 AI 辅助生成」注释即可"}],"a":["A"],"e":"✅ 正确：可问责（accountability）在工程上的落地形式就是留痕——评审记录、批准记录、验证证据（测试报告、扫描结果），以及变更说明中对 AI 参与的如实记录。这样事故复盘时能定位到「谁基于什么信息做了批准决定」。\n\n❌ B：一刀切禁用放弃收益，也不解决问题——人工写的代码同样会出事故，关键在流程而非工具。\n❌ C：模型不能承担法律责任，让它「签名」是把责任拟人化的形式主义。\n❌ D：只在文件头加一句注释，无法回答「谁批准、依据什么」，不构成可追溯。\n\n📌 关键概念：责任归属的判据是「能否还原决策链」——谁提的、谁审的、看了什么证据、谁批的。AI 参与了哪个环节要如实记录，但责任主体永远是人。\n🔗 依据：GitHub Docs · Responsible use of GitHub Copilot features（accountability）","d":1,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D2-01","d":2,"t":"single","q":"在 IDE 中，Copilot Agent Mode 的主要能力是？","o":[{"l":"A","t":"仅做单文件内联补全"},{"l":"B","t":"多文件编辑并访问终端，可将任务委派给 Sub-Agents 以优化上下文使用"},{"l":"C","t":"仅用于解释终端命令"},{"l":"D","t":"仅生成文档字符串"}],"a":["B"],"e":"✅ 正确：IDE 中的 Agent Mode 会自主规划并跨多个文件改动，同时具备终端执行能力（跑命令、跑测试、看报错再修），并可将子任务委派给 Sub-Agents 以控制上下文占用。它与你手动点「应用」的 Copilot Edits 不同，是端到端执行。\n\n❌ A：单文件内联补全（inline suggestions）是最基础的形态，能力边界远小于 Agent Mode。\n❌ C：解释终端命令属于 Copilot CLI 或 @terminal 参与者的职责，不是 Agent Mode 的定义。\n❌ D：生成文档字符串是 /doc 这类单点命令的用途。\n\n📌 关键概念：四种形态要分清——内联补全（打字即出）、Chat（问答与解释）、Edits（受控多文件改动，需你确认）、Agent Mode（自主多文件改动 + 跑终端）。题干问「多文件 + 终端」就是 Agent Mode。\n🔗 依据：GitHub Docs · Asking GitHub Copilot questions in your IDE（agent mode）","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-02","d":2,"t":"multiple","q":"以下哪些属于 GitHub Copilot CLI 的用途？（多选）","o":[{"l":"A","t":"gh copilot explain 解释命令"},{"l":"B","t":"gh copilot suggest 建议命令"},{"l":"C","t":"在 IDE 中做多文件编辑"},{"l":"D","t":"生成脚本并管理文件"}],"a":["A","B","D"],"e":"✅ 正确 A：解释命令是 CLI 最基础的用途，把看不懂的 shell 命令、参数、报错原因讲清楚。\n✅ 正确 B：按自然语言意图给出可执行的命令建议，避免翻文档拼参数。\n✅ 正确 D：在终端里直接生成脚本、批量处理文件，属于 CLI 的核心价值场景。\n\n❌ C：多文件编辑在 IDE 的 Agent Mode 或 Copilot Edits 中完成，CLI 不承担这个职责。\n\n📌 关键概念：安装方式要记一条——`npm install -g @github/copilot`（新版独立 CLI）；旧版 `gh copilot explain / suggest` 扩展已被取代，gh v2.86.0 起 `gh copilot` 会自动引导安装新 CLI。首次使用需 `/login` 走浏览器 OAuth，而不是只靠 GITHUB_TOKEN。\n🔗 依据：GitHub Docs · About GitHub Copilot CLI","s":"原创-基于官方考纲 D2.T2"},{"id":"D2-03","d":2,"t":"single","q":"企业管理员希望统一管控 Copilot 的功能可用性与合规，应优先使用？","o":[{"l":"A","t":"仅依赖每位开发者的个人设置"},{"l":"B","t":"组织范围策略管理 + 审计日志事件 + 通过 REST API 管理订阅"},{"l":"C","t":"直接关闭所有 Copilot 功能"},{"l":"D","t":"仅使用内容排除"}],"a":["B"],"e":"✅ 正确：组织级治理是三件事的组合——① 在组织/企业设置的 Copilot 策略中统一控制功能可用性（Chat、CLI、Agent、MCP allowlist、Code Review 等）；② 通过审计日志核对「谁在什么时候改了什么」；③ 用 REST API 批量管理席位与读取用量。三者缺一，治理就有盲区。\n\n❌ A：只靠个人设置无法统一管控，也无法审计，与「企业管理员」的角色定位冲突。\n❌ C：直接关闭全部功能是最粗暴的一刀切，牺牲业务价值，不是治理。\n❌ D：内容排除只解决「哪些文件不进上下文」这一个点，管不了功能开放、席位、审计。\n\n📌 关键概念：治理三件套＝策略（事前）＋审计日志（事后追溯）＋API（规模化执行）。注意 MCP 的禁用/白名单由组织所有者即可完成，不必升级到 Enterprise。\n🔗 依据：GitHub Docs · Managing policies and features for GitHub Copilot in your organization","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-04","d":2,"t":"multiple","q":"以下哪些属于 D2.T3「功能与能力」的范畴？（多选）","o":[{"l":"A","t":"Spaces、Spark、Pull Request 摘要"},{"l":"B","t":"通过 instructions 文件定制评审标准"},{"l":"C","t":"仅内联补全"},{"l":"D","t":"Agent Mode 与 MCP"}],"a":["A","B","D"],"e":"✅ 正确 A：Spaces 提供可共享的持久化上下文集合，Spark 用自然语言生成可运行应用，PR 摘要自动生成变更说明，三者都属于「功能与能力」簇。\n✅ 正确 B：instructions 文件（如仓库根 `.github/copilot-instructions.md`）用于固化项目约定，也能定制代码评审标准。\n✅ 正确 D：Agent Mode 与 MCP 是本域新增的重点能力，MCP 让 Copilot 接入外部工具与数据源。\n\n❌ C：内联补全属于「在 IDE 中使用 Copilot」这一子簇的基础能力，不是本簇新增功能；把它当作全部能力是典型的以偏概全。\n\n📌 关键概念：D2 分三簇——IDE 使用（补全/Chat/Agent 触发）、CLI（安装、命令、会话）、功能与能力（Agent Sessions、Sub-Agents、MCP、Code Review、Spaces、Spark、PR 摘要、指令文件、prompt 文件）+ 组织治理。选项常把第一簇的基础能力混进第三簇。\n🔗 依据：Microsoft Learn · GH-300 study guide（Skills measured as of August 7, 2026）","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-05","d":2,"t":"single","q":"Copilot Edits 的主要用途是？","o":[{"l":"A","t":"仅在聊天窗口生成自然语言回答"},{"l":"B","t":"在多个文件中按指令进行协调的编辑（多文件改动）"},{"l":"C","t":"仅做数据库迁移"},{"l":"D","t":"只用于生成提交信息"}],"a":["B"],"e":"✅ 正确：Copilot Edits 面向「按指令做受控的多文件改动」——你给定改动意图与范围，它在工作区内跨文件改，逐处展示差异，由你逐条或整体接受。它介于 Chat（只回答）与 Agent Mode（自主执行、可跑终端）之间。\n\n❌ A：只在聊天窗口回答自然语言是 Ask 模式的行为，不产生文件改动。\n❌ C：数据库迁移是具体业务操作，不是 Copilot 的功能定义。\n❌ D：生成提交信息只是极小的附带能力，不是 Edits 的用途。\n\n📌 关键概念：四模式判据——Ask（只答不改）／Edit（多文件改、逐处确认）／Agent（自主改 + 执行命令）／Plan（只出计划，需点 Start Implementation 才执行）。「Plan 与 Agent 是一回事」是常见错误选项，Plan 不执行任何改动。\n🔗 依据：GitHub Docs · Copilot chat modes（ask / edit / agent / plan）","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-06","d":2,"t":"single","q":"MCP（Model Context Protocol）在 Copilot 中的作用主要是？","o":[{"l":"A","t":"替代 Git 进行版本控制"},{"l":"B","t":"让 Copilot 连接外部工具/数据源，扩展其可获取的上下文与能力"},{"l":"C","t":"仅用于压缩日志"},{"l":"D","t":"用于重置用户密码"}],"a":["B"],"e":"✅ 正确：MCP（Model Context Protocol）是开放协议，让 Copilot 通过 MCP 服务器接入外部工具与数据源（数据库、内部 API、工单系统、监控平台），从而获取 IDE 之外的上下文并执行动作，是把 Copilot 从「读代码」扩展到「连系统」的关键机制。\n\n❌ A：MCP 与版本控制无关，Git 的职责不会被替代。\n❌ C：日志压缩与应用层逻辑无关，MCP 不是数据处理管道。\n❌ D：密码重置属于身份管理操作，不是 MCP 的设计用途。\n\n📌 关键概念：MCP 的治理面同样考——组织所有者可以在组织设置的 Copilot 策略中禁用 MCP 或配置 allowlist（Business 计划即可，不必 Enterprise）；企业审计日志里对应 `mcp_registry.*` 事件。\n🔗 依据：GitHub Docs · Extending GitHub Copilot with MCP；Organization Copilot policies","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-07","d":2,"t":"single","q":"一名开发者用 Agent Mode 处理跨多个文件的重构，中途需要切换到紧急故障处理。几天后他回到这个任务，希望继续上次的进度而不是重新描述需求。他应该依赖哪个能力？","o":[{"l":"A","t":"Agent Sessions：保留任务上下文与进度，可回到该会话续接工作"},{"l":"B","t":"Plan Mode：因为它会保存计划并在下次自动执行"},{"l":"C","t":"内容排除（content exclusion）：把它当作任务断点记录"},{"l":"D","t":"公共代码匹配过滤：它会缓存上次对话"}],"a":["A"],"e":"✅ 正确：Agent Sessions 是 Agent Mode 的运行载体，记录本次任务的目标、已改文件、执行过的命令与中间结论，切回来可继续推进；多会话并存时也能分别管理，避免上下文互相污染。\n\n❌ B：Plan Mode 的作用是「只出计划、不动代码」，它不负责跨天保存并自动续跑，也不会自动执行。\n❌ C：内容排除是输入端上下文门控（哪些文件不许被 Copilot 读），与任务进度无关。\n❌ D：公共代码匹配过滤是输出端的知识产权过滤，与对话缓存毫无关系。\n\n📌 关键概念：把四个易混功能各自钉死一句话——Agent Sessions（续接任务）、Sub-Agents（拆分上下文）、Spaces（共享知识上下文）、instructions 文件（固化项目约定）。考试常用「保存/续接/复用」这类词诱导到错误选项上。\n🔗 依据：GitHub Docs · Managing agent sessions in VS Code","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-08","d":2,"t":"single","q":"Agent Mode 中 Sub-Agents（子代理）的作用是？","o":[{"l":"A","t":"把大任务拆给独立子代理并行处理，优化上下文使用与隔离"},{"l":"B","t":"仅用于生成图片"},{"l":"C","t":"仅用于翻译界面"},{"l":"D","t":"替代人工做最终决策"}],"a":["A"],"e":"✅ 正确：Sub-Agents 把一个大任务拆成若干子任务，交给独立的子代理在各自隔离的上下文中完成，再把结果汇总回主代理。价值有两点——上下文不被无关细节撑爆（上下文窗口有限），以及子任务之间互不干扰（避免一个分支的错误假设污染另一个）。\n\n❌ B：生成图片不属于 Sub-Agents 的能力，它是文本与代码任务的分解与隔离机制。\n❌ C：翻译界面与任务分解无关，属于明显的无关项。\n❌ D：最终决策与采纳仍由人负责，Sub-Agents 只处理执行层面的任务分解。\n\n📌 关键概念：官方表述的落点是 for optimized context usage——即「优化上下文使用」，不是「提升模型智力」也不是「并行提速」这一唯一目的。答题时抓住「上下文隔离」这个关键词。\n🔗 依据：Microsoft Learn · GH-300 study guide（agent sessions and sub-agents）","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-09","d":2,"t":"multiple","q":"Copilot Chat 中常见的斜杠命令（slash commands）包括？（多选）","o":[{"l":"A","t":"/explain 解释选中代码"},{"l":"B","t":"/fix 修复问题"},{"l":"C","t":"/tests 生成测试"},{"l":"D","t":"/deploy 直接上线生产"}],"a":["A","B","C"],"e":"✅ 正确 A：`/explain` 解释当前活动编辑器或选中代码的工作原理，是接手陌生代码时最常用的入口。\n✅ 正确 B：`/fix` 针对选中代码中的问题给出修复建议，需你确认后应用。\n✅ 正确 C：`/tests` 为选中代码生成单元测试，常与 `/setupTests` 配合先配好测试框架。\n\n❌ D：不存在「/deploy 直接上线生产」的斜杠命令；能触发部署的只能是流水线与人，Copilot 不对生产发布负责。\n\n📌 关键概念：常用斜杠命令记一组——`/explain`（解释）、`/fix`（修）、`/tests`（测试）、`/doc`（文档注释）、`/optimize`（性能优化）、`/new`（脚手架）、`/clear`（清空会话上下文）、`/help`。题干若给出「一键上线」「一键回滚」这类高危命令，必为错误项。\n🔗 依据：GitHub Docs · GitHub Copilot Chat cheat sheet（slash commands）","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-10","d":2,"t":"single","q":"关于 prompt file（提示文件）的复用，正确的是？","o":[{"l":"A","t":"只能临时输入，无法保存复用"},{"l":"B","t":"可将常用提示保存为文件，在 Chat 中引用以保证一致性与可复用"},{"l":"C","t":"会强制改变模型权重"},{"l":"D","t":"仅企业版可用"}],"a":["B"],"e":"✅ 正确：prompt file 把常用提示保存为文件（如 `.github/prompts/` 下的 `*.prompt.md`），在 Chat 中以引用方式调用。价值是三点——同一团队复用同一套提示、输出格式与口径保持一致、改动只需改文件而不必逐人交代。适合「每次评审都要问的那五个问题」这类重复场景。\n\n❌ A：提示当然可以保存复用，这是提示文件存在的意义。\n❌ C：改提示不会改变模型权重，只改变本次推理的输入。\n❌ D：提示文件不是企业版专属能力，把它说成付费门槛是常见错误。\n\n📌 关键概念：三个「文件化」要分清——instructions 文件（持续生效的项目约定）、prompt 文件（按需调用的提示模板）、agent/skill 类定制（封装特定流程）。题干问「保证多次响应一致」即指 prompt 文件或 instructions 文件。\n🔗 依据：GitHub Docs · Prompt files and reusable prompts in VS Code","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-11","d":2,"t":"single","q":"仓库中的 copilot-instructions.md 的作用是？","o":[{"l":"A","t":"仅用于记录个人待办"},{"l":"B","t":"为仓库提供项目级指令，让 Copilot 默认遵循该项目的约定与规范"},{"l":"C","t":"仅影响 Git 提交消息格式"},{"l":"D","t":"用于禁用 Copilot"}],"a":["B"],"e":"✅ 正确：仓库根目录的 `.github/copilot-instructions.md` 是项目级持续生效的指令文件，Copilot 在 Chat、代码评审等场景会自动带上它，用于固化技术栈、命名规范、目录约定、禁止事项等。它等于把「新人的口头交代」变成仓库内可版本管理的规则。\n\n❌ A：个人待办属于项目管理内容，Copilot 不会把它当行为准则（也不该放敏感个人信息进仓库）。\n❌ C：它不影响 Git 提交消息格式；提交信息规范要靠提交模板或钩子。\n❌ D：它不是禁用开关，禁用 Copilot 走组织策略或个人设置。\n\n📌 关键概念：一个实操细节常被考——代码评审读取指令文件时只覆盖前面的有限篇幅（约前 4,000 字符），所以最重要的规则要写在最前面，长篇大论的后半段可能不被采用。组织级还可另设组织级指令，与仓库级并存。\n🔗 依据：GitHub Docs · Adding repository custom instructions for GitHub Copilot","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-12","d":2,"t":"single","q":"Copilot Spaces 的主要用途是？","o":[{"l":"A","t":"提供可共享的知识/上下文集合，让 Copilot 基于团队资料作答"},{"l":"B","t":"仅用于压缩图片"},{"l":"C","t":"仅用于删除分支"},{"l":"D","t":"仅用于管理账单"}],"a":["A"],"e":"✅ 正确：Copilot Spaces 是持久化、可共享的上下文集合——把相关仓库文档、设计说明、规范集中成一个空间，提问时指定该空间作为上下文，Copilot 就会基于团队自有资料作答，而不是靠通用知识猜。它解决了「每次都要手动附文件」和「新人不知道看哪份文档」两个问题。\n\n❌ B：压缩图片属于媒体处理，与上下文组织无关。\n❌ C：删除分支是仓库操作，不涉及 Copilot 的上下文机制。\n❌ D：管理账单属于计费事务，不是上下文能力。\n\n📌 关键概念：历史上这个位置叫 Knowledge Bases（早期仅 Copilot Enterprise 提供），现已演进为 Spaces 并对各计划开放。考试若问「组织要把内部文档喂给 Copilot 当上下文」，答案指向 Spaces；若出现「只有企业版才能共享上下文」的说法，属于过时判断。\n🔗 依据：GitHub Docs · GitHub Copilot Spaces","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-13","d":2,"t":"single","q":"业务方希望在两小时内看到一个能点、能填表的费用报销小工具，用于内部评审，但团队没有前端人力。最贴合这个诉求的 Copilot 能力是？","o":[{"l":"A","t":"Copilot Spark：用自然语言描述需求，直接生成可运行、可部署的应用原型"},{"l":"B","t":"Copilot Code Review：因为它能自动生成页面"},{"l":"C","t":"内容排除：因为要先屏蔽敏感字段"},{"l":"D","t":"Copilot CLI 的 explain：因为它能解释应用架构"}],"a":["A"],"e":"✅ 正确：Spark 的定位就是「用一句话到可用应用」——自然语言描述需求后生成可交互的前端应用并可直接部署发布，适合做原型、内部工具、演示 Demo，不需要团队从零搭脚手架。\n\n❌ B：Code Review 是评审已有代码改动，不生成应用页面。\n❌ C：内容排除是输入端隐私配置，与生成原型无关（虽然做 Demo 时确实应避开真实数据，但那是另一件事）。\n❌ D：CLI 的 explain 只解释命令，不产出应用。\n\n📌 关键概念：D2 里几个产品名各归其位——Spark（自然语言造应用）、Spaces（共享上下文）、Edits（受控多文件改）、Agent Mode（自主执行）、Code Review（评审）、PR 摘要（写说明）。题干出现「原型、Demo、内部小工具、无需前端」即为 Spark。\n🔗 依据：GitHub Docs · GitHub Spark overview","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-14","d":2,"t":"single","q":"Pull Request 摘要（PR summary）功能的作用是？","o":[{"l":"A","t":"自动根据改动生成 PR 描述与变更摘要，便于评审"},{"l":"B","t":"仅用于关闭 PR"},{"l":"C","t":"仅用于分配评审人"},{"l":"D","t":"仅用于压缩提交"}],"a":["A"],"e":"✅ 正确：PR 摘要根据本次改动自动生成拉取请求描述——改了什么、影响了哪些文件、评审者应重点关注哪里。它降低的是「写说明」和「读说明」的成本，让评审更快进入实质内容。\n\n❌ B：关闭 PR 属于流程操作，与摘要无关。\n❌ C：分配评审人由 CODEOWNERS 或人工指派完成，摘要不承担派活职责。\n❌ D：压缩提交（squash）是合并策略，与摘要生成是两回事。\n\n📌 关键概念：PR 摘要常与「评审效率」一起考——它和 Copilot Code Review 是两个不同功能：摘要写给人看的说明，Code Review 给出对代码的意见。一个负责「让人看懂改了什么」，一个负责「指出可能有什么问题」。\n🔗 依据：GitHub Docs · About Copilot pull request summaries","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-15","d":2,"t":"single","q":"关于 Copilot Code Review 策略，正确的是？","o":[{"l":"A","t":"只能对全部仓库一刀切开启，无法定制"},{"l":"B","t":"管理员可配置评审规则与触发条件，并可结合 instructions 定制评审标准"},{"l":"C","t":"只能由个人开发者本地运行，无法组织统一"},{"l":"D","t":"会强制自动合并所有 PR"}],"a":["B"],"e":"✅ 正确：Copilot Code Review 是可按仓库与规则配置的策略型能力——管理员决定哪些仓库启用、何时触发（如 PR 打开时自动评审、或仅手动请求），并可通过 instructions 文件把团队评审标准固化下来（关注点、禁止模式、必须补测试的改动类型）。\n\n❌ A：不存在「一刀切无法定制」，仓库级开关与规则定制正是它的治理设计。\n❌ C：它既能本地请求，也能作为组织级策略统一启用，不是只能在个人机器上跑。\n❌ D：Code Review 只提意见，绝不自动合并 PR；自动合并属于分支保护与流水线策略。\n\n📌 关键概念：凡涉及「Copilot 是否会自动完成高风险动作」的选项，默认答否——它不自动合并、不自动部署、不自动修改生产配置。这条判断能秒杀一大批干扰项。\n🔗 依据：GitHub Docs · Configuring GitHub Copilot code review","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-16","d":2,"t":"multiple","q":"GitHub 审计日志（audit log）可帮助组织追踪 Copilot 的哪些事件？（多选）","o":[{"l":"A","t":"订阅与席位分配变化"},{"l":"B","t":"功能启用/禁用与策略变更"},{"l":"C","t":"具体每一次代码补全的逐字内容"},{"l":"D","t":"管理员配置操作"}],"a":["A","B","D"],"e":"✅ 正确 A：席位与订阅变化会记录，例如席位新增、分配、取消、席位管理方式变更，可据此追查「谁给谁开了 Copilot」。\n✅ 正确 B：组织与企业级功能开关、策略变更会记录，包括内容排除的修改、指令文件更新、代码评审仓库设置变更。\n✅ 正确 D：管理员配置操作（含 MCP 注册表白名单调整、云代理的仓库启用与防火墙白名单）属于审计范围。\n\n❌ C：逐字的补全内容与逐条建议的接受/拒绝**不在**审计日志里。审计日志只覆盖控制面事件，不记录本地 IDE 或 CLI 会话的 prompt、响应与生成代码；若需这类数据要靠导出 OpenTelemetry 到自建采集端。\n\n📌 关键概念：三条硬事实——① 查计划与配置类事件用 `action:copilot`；② 查代理在 GitHub 上的活动用 `actor:Copilot`（含 `actor_is_agent` 标记）；③ 日志保留 180 天，需长期留存要自行导出。\n🔗 依据：GitHub Docs · Reviewing audit logs for GitHub Copilot","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-17","d":2,"t":"single","q":"组织通过 REST API 管理 Copilot 订阅的主要目的是？","o":[{"l":"A","t":"自动化席位分配、查询用量与集中管控"},{"l":"B","t":"替代人工编写代码"},{"l":"C","t":"仅供个人使用，无组织价值"},{"l":"D","t":"用于生成测试用例"}],"a":["A"],"e":"✅ 正确：通过 REST API 管理 Copilot 的价值是规模化与自动化——批量分配/取消席位（如按 IdP 组同步）、查询组织或企业的使用量与活跃度以评估投入产出、把开通流程接进现有账号生命周期管理，避免逐个点页面。\n\n❌ B：API 管的是订阅、席位与用量，不生成代码。\n❌ C：这是面向组织的管理接口，恰恰为组织而生。\n❌ D：生成测试用例是 `/tests` 的职责，与订阅 API 无关。\n\n📌 关键概念：两个接口记一下——席位分配走 `/orgs/{org}/copilot/billing/selected_users`，用量与指标走 `/orgs/{org}/copilot/usage` 与 metrics 系列接口。注意部分 Copilot API 仍标注为公开预览，接口可能调整。\n🔗 依据：GitHub Docs · REST API endpoints for Copilot（billing / usage / metrics）","s":"原创-基于官方考纲 D2.T3"},{"id":"D2-18","d":2,"t":"multiple","q":"关于 Copilot 计划（Individual / Business / Enterprise）的能力差异，正确的是？（多选）","o":[{"l":"A","t":"Enterprise 提供更强的组织策略、审计与数据保护能力"},{"l":"B","t":"Business/Enterprise 默认不在组织代码上训练模型"},{"l":"C","t":"所有计划在数据共享与合规能力上完全相同"},{"l":"D","t":"Individual 主要面向个人开发者，组织治理能力有限"}],"a":["A","B","D"],"e":"✅ 正确 A：Enterprise 在 Business 之上增加更强的组织治理与数据保护能力（如企业级策略统管、跨组织访问控制、企业级审计视角），是治理深度的差别。\n✅ 正确 B：Business 与 Enterprise 默认不使用客户代码训练基础模型，这是与企业采购合规最相关的一条。\n✅ 正确 D：个人计划面向个人开发者，缺少组织策略、审计与集中席位管理，组织治理能力有限。\n\n❌ C：各计划在数据共享、治理能力、培训数据使用上差异明显，说「完全相同」与事实相反（个人计划的交互数据默认可能用于产品改进，可在设置中关闭）。\n\n📌 关键概念：计划差异按四层记——训练数据使用（个人可用/企业不可）、组织策略与审计（Business 起）、知识上下文与更深治理（Enterprise）、IP 赔偿（付费计划且有条件）。答题时不要死记功能清单，记住「治理能力随计划递增」这条主轴。\n🔗 依据：GitHub Docs · GitHub Copilot plans and features","s":"原创-基于官方考纲 D2.T1"},{"id":"D2-19","t":"single","q":"企业安全团队要求：成员只能接入经过批准的外部 MCP 服务器，未列入白名单的一律不可用。管理员应在哪里实现？","o":[{"l":"A","t":"组织（或企业）的 Copilot 策略设置：禁用 MCP 或配置允许列表，Business 计划即可实施"},{"l":"B","t":"每位成员本地的 IDE 配置文件，由个人自行遵守"},{"l":"C","t":"仓库的内容排除列表里追加 MCP 服务器地址"},{"l":"D","t":"必须升级到 Enterprise 才能管控 MCP，Business 无此能力"}],"a":["A"],"e":"✅ 正确：MCP 的治理入口在组织/企业的 Copilot 策略中——组织所有者可以选择禁用 MCP、或仅允许白名单内的服务器，不必逐台机器配置。这类变更会进入审计日志（`mcp_registry.*` 系列事件），可事后追溯。\n\n❌ B：靠个人自觉无法形成管控，也不可审计。\n❌ C：内容排除处理的是文件路径，与 MCP 服务器地址无关。\n❌ D：「必须 Enterprise 才能管控 MCP」是常见误传，Business 计划的组织所有者已可禁用或配置白名单。\n\n📌 关键概念：治理类题目有个通用判断——看「谁能配」而不是「要哪个版本」。组织所有者可做的事（策略、MCP 白名单、内容排除、审计）在 Business 即具备；Enterprise 增加的是跨组织统管与更深的数据保护。\n🔗 依据：GitHub Docs · Managing policies for GitHub Copilot in your organization（MCP 策略与 allowlist）","d":2,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D2-20","t":"single","q":"以下哪项最能区分「Copilot 云代理（cloud agent）」与「IDE 中的 Agent Mode」？","o":[{"l":"A","t":"云代理在 GitHub 侧独立完成工作并提交拉取请求；IDE 的 Agent Mode 直接改动你本地工作区的文件"},{"l":"B","t":"两者完全等价，只是入口不同"},{"l":"C","t":"云代理只能在本地运行，Agent Mode 必须联网"},{"l":"D","t":"云代理只能写文档，Agent Mode 只能改测试"}],"a":["A"],"e":"✅ 正确：两者的运行位置与产出形态不同——云代理（委派给 GitHub 侧执行的代理）在你离开编辑器后继续推进任务，结果以 PR 形式回到仓库供评审；IDE 的 Agent Mode 在本地工作区执行多文件改动并可运行终端命令，改的是你磁盘上的文件。\n\n❌ B：「入口不同、本质相同」忽略了执行环境与产出形态的差别，也忽略了权限边界的不同。\n❌ C：正好相反，云代理跑在 GitHub 侧，本地才需要联网访问它。\n❌ D：两者的能力描述都错，云代理与 IDE 代理都能改代码。\n\n📌 关键概念：还有一个必须记住的边界——内容排除对云代理与 Agent Mode 均不生效，所以「委派给云代理」并不等于「敏感文件就被排除了」，这是考试反复设置的陷阱。\n🔗 依据：GitHub Docs · Copilot cloud agent；Asking GitHub Copilot questions in your IDE","d":2,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D2-21","t":"single","q":"开发者面对一个跨五个文件的数据库迁移改造，希望先看到完整改动方案再决定是否动手。他应该先用哪个模式？","o":[{"l":"A","t":"Plan Mode：只输出实施计划与研究结论，不修改任何文件，确认后再切换执行"},{"l":"B","t":"Agent Mode：直接开始改，改完再看 diff"},{"l":"C","t":"Ask 模式：只回答问题，永远不改代码"},{"l":"D","t":"Edit 模式：直接在五个文件里并行改动"}],"a":["A"],"e":"✅ 正确：Plan Mode 的定位就是「先研究、只出计划、不动代码」——它会梳理受影响文件、迁移步骤、风险点与测试范围，供你评审；确认后再切换（通常点 Start Implementation 或切到 Agent）执行。高风险改造前置一步计划，是降低返工成本的标准做法。\n\n❌ B：Agent Mode 会直接开始改动，跳过「先评审方案」这一步，与题干诉求相反。\n❌ C：Ask 模式只回答问题，不产出可执行的分步计划，力度不够。\n❌ D：Edit 模式是多文件受控改动，但它不先给整体方案，仍需你自行设计步骤。\n\n📌 关键概念：四模式一句话记法——Ask 只答、Plan 只规划、Edit 按指令改并逐处确认、Agent 自主执行。另有一处易错点：Plan Mode 与 Agent Mode 不是同一件事，Plan 不会自动执行，必须显式切换。\n🔗 依据：GitHub Docs · Copilot chat modes in VS Code","d":2,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D2-22","t":"single","q":"管理层要评估「Copilot 到底有没有被用起来」，希望拿到各部门的活跃用户数、建议接受率与按 IDE/语言的分布。最合适的取数方式？","o":[{"l":"A","t":"调用 Copilot 的 metrics / usage API，按组织或企业维度拉取聚合指标"},{"l":"B","t":"逐台机器截图 IDE 状态栏，人工汇总"},{"l":"C","t":"翻审计日志，统计每一次代码补全的接受记录"},{"l":"D","t":"查看每个仓库的提交记录，统计提交数量变化"}],"a":["A"],"e":"✅ 正确：Copilot 提供组织与企业维度的用量与指标接口（如 `/orgs/{org}/copilot/usage` 与 metrics 系列），可直接取活跃用户、接受率、按 IDE 与语言分布等聚合指标，适合做周期性报表与投入产出评估。\n\n❌ B：人工截图不可行、不可重复，也没有可比口径。\n❌ C：审计日志不含逐条补全的接受记录，它只覆盖控制面事件（席位、策略、配置变更）。\n❌ D：提交数受业务节奏影响，无法归因到工具使用。\n\n📌 关键概念：数据来源要分清——① 用量/指标 API：活跃度与接受率；② 审计日志：谁改了什么配置；③ 本地会话的 prompt 与工具调用：审计日志没有，需自行导出 OpenTelemetry。选错数据源是这类题的主要失分点。\n🔗 依据：GitHub Docs · REST API endpoints for Copilot metrics / usage","d":2,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D2-23","t":"multiple","q":"关于 Copilot 的组织用量指标（usage / metrics），以下哪些说法正确？（多选）","o":[{"l":"A","t":"可以按周期观察活跃用户数与建议接受率的变化趋势"},{"l":"B","t":"可以按 IDE 类型与编程语言拆分使用分布"},{"l":"C","t":"可以逐字还原某位开发者当时的提示内容"},{"l":"D","t":"可以为席位调整与推广活动提供数据依据"}],"a":["A","B","D"],"e":"✅ 正确 A：活跃用户与接受率是评估采用度的核心指标，可按日/周/月观察趋势。\n✅ 正确 B：按 IDE 与语言拆分能看出「哪些团队真的在用、在哪些技术栈上用」，指导培训与推广。\n✅ 正确 D：用量数据正是席位回收、扩展与推广效果评估的依据。\n\n❌ C：用量指标是聚合统计，不含任何具体提示内容；逐字的 prompt 与响应既不在用量接口里，也不在审计日志里。\n\n📌 关键概念：一条重要的隐私边界——Copilot 的分析数据是聚合的、去标识化的，用来回答「用得怎么样」，不回答「谁写了什么」。需要会话级明细只能靠企业自建的 OpenTelemetry 采集，且默认不含提示与响应内容。\n🔗 依据：GitHub Docs · Copilot metrics 与 usage API 说明","d":2,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D2-24","t":"single","q":"HR 每月根据组织架构变动自动为新入职研发开通 Copilot 席位、为离职人员回收。最合适的实现方式是？","o":[{"l":"A","t":"调用 Copilot 席位管理接口（如按组织批量分配/取消所选用户），接入现有账号生命周期流程"},{"l":"B","t":"每位员工入职当天自行在设置里领取试用"},{"l":"C","t":"由管理员每周手工点选，保证不出错"},{"l":"D","t":"把组织所有成员默认开启，离职时不做处理"}],"a":["A"],"e":"✅ 正确：席位管理有对应的 REST 接口（组织维度批量设置所选用户的席位），把开通/回收接进入离职流程即可自动对齐，既避免漏开也避免为离职人员继续付费，同时保证权限与人员状态一致。\n\n❌ B：自助领取无法保证覆盖，也会绕过审批与成本归口。\n❌ C：手工操作在规模上去后必然出错，且无法审计一致性。\n❌ D：默认全开且不回收，会造成持续的席位浪费与权限残留，属于典型的治理缺陷。\n\n📌 关键概念：席位治理的判据是「与人员状态强一致」——入职即开、转岗即调、离职即收。凡是靠人记、靠自觉、靠事后补的方案，在审计视角下都不成立。\n🔗 依据：GitHub Docs · REST API for Copilot billing（selected_users）","d":2,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D2-25","t":"multiple","q":"以下哪些界面可以发起 GitHub Copilot Chat 对话？（多选）","o":[{"l":"A","t":"VS Code 与 Visual Studio"},{"l":"B","t":"JetBrains 系列 IDE"},{"l":"C","t":"GitHub.com 网站与 GitHub Mobile 移动端"},{"l":"D","t":"仅 VS Code，其他界面只有内联补全"}],"a":["A","B","C"],"e":"✅ 正确 A：VS Code 与 Visual Studio 都提供完整的 Chat 体验（含参与者、斜杠命令、上下文变量）。\n✅ 正确 B：JetBrains 系列（IntelliJ、PyCharm、GoLand 等）通过插件提供 Chat 与补全。\n✅ 正确 C：Chat 同样存在于 GitHub.com 与 GitHub Mobile，可在浏览器和手机上就仓库提问。\n\n❌ D：「只有 VS Code 有 Chat」是过时且错误的判断——各 IDE 的功能存在差异，但不能由此推论其他界面只有补全。\n\n📌 关键概念：功能矩阵要按「界面 × 能力」查，不能假设一致——内联补全、Chat、Agent Mode、Edits、代码评审的可达性在不同 IDE 与网页/移动端并不相同。遇到「某功能在 A 能用，在 B 是否也能用」的题，正确态度是查功能矩阵，而不是按经验类推。\n🔗 依据：GitHub Docs · GitHub Copilot feature matrix","d":2,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D2-26","t":"single","q":"团队发现某个 Copilot 能力在 VS Code 里可用，但在团队另一部分人使用的 JetBrains IDE 里找不到。最合理的判断是？","o":[{"l":"A","t":"各 IDE 的 Copilot 能力并不完全一致，应查该功能的 IDE 支持矩阵，再决定是换工具还是改用等效替代能力"},{"l":"B","t":"一定是这些人的插件装错了，重装即可解决"},{"l":"C","t":"说明 JetBrains 不被 Copilot 支持"},{"l":"D","t":"只要升级到企业版，所有 IDE 的功能就会完全一致"}],"a":["A"],"e":"✅ 正确：Copilot 在不同 IDE 中的能力覆盖存在客观差异（新功能通常先在 VS Code 落地，再逐步覆盖其他 IDE），且部分能力是特定界面独有的。正确做法是查功能矩阵确认支持情况，再决定用等效做法（例如用 Chat 加显式上下文替代某个仅 VS Code 可用的能力）。\n\n❌ B：能力缺失不等于安装错误，直接让人重装会浪费排查成本。\n❌ C：JetBrains 是受支持的 IDE 之一，只是能力范围不同，「不支持」的判断过重。\n❌ D：计划升级改变的是治理与数据能力，不会让各 IDE 的功能瞬间对齐。\n\n📌 关键概念：跨 IDE 问题的判断顺序——先查功能矩阵，再看版本与插件，最后才怀疑环境。这个顺序能避免把「设计差异」误判为「故障」。\n🔗 依据：GitHub Docs · GitHub Copilot feature matrix","d":2,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D3-01","d":3,"t":"single","q":"关于 Copilot 代码建议生命周期，正确的顺序是？","o":[{"l":"A","t":"触发 → 上下文收集 → 提示构建 → 模型推理 → 代理/后处理 → 呈现建议"},{"l":"B","t":"直接返回训练数据中最常见的片段"},{"l":"C","t":"跳过过滤直接呈现"},{"l":"D","t":"只看当前光标所在的一行"}],"a":["A"],"e":"✅ 正确：一次建议的完整链路是——触发（输入停顿、手动触发或 Chat 请求）→ 上下文收集（光标附近代码、已打开的相关文件、导入与项目结构线索）→ 提示构建（把上下文与你的输入组装成模型请求）→ 模型推理（生成候选）→ 代理过滤与后处理（安全与策略过滤、代码去重与格式整理）→ 呈现建议。\n\n❌ B：模型不是在检索训练数据里最常见的片段直接返回，那样无法做到贴合当前代码；它是按当前提示重新生成。\n❌ C：跳过过滤直接呈现与事实相反，代理层与后处理是链路上的固定环节。\n❌ D：只看当前一行不足以解释跨文件的补全质量，Copilot 会利用已打开文件与相邻上下文。\n\n📌 关键概念：这条链路的价值在于定位问题——「它为什么给了这段建议」看上下文收集与提示构建，「它为什么没给建议」看代理过滤与后处理，「它为什么给的是旧写法」看训练数据时效。\n🔗 依据：GitHub Docs · How GitHub Copilot works（data flow 与 suggestion lifecycle）","s":"原创-基于官方考纲 D3.T2"},{"id":"D3-02","d":3,"t":"multiple","q":"关于 Copilot 的数据处理，正确的认识是？（多选）","o":[{"l":"A","t":"它收集编辑器上下文（光标附近代码、相关文件）来构建提示"},{"l":"B","t":"企业版与个体版在数据共享与 IP 赔偿条款上有差异"},{"l":"C","t":"它总能看到项目中的所有文件"},{"l":"D","t":"提示会经过代理过滤与后处理"}],"a":["A","B","D"],"e":"✅ 正确 A：编辑器上下文（光标附近代码、已打开或相关文件、语言与导入信息）是构建提示的主要素材。\n✅ 正确 B：企业版与个人版在数据使用、训练、IP 赔偿上确有差异，这是采购与合规评估的重点。\n✅ 正确 D：请求经代理层做安全与策略过滤，返回结果再经后处理整理后才呈现。\n\n❌ C：Copilot 看不到「项目中的所有文件」——它只能参考已打开或显式附上的文件、以及与当前编辑位置相关的上下文，未打开且与任务无关的文件不会被读入；仓库中 `.gitignore` 忽略的路径同样不被读取。\n\n📌 关键概念：「Copilot 能看到全部代码」是最常见的错误认知。它看的是被提供的上下文，不是你的磁盘。想扩大它的视野，靠打开文件、显式附上文件或在提问里指定范围，而不是「它自己会发现」。\n🔗 依据：GitHub Docs · How GitHub Copilot works；About content exclusions","s":"原创-基于官方考纲 D3.T1"},{"id":"D3-03","d":3,"t":"single","q":"Copilot 在构建提示时收集的上下文通常不包括以下哪项？","o":[{"l":"A","t":"光标附近的代码"},{"l":"B","t":"当前打开/相关文件"},{"l":"C","t":"项目未打开且与当前任务无关的全部文件"},{"l":"D","t":"导入与项目结构线索"}],"a":["C"],"e":"✅ 正确：Copilot 构建提示时不会读入「未打开、且与当前任务无关的全部文件」。它能拿到的上下文是有边界的——当前编辑位置的周边代码、你打开或显式附上的文件、语言与依赖线索、以及（在 Chat 中）会话历史。\n\n❌ A：光标附近代码是最核心的上下文来源，内联补全尤其依赖它。\n❌ B：打开或相关文件正是扩展上下文的主要途径。\n❌ D：导入、依赖与项目结构线索用于判断可用 API 与写法风格，属于上下文的一部分。\n\n📌 关键概念：这也解释了为什么「上下文不足」的表现是幻觉或跨框架乱写——不是模型不行，是喂给它看的东西不够。反过来，把仓库里所有文件都当上下文既不可行也会拖累质量，正确做法是精选（选文件、定点选中、用 Spaces 组织长期知识）。\n🔗 依据：GitHub Docs · How GitHub Copilot works；Copilot Chat context","s":"原创-基于官方考纲 D3.T1"},{"id":"D3-04","d":3,"t":"single","q":"Copilot 会先收集你光标附近的代码与已打开的相关文件，再把这些内容与你的输入一起组装成发给模型的请求。这个组装环节在 Copilot 架构中的名称与作用是？","o":[{"l":"A","t":"提示构建（prompt building）：决定模型这次能看到什么、看不到什么"},{"l":"B","t":"代理过滤（proxy filtering）：拦截敏感信息，阻止其离开本机"},{"l":"C","t":"后处理（post-processing）：对模型返回的建议做格式整理"},{"l":"D","t":"索引构建（indexing）：把整个仓库写入向量库供长期检索"}],"a":["A"],"e":"✅ 正确：提示构建处在链路中段，负责把「收集到的上下文 + 你的输入」拼成一次具体请求。它决定了模型的可见范围——这也是为什么内容排除、打开哪些文件、用不用 #file 会影响结果：它们改的都是这一环的输入。\n\n❌ B：代理过滤发生在请求离开编辑器之后、以及响应返回之前，做的是安全与策略层面的过滤，不是组装。\n❌ C：后处理是对已生成结果做过滤与整理，位于模型推理之后。\n❌ D：Copilot 的代码补全不是靠把整个仓库灌进向量库检索来工作，这个描述更像是把别的 AI 编码产品的架构套了过来。\n\n📌 关键概念：链路名称要能对号入座——上下文收集（拿什么）→ 提示构建（怎么拼）→ 代理过滤（出门前拦什么）→ 推理（生成）→ 后处理（回来后再修什么）。考试常把相邻两环的作用互换来设计干扰项。\n🔗 依据：GitHub Docs · How GitHub Copilot works","s":"原创-基于官方考纲 D3.T2"},{"id":"D3-05","d":3,"t":"multiple","q":"代理过滤与后处理（proxy filtering & post-processing）的作用包括？（多选）","o":[{"l":"A","t":"对建议做安全与质量相关的过滤"},{"l":"B","t":"移除可能不匹配策略的内容"},{"l":"C","t":"直接把原始训练数据返回给用户"},{"l":"D","t":"对输出做格式整理后呈现"}],"a":["A","B","D"],"e":"✅ 正确 A：代理过滤会对请求与响应做安全相关处理（例如拦截明显有害、恶意或不合规内容），属于链路上的强制关卡。\n✅ 正确 B：与策略相关的处理会在这一层生效，包括依据配置抑制不该出现的内容，让输出符合组织要求。\n✅ 正确 D：后处理负责把结果整理成可呈现的形态（格式、去重、结构对齐），让建议真正可读可用。\n\n❌ C：把原始训练数据直接返回是不可能的——模型没有「查询训练库并原样回吐」的机制，返回的是即时生成的文本。\n\n📌 关键概念：两个方向要分清——代理过滤与后处理作用在「输出侧」，内容排除作用在「输入侧」。前者管「什么不许出去／不许显示」，后者管「什么不许被读进来」。这是域 3 与域 6 的接缝，也是高频陷阱。\n🔗 依据：GitHub Docs · How GitHub Copilot works（proxy filtering and post-processing）","s":"原创-基于官方考纲 D3.T2"},{"id":"D3-06","d":3,"t":"single","q":"关于 GitHub Copilot 企业版的数据使用政策，正确的是？","o":[{"l":"A","t":"企业代码默认被用于训练底层模型"},{"l":"B","t":"企业版默认不在客户专有代码上训练模型，并有更强的数据保护"},{"l":"C","t":"所有版本都公开全部代码"},{"l":"D","t":"数据政策与个人版完全相同"}],"a":["B"],"e":"✅ 正确：Copilot Business 与 Enterprise 默认不使用客户代码训练基础模型，并在数据保留、访问控制、策略管控上提供更强保护，这是企业敢在私有代码库上启用的前提。\n\n❌ A：方向完全相反，企业版恰恰是不用于训练的那一档。\n❌ C：任何计划都不会公开客户代码，「所有版本都公开」是明显错误的说法。\n❌ D：各计划数据政策差异明显——个人计划的交互数据默认可能用于产品改进且可在设置中关闭，企业版则默认排除，两者并不相同。\n\n📌 关键概念：数据保留时长也常考——个人计划交互数据保留一段时间用于产品改进；Business 保留日志但不用于训练；Enterprise 交互数据不留存。题干若问「哪种计划的数据留存最少」，答案是 Enterprise。\n🔗 依据：GitHub Docs · GitHub Copilot 数据使用与隐私说明；Copilot plans","s":"原创-基于官方考纲 D3.T3"},{"id":"D3-07","d":3,"t":"single","q":"关于 Copilot Individual（个人版）的数据共享条款，正确的是？","o":[{"l":"A","t":"个人版数据无任何条款限制"},{"l":"B","t":"个人版默认可能将使用数据用于产品改进，用户可在设置中调整；具体以官方隐私声明为准"},{"l":"C","t":"个人版比企业版数据保护更强"},{"l":"D","t":"个人版数据永久公开"}],"a":["B"],"e":"✅ 正确：个人计划（Free/Pro 等）的交互数据默认可能被用于产品改进与模型训练，用户可以在账号的 Copilot 设置中关闭「允许 GitHub 将我的数据用于 AI 模型训练」，关闭后对未来数据采集生效。具体范围与例外应以官方隐私声明为准。\n\n❌ A：说「无任何条款限制」忽略了隐私声明与设置项的存在。\n❌ C：个人计划的数据保护强度低于企业版，反过来说不成立。\n❌ D：任何计划都不会把用户数据永久公开，「永久公开」是对数据条款的严重误读。\n\n📌 关键概念：一句话记住差异——个人计划默认参与改进、可退出；企业计划默认不参与、无需设置。公司内部推广时这条直接影响「该用哪个计划做公司代码」，属于必须讲清的合规点。\n🔗 依据：GitHub Docs · GitHub Copilot privacy 与个人账号设置","s":"原创-基于官方考纲 D3.T3"},{"id":"D3-08","d":3,"t":"single","q":"关于 IP 赔偿（IP indemnity）的适用前提，正确的是？","o":[{"l":"A","t":"无条件适用于任何使用"},{"l":"B","t":"需满足条款规定的合规使用条件，且通常绑定企业版计划"},{"l":"C","t":"仅当代码未被修改时才生效"},{"l":"D","t":"仅对个人版生效"}],"a":["B"],"e":"✅ 正确：IP 赔偿不是自动附带的保障，它绑定 Business 与 Enterprise 计划，且必须同时满足——① 公共代码匹配过滤（重复检测）处于启用状态；② 收到的建议在使用时未被修改。满足才谈得上由 GitHub 承担第三方知识产权主张的辩护费用。\n\n❌ A：「无条件适用于任何使用」两处都错：有计划门槛，也有使用条件。\n❌ C：条件不止「未修改」一条，还包括过滤器必须开启以及计划必须在范围内；只记住一半容易踩坑。\n❌ D：个人计划不在赔偿范围内，说「仅对个人版生效」正好说反了。\n\n📌 关键概念：IP 赔偿的完整判据＝计划（Business/Enterprise）＋ 过滤器开启 ＋ 建议未修改。缺任一条即不适用。同时牢记：赔偿针对知识产权主张，不覆盖漏洞、故障与业务损失。\n🔗 依据：GitHub Docs · GitHub Copilot IP indemnity（Copilot Business / Enterprise 条款）","s":"原创-基于官方考纲 D3.T3"},{"id":"D3-09","d":3,"t":"multiple","q":"关于不同 Copilot 计划在数据使用与留存上的差异，以下哪些正确？（多选）","o":[{"l":"A","t":"个人计划（Free/Pro 等）的交互数据默认可能用于产品改进，用户可在设置中关闭"},{"l":"B","t":"Business 与 Enterprise 默认不使用客户代码训练基础模型"},{"l":"C","t":"Enterprise 在交互数据留存上最保守，不作为日志长期保留"},{"l":"D","t":"所有计划的数据政策完全一致，差异只体现在席位数量上"}],"a":["A","B","C"],"e":"✅ 正确 A：个人计划的交互数据默认参与产品改进与模型训练，个人可在账号的 Copilot 设置中关闭该用途，关闭后对未来采集生效。\n✅ 正确 B：Business 与 Enterprise 默认不把客户代码用于训练基础模型，这是企业采购的合规底线。\n✅ 正确 C：Enterprise 在数据留存上最保守，交互数据不作为长期日志保留，适合强监管场景。\n\n❌ D：「所有计划政策一致」与事实相反，差异恰恰集中在训练使用、留存时长、治理能力与赔偿范围四处。\n\n📌 关键概念：数据政策的三个维度要能分开答——能否用于训练（个人可退出／企业默认不）、留存多久（个人与 Business 有保留、Enterprise 最保守）、谁可见（企业有审计与策略）。题干问「合规最严的方案」，答案永远落在 Enterprise。\n🔗 依据：GitHub Docs · GitHub Copilot 数据使用与隐私说明；plans 对比","s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D3-10","t":"single","q":"开发者发现某个目录下的文件无论怎么打开，Copilot 都从不基于它们给出建议。最可能的原因？","o":[{"l":"A","t":"该目录被 .gitignore 忽略，Copilot 不会读取被忽略的路径"},{"l":"B","t":"该目录文件太大，Copilot 一律跳过所有大文件"},{"l":"C","t":"Copilot 只读取仓库根目录的文件，不进入子目录"},{"l":"D","t":"该目录没有 README，Copilot 无法识别"}],"a":["A"],"e":"✅ 正确：Copilot 尊重 `.gitignore` 的忽略规则，被忽略的路径（如构建产物、本地配置、依赖目录）不会被当作上下文读取。这是很多「这个目录完全没建议」的真实原因，通常需要调整忽略规则或用替代方式显式提供上下文。\n\n❌ B：大文件的影响是可能被截断或降级（例如只提供文件大纲），不是「一律跳过」。\n❌ C：Copilot 会使用项目结构线索与打开的相关文件，不限于根目录。\n❌ D：README 是否存在不影响是否读取该目录。\n\n📌 关键概念：上下文可达性有三道门——① `.gitignore` 忽略的路径读不到；② 未打开且未被显式附上的文件通常不参与；③ 组织/仓库配置的内容排除会让特定路径不可读。排查「为什么它看不到这个文件」时按这三道门依次过。\n🔗 依据：GitHub Docs · How GitHub Copilot works；Excluding content from Copilot","d":3,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D3-11","t":"single","q":"安全团队希望留存本地 IDE 会话级别的明细（模型调用、工具执行、token 用量与错误），用于事后审计。可行路径是？","o":[{"l":"A","t":"从 IDE 与 CLI 侧导出 OpenTelemetry 数据到自建的 OTLP 采集端，提示与响应内容默认不含、需显式开启"},{"l":"B","t":"直接查 GitHub 的审计日志，里面包含完整的本地会话记录"},{"l":"C","t":"查组织用量指标接口，其中含每轮对话的明细"},{"l":"D","t":"无法实现，Copilot 不提供任何会话级可观测数据"}],"a":["A"],"e":"✅ 正确：GitHub 的审计日志只覆盖控制面事件（席位、策略、配置变更、代理在 GitHub 上的活动），不含本地 IDE 或 CLI 会话的 prompt、响应与生成代码。要补上这一段，需要从客户端侧导出 OpenTelemetry 数据到自己的采集端，可获得模型调用、工具执行、token 用量与错误等追踪信息；提示与响应内容默认被排除，需明确开启才采集。\n\n❌ B：审计日志恰恰不含本地会话内容，这是它最常被误解的地方。\n❌ C：用量与指标接口返回的是聚合统计，不含逐轮明细。\n❌ D：说「完全无法实现」过于绝对，OpenTelemetry 正是为此提供的通道。\n\n📌 关键概念：可观测性分两半——控制面（谁改了配置，看审计日志，保留 180 天）与数据面（会话里发生了什么，看 OpenTelemetry 自采集）。审计需求要先明确「要哪一半」，再去选数据源。\n🔗 依据：GitHub Docs · Copilot 审计日志事件；OpenTelemetry 导出说明","d":3,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D4-01","d":4,"t":"single","q":"以下哪种提示写法最能让 Copilot 给出高质量结果？","o":[{"l":"A","t":"「排序函数」"},{"l":"B","t":"「用 Python 写一个函数，输入用户列表，返回按年龄降序、同龄按姓名升序的列表，要求类型注解」"},{"l":"C","t":"不写任何说明，只给函数名"},{"l":"D","t":"只写变量名不写意图"}],"a":["B"],"e":"✅ 正确：有效提示包含四要素——意图（做什么）、输入与输出的形态、约束（语言、框架、风格、性能要求）、验收标准（怎样算对）。B 同时给出了排序规则的两个键、并列时的处理、类型注解要求，模型不需要猜。\n\n❌ A：只给「排序函数」三个字，语言、数据结构、排序键、并列规则全靠猜，输出必然随机摇摆。\n❌ C：只给函数名等于让模型猜业务语义，命名越抽象错得越远。\n❌ D：只写变量名不写意图，连「要它做什么」都没有表达。\n\n📌 关键概念：提示质量的四要素可记为「意图 + 数据 + 约束 + 验收」。考试里判断哪个提示更好，比的不是长短，而是谁把约束写得更明确、歧义更少。\n🔗 依据：GitHub Docs · Prompt engineering for GitHub Copilot","s":"原创-基于官方考纲 D4.T1"},{"id":"D4-02","d":4,"t":"multiple","q":"关于少样本（few-shot）提示，正确的是？（多选）","o":[{"l":"A","t":"给 1–N 个示例让模型模仿格式或风格"},{"l":"B","t":"完全不给任何示例"},{"l":"C","t":"有助于稳定输出格式"},{"l":"D","t":"仅用于图像生成"}],"a":["A","C"],"e":"✅ 正确 A：少样本提示就是在提示里给出 1 到 N 个示例，让模型模仿示例的格式、风格与判断边界，而不是只按文字描述去猜。\n✅ 正确 C：示例的价值恰恰在于「稳定输出格式」——给一条规范的测试用例，后续生成的测试结构会明显趋同，便于统一评审与自动化执行。\n\n❌ B：「完全不给任何示例」是零样本，与少样本的定义相反。\n❌ D：少样本是文本提示技巧，与图像生成无关，题干也未限定领域。\n\n📌 关键概念：零样本与少样本不冲突——零样本靠描述，少样本靠示范。工程上的经验判据：格式要求越严（日志模板、测试结构、SQL 风格、评审意见格式），越该用少样本；探索性任务用零样本更省提示长度。\n🔗 依据：GitHub Docs · Prompt engineering for GitHub Copilot（zero-shot / few-shot）","s":"原创-基于官方考纲 D4.T1"},{"id":"D4-03","d":4,"t":"single","q":"开发者发现 Copilot 反复给出错误框架的写法（项目用 FastAPI，它却按 Flask 给）。在不改动代码结构的前提下，最直接有效的一步是？","o":[{"l":"A","t":"在文件顶部用注释写明技术栈与约束，必要时用 #file 显式把相关文件附给 Chat"},{"l":"B","t":"在 Chat 里反复追问「你为什么用 Flask」，直到它改口为止"},{"l":"C","t":"关闭所有已打开的文件，让它只看当前这一行"},{"l":"D","t":"把关键文件加进内容排除，避免它读到旧代码"}],"a":["A"],"e":"✅ 正确：注释是最便宜的上下文注入方式——写在文件顶部或函数上方，Copilot 在生成时就把它当约束；Chat 场景下再用 `#file` 显式附上入口文件或依赖清单，让技术栈可见。两者都不需要改代码结构。\n\n❌ B：追问只能改善本次对话的说服效果，下一轮补全照样跑偏，属于治标。\n❌ C：减少上下文会让它更缺依据，错误率反而上升。\n❌ D：内容排除是让 Copilot 不看某些文件（通常用于密钥与敏感目录），把业务代码排除掉等于让它更瞎，方向反了。\n\n📌 关键概念：扩大上下文的三条正路——写注释、显式附文件（`#file`）、用 `@workspace` 让它把项目结构纳入考虑。凡是「减少上下文」「屏蔽文件」想解决写法错误的选项，基本都为错。\n🔗 依据：GitHub Docs · Prompt engineering；Copilot Chat cheat sheet（chat variables）","s":"原创-基于官方考纲 D4.T1"},{"id":"D4-04","d":4,"t":"single","q":"zero-shot（零样本）提示指的是？","o":[{"l":"A","t":"不给任何示例，直接下达任务"},{"l":"B","t":"必须提供大量示例"},{"l":"C","t":"仅用于训练模型"},{"l":"D","t":"必须联网检索"}],"a":["A"],"e":"✅ 正确：零样本（zero-shot）指不提供任何示例，仅用文字描述任务让模型直接完成。它适合目标清晰、格式无严格要求的任务，也最省提示长度。\n\n❌ B：必须提供大量示例是少样本的特征，与零样本定义相反。\n❌ C：零样本是提示形态，不是训练方式；用户无法通过提示训练模型。\n❌ D：是否需要联网与提示形态无关，Copilot 本身依赖联网服务但不需要你「检索后再问」。\n\n📌 关键概念：术语对照——零样本（只描述）、少样本（示范若干例）、角色提示（设定视角）、思维链（要求分步推理）。考试常把「不给示例」与「不需要上下文」混为一谈：零样本只是不给示例，上下文该给还是要给。\n🔗 依据：GitHub Docs · Prompt engineering for GitHub Copilot","s":"原创-基于官方考纲 D4.T1"},{"id":"D4-05","d":4,"t":"multiple","q":"以下哪些是有效提示的最佳实践？（多选）","o":[{"l":"A","t":"明确意图与目标"},{"l":"B","t":"提供相关上下文与约束"},{"l":"C","t":"把任务拆成清晰步骤"},{"l":"D","t":"用尽可能模糊的措辞以「测试模型」"}],"a":["A","B","C"],"e":"✅ 正确 A：明确意图与目标——先说清要做什么、达成什么效果，避免模型在多种理解间摇摆。\n✅ 正确 B：提供相关上下文与约束——语言版本、框架、性能与安全要求、允许与禁止的做法。\n✅ 正确 C：把任务拆成清晰步骤——复杂任务分步提问，每步可验证，出错时定位成本低。\n\n❌ D：故意用模糊措辞「测试模型」只会得到模糊输出，把不确定性成本转嫁给自己。\n\n📌 关键概念：三条最实用的落地技巧——① 先让它解释现有代码再让它改（建立共同上下文）；② 给约束时用「不变的是什么」来锁定边界（如「不改 public API」）；③ 一次只解决一个问题，多任务混在一次提示里质量必降。\n🔗 依据：GitHub Docs · Prompt engineering for GitHub Copilot","s":"原创-基于官方考纲 D4.T1"},{"id":"D4-06","d":4,"t":"single","q":"在 Copilot Chat 中，聊天历史会如何影响后续回答？","o":[{"l":"A","t":"完全忽略历史，每次独立"},{"l":"B","t":"历史会作为上下文被参考，但无关或过长历史应适时清理以免污染"},{"l":"C","t":"历史会自动发给第三方"},{"l":"D","t":"历史只在终端命令有效"}],"a":["B"],"e":"✅ 正确：Chat 会把本次会话的历史作为上下文，多轮对话因此能延续前提（先声明「我们用 FastAPI」，后续不必重复）。但历史也占上下文窗口，冗长或跑题的历史会挤占空间、把旧假设带进新任务，所以换任务时应当清空会话重新开始。\n\n❌ A：说「完全忽略历史」与多轮对话的实际行为相反。\n❌ C：历史不会被自动发给第三方，这是对数据流的误解。\n❌ D：聊天历史在 IDE Chat 中普遍生效，不是只在终端有效。\n\n📌 关键概念：两条实操纪律——换任务用 `/clear` 开新会话；长会话后期容易「忘记」早期的约束，重要规则应写进 instructions 文件（持续生效）而不是只在对话里说一次。\n🔗 依据：GitHub Docs · Copilot Chat cheat sheet（chat history 与 /clear）","s":"原创-基于官方考纲 D4.T2"},{"id":"D4-07","d":4,"t":"single","q":"同一个 PR，开发者先让 Copilot「以安全评审员的视角查这个改动有没有注入风险」，再让它「用业务方能看懂的话把这次改动讲清楚」。两次输出风格差异很大。这属于提示工程中的哪一项？","o":[{"l":"A","t":"角色与受众设定：指定专业视角与读者对象，收窄输出范围"},{"l":"B","t":"零样本提示：因为两次都没有提供示例"},{"l":"C","t":"少样本提示：因为一次给了两个任务"},{"l":"D","t":"上下文窗口扩容：因为打开了更多文件"}],"a":["A"],"e":"✅ 正确：角色设定（role prompting）通过指定「以谁的视角、讲给谁听」改变输出的专业深度、术语密度与结构，是最省成本的定向手段。安全评审要漏洞类型、攻击路径、修复建议；业务沟通要影响面、风险、上线节奏，两者天然不同。\n\n❌ B：两次确实都没给示例，这只能说明它们都是零样本，不能解释风格差异的原因——本题问的是「为什么不同」。\n❌ C：两次是两个独立任务，不构成少样本（少样本要求在同一任务里给示范）。\n❌ D：上下文窗口是容量概念，不会改变表达视角。\n\n📌 关键概念：角色提示的四个可调项——身份（安全评审员/架构师/新人导师）、受众（业务方/运维/审计）、深度（概览/逐行）、格式（清单/散文/表格）。写提示时把这四项说清，比加十句「请认真一点」有效。\n🔗 依据：GitHub Docs · Prompt engineering for GitHub Copilot","s":"原创-基于官方考纲 D4.T1"},{"id":"D4-08","d":4,"t":"single","q":"当需要处理超大文件或长上下文时，合理的做法是？","o":[{"l":"A","t":"把所有内容一次性塞入提示"},{"l":"B","t":"分块聚焦相关部分，并辅以明确的局部指令"},{"l":"C","t":"直接忽略该文件"},{"l":"D","t":"只保留文件名不提供内容"}],"a":["B"],"e":"✅ 正确：上下文窗口有限，超大文件整体塞入会被截断或稀释重点。合理做法是分块处理——聚焦与当前任务相关的函数或段落，配合明确的局部指令（改哪个函数、保持什么不变、输出什么形态），逐块验证后再拼装。\n\n❌ A：一次性塞入全部内容，超出窗口的部分会被丢弃，且关键约束容易被淹没。\n❌ C：直接忽略该文件等于放弃任务，不是策略。\n❌ D：只给文件名不给内容，模型没有任何依据可言。\n\n📌 关键概念：三个可用的省上下文手段——选中具体代码用 `#selection`、只附必要文件用 `#file`、把长期规范放进 instructions 文件避免每轮重复粘贴。长任务还应主动用 `/clear` 或摘要压缩，防止早期约束被挤出窗口。\n🔗 依据：GitHub Docs · Copilot Chat context 与 prompt engineering","s":"原创-基于官方考纲 D4.T2"},{"id":"D4-09","t":"single","q":"用 `#file` 把一个上万行的大文件加进 Chat 作为上下文时，Copilot 的实际处理方式是？","o":[{"l":"A","t":"优先放入完整内容；若超出上下文窗口则降级为文件大纲（函数与说明），大纲仍过大时该文件不被纳入"},{"l":"B","t":"一律只读该文件的前 100 行"},{"l":"C","t":"直接拒绝回答并报错"},{"l":"D","t":"自动把文件切分后逐段提问，无需用户干预"}],"a":["A"],"e":"✅ 正确：`#file` 的加载是分级降级的——能放全文就放全文；放不下就退化为带函数签名与说明的大纲；连大纲都放不下时，该文件就不会进入提示。所以「我明明附了文件，它却说没看到」的合理解释往往是大文件被降级或排除。\n\n❌ B：没有「只读前 100 行」这种固定规则。\n❌ C：不会直接报错，而是静默降级，这也正是它容易被忽略的原因。\n❌ D：自动切分并逐段提问不是它的默认行为，需要你自己分块并分别提问。\n\n📌 关键概念：大文件与长上下文的正确姿势是「主动分块 + 局部指令」——选中相关函数（`#selection`）、只附必要文件、明确「改哪里、什么不能变」。指望一次性塞入全部内容，结果通常是被降级而不自知。\n🔗 依据：GitHub Docs · Copilot Chat cheat sheet（chat variables 与上下文限制）","d":4,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D4-10","t":"multiple","q":"以下哪些是 Copilot Chat 中的「上下文变量」写法（用 # 引导）？（多选）","o":[{"l":"A","t":"#selection：把当前编辑器选中内容作为上下文"},{"l":"B","t":"#file：把指定文件作为上下文"},{"l":"C","t":"#terminalLastCommand：把终端最近一次执行的命令作为上下文"},{"l":"D","t":"#tests：为选中代码生成单元测试"}],"a":["A","B","C"],"e":"✅ 正确 A：`#selection` 把当前选中的代码片段带入提示，是提高精确度最有效的方式之一。\n✅ 正确 B：`#file` 显式附上工作区内的某个文件，可指定多个。\n✅ 正确 C：`#terminalLastCommand` 带入终端最近一次执行及其输出，用于排查命令失败。\n\n❌ D：`/tests` 是斜杠命令（用 `/` 引导，表示任务意图），不是上下文变量（用 `#` 引导，表示提供材料）。两者符号与语义都不同。\n\n📌 关键概念：三个符号各管一件事——`@` 选参与者（谁来答，如 @workspace、@terminal、@github）、`#` 附上下文（给它看什么）、`/` 定任务（做什么，如 /explain、/fix、/tests）。常见错误正是把 `/tests` 当变量、把 `@workspace` 当变量。\n🔗 依据：GitHub Docs · GitHub Copilot Chat cheat sheet（chat participants / variables / slash commands）","d":4,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D4-11","t":"single","q":"开发者想问「这个项目里订单状态的流转逻辑分布在哪几个文件、彼此如何调用」。最能支撑这类问题的用法是？","o":[{"l":"A","t":"在提问中加入 @workspace，让它把项目结构、文件关系与既有模式纳入考虑"},{"l":"B","t":"只选中当前文件的某一行，用 #selection 提问"},{"l":"C","t":"打开终端用 @terminal 提问"},{"l":"D","t":"用 /doc 为选中符号生成文档注释"}],"a":["A"],"e":"✅ 正确：`@workspace` 参与者具备工作区级上下文，适合回答「跨文件的调用关系、功能分布在哪些文件、项目里用的是哪种设计模式」这类需要结构视野的问题。\n\n❌ B：`#selection` 只带入选中的片段，回答范围被限定在一段代码内，看不到跨文件关系。\n❌ C：`@terminal` 面向终端命令与输出，不解决代码结构问题。\n❌ D：`/doc` 是生成文档注释的动作，不是检索结构的手段。\n\n📌 关键概念：参与者与变量的组合逻辑——需要「结构视野」用 @workspace，需要「精确片段」用 #selection，需要「命令排错」用 @terminal。两者还可叠加：`@workspace /explain #file order.ts` 既能看全局又锁定入口文件。\n🔗 依据：GitHub Docs · Copilot Chat cheat sheet（@workspace 参与者）","d":4,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D4-12","t":"single","q":"团队希望 Copilot 生成的单元测试风格统一（都带 arrange-act-assert 结构与中文用例名）。最有效的提示做法是？","o":[{"l":"A","t":"在提示里先给一个符合规范的现有测试作为范例，再要求按同样风格为新函数生成测试"},{"l":"B","t":"只说「请写得规范一点」，让它自行理解"},{"l":"C","t":"把测试框架文档整篇贴进对话"},{"l":"D","t":"反复生成直到偶然出现符合风格的版本"}],"a":["A"],"e":"✅ 正确：这是少样本提示的典型应用——给一个符合目标风格的现成范例，模型会模仿其结构、命名与断言方式，比任何形容词都精确。「规范一点」是主观描述，模型无法确定你要哪种规范。\n\n❌ B：模糊措辞会把不确定性留给模型，输出风格每次不同。\n❌ C：整篇文档信息密度低、占用上下文窗口，且仍需模型自行归纳风格。\n❌ D：靠反复重抽既不可控也浪费时间，不可作为工程做法。\n\n📌 关键概念：判据很简单——凡是「格式、结构、命名、风格」要求，用范例（少样本）；凡是「逻辑、约束、边界」要求，用文字描述。两者常需同时使用：范例定形式，文字定行为。\n🔗 依据：GitHub Docs · Prompt engineering for GitHub Copilot（few-shot）","d":4,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D5-01","d":5,"t":"single","q":"用 Copilot 现代化遗留代码，以下做法恰当的是？","o":[{"l":"A","t":"让它把 Python2 脚本改写为带类型注解的 Python3 并补测试"},{"l":"B","t":"直接合入其输出不验证"},{"l":"C","t":"仅用于生成注释"},{"l":"D","t":"禁止使用 Copilot 处理遗留代码"}],"a":["A"],"e":"✅ 正确：现代化遗留代码的正确姿势是「先定目标、再分段改、最后用测试兜底」——让 Copilot 把旧语法迁到新版本并补齐类型注解，同时生成对应的测试来锁定行为等价；旧代码往往缺测试，先补测试再改才安全。\n\n❌ B：直接合入不验证，等于把「行为是否等价」这个最关键的问题交给概率模型去赌。\n❌ C：只生成注释不改变遗留问题，是极低价值的用法。\n❌ D：一刀切禁止使用，放弃了最擅长的场景——语法迁移与样板改写恰恰是模型强项。\n\n📌 关键概念：遗留代码改造的风险点不在「能不能改对」，而在「改完是否行为一致」。所以顺序必须是——补测试（覆盖现状）→ 分段改写 → 跑测试比对 → 人工评审差异。这条顺序在任何重构类题目里都成立。\n🔗 依据：GitHub Docs · Copilot 使用场景（modernizing legacy code）","s":"原创-基于官方考纲 D5.T1"},{"id":"D5-02","d":5,"t":"multiple","q":"Copilot 在测试与安全支撑方面能做什么？（多选）","o":[{"l":"A","t":"生成单元测试/集成测试骨架"},{"l":"B","t":"识别边界用例并补断言"},{"l":"C","t":"完全替代人工代码评审的全部职责"},{"l":"D","t":"建议安全与性能改进"}],"a":["A","B","D"],"e":"✅ 正确 A：按函数签名与实现生成单测／集成测试骨架，省掉样板结构，人再补业务断言。\n✅ 正确 B：提示它「列出可能失败的边界条件」——空输入、超长、并发、异常路径——往往能补出人容易漏的用例。\n✅ 正确 D：让它指出潜在注入点、低效查询、未处理异常并给改法，是代码安全与性能初筛的有效入口。\n\n❌ C：Copilot 不能替代人工评审的全部职责——业务语义、架构影响、合规判断与最终签字仍由人承担，它只做初筛。\n\n📌 关键概念：测试场景的三段用法——生成骨架（省样板）、逼问边界（补盲区）、解释失败（定位根因，可让它读终端报错）。三者都建立在「生成的测试必须真的跑一遍」这个前提上。\n🔗 依据：GitHub Docs · Using GitHub Copilot for testing；/tests 命令","s":"原创-基于官方考纲 D5.T2"},{"id":"D5-03","d":5,"t":"single","q":"用 Copilot 生成文档（docstring / 注释）时，正确的态度是？","o":[{"l":"A","t":"直接采纳，文档不可能出错"},{"l":"B","t":"将生成的文档作为草稿，核对准确性后再提交"},{"l":"C","t":"完全不生成文档"},{"l":"D","t":"只用于删除现有文档"}],"a":["B"],"e":"✅ 正确：文档生成（`/doc`、docstring、README 段落）的产出应当作草稿——它会写出「看起来对」的参数说明，但可能把默认值、异常行为、副作用写错，甚至给函数编造不存在的参数。核对准确性后再提交，是基本纪律。\n\n❌ A：文档出错的代价不比代码低，错误文档会误导后续所有使用者，甚至比没有文档更糟。\n❌ C：完全不生成等于放弃一个高价值低风险场景。\n❌ D：生成文档不是删除既有文档的工具。\n\n📌 关键概念：判断「AI 产出可信度」的通用标准是「错了会不会有人立刻发现」——代码错了测试会红，文档错了没人报错，所以文档更需要人工核对。这条推理也适用于提交信息、PR 描述、变更日志。\n🔗 依据：GitHub Docs · Copilot Chat 斜杠命令（/doc）","s":"原创-基于官方考纲 D5.T1"},{"id":"D5-04","d":5,"t":"single","q":"新同事第一天要改一个陌生仓库里的计费逻辑。他希望先在 IDE 内搞清楚「这个模块的调用链、关键文件与既有约定」，再动手改。最合适的用法是？","o":[{"l":"A","t":"用 Chat 搭配 @workspace 与 /explain，先让它讲清调用链与关键文件，再提出改动"},{"l":"B","t":"直接把整个计费模块重写一遍，用新代码覆盖旧逻辑"},{"l":"C","t":"让 Copilot 先生成一套部署脚本，把服务跑起来再看代码"},{"l":"D","t":"先不用 Copilot，等通读全部源码之后再考虑引入"}],"a":["A"],"e":"✅ 正确：@workspace 让 Copilot 把项目结构与文件间关系纳入考虑，/explain 负责把代码讲明白，两者组合正是「快速建立心智模型」的标准动作——先理解再修改，也符合负责任的 AI 使用顺序。\n\n❌ B：在不理解现有逻辑时整体重写，会把原有的隐含业务规则（计费口径、边界处理、历史兼容）一并抹掉，风险最高。\n❌ C：部署脚本解决的是「跑起来」，回答不了「逻辑怎么走、约定是什么」。\n❌ D：把工具排除在理解阶段之外，放弃了它最稳妥的用途之一——解释代码不改变代码，几乎零风险。\n\n📌 关键概念：onboarding 场景的推荐顺序是「解释 → 提问 → 小幅修改 → 补测试」。注意「解释代码」与「修改代码」的责任等级不同：前者低风险可放手用，后者必须验证。\n🔗 依据：GitHub Docs · Copilot Chat（@workspace 与 /explain）","s":"原创-基于官方考纲 D5.T1"},{"id":"D5-05","d":5,"t":"single","q":"团队统计发现开发者每天有几十次为了查某个 API 的用法而切出 IDE 翻文档。Copilot 最能直接削减这部分切换的做法是？","o":[{"l":"A","t":"在 IDE 内直接用 Chat 提问或 /explain 获取解释与示例，不必离开编辑器"},{"l":"B","t":"开启 PR 摘要，减少评审阶段的来回沟通"},{"l":"C","t":"配置内容排除，屏蔽文档目录以减少无关干扰"},{"l":"D","t":"用 Copilot Code Review 替代人工评审，减少讨论轮次"}],"a":["A"],"e":"✅ 正确：上下文切换的成本主要来自「离开当前任务去别处找答案」。IDE 内的 Chat 与 /explain 把「查用法、看示例、问为什么」留在同一个界面，这才是直接削减切换的手段。\n\n❌ B：PR 摘要优化的是评审沟通效率，减少的是评审环节的往返，不是查文档的切换。\n❌ C：内容排除是隐私与合规配置，屏蔽文档目录只会让 Copilot 更缺依据，与切换次数无关。\n❌ D：Code Review 替代不了人工评审，且它影响的是评审流程，与日常查 API 的场景不同。\n\n📌 关键概念：本域题目的通用判据是「问的是哪一类浪费」——查资料切换、样板代码耗时、理解陌生代码、补测试、改遗留代码，五类各对应不同功能。看准题干指向哪一类，别被「都能提效」的泛化选项带偏。\n🔗 依据：GitHub Docs · Copilot 生产力场景（reduce context switching）","s":"原创-基于官方考纲 D5.T1"},{"id":"D5-06","d":5,"t":"multiple","q":"Copilot 在生成样例/测试数据方面可以用于？（多选）","o":[{"l":"A","t":"生成 mock 数据用于本地联调"},{"l":"B","t":"构造边界值/异常输入用于测试"},{"l":"C","t":"直接在生产数据库插入随机数据"},{"l":"D","t":"按 schema 生成符合结构的样例"}],"a":["A","B","D"],"e":"✅ 正确 A：生成 mock 数据用于本地联调，是最常见也最安全的用法——数据是假的，风险可控。\n✅ 正确 B：构造边界值与异常输入（空、超长、负数、时区跨越、非法字符），能有效提高测试覆盖。\n✅ 正确 D：按已有 schema 生成结构合规的样例数据，便于前后端并行开发与演示。\n\n❌ C：往生产数据库插随机数据是明确禁止的操作——它污染真实业务数据，且可能触发下游计费、对账、通知等连锁反应。任何「直接写生产」的选项都错。\n\n📌 关键概念：判断数据类用法是否合规，只问一句「这份数据会不会进入生产或真实客户环境」。留在本地、测试库、演示环境里的都可以；碰生产的都不行。\n🔗 依据：GitHub Docs · Copilot 使用场景（generate sample data）","s":"原创-基于官方考纲 D5.T2"},{"id":"D5-07","d":5,"t":"single","q":"使用 Copilot 重构重复代码时，恰当的做法是？","o":[{"l":"A","t":"让它抽取公共函数并对比行为差异，再补测试验证"},{"l":"B","t":"直接接受重构结果不比对"},{"l":"C","t":"禁止使用重构类建议"},{"l":"D","t":"只用于重命名变量"}],"a":["A"],"e":"✅ 正确：重构的核心风险是「行为改变而不自知」。恰当做法是让 Copilot 抽取公共函数或调整结构后，逐处比对行为差异（尤其异常分支、空值、边界、日志与副作用），并用测试锁定等价性，确认无变化再合并。\n\n❌ B：直接接受不比对，等于放弃了对「等价重构」这个唯一验收标准的检查。\n❌ C：禁止使用重构建议，放弃了 Copilot 的强项——机械性重复代码的合并与命名统一。\n❌ D：只做重命名是最保守也最低价值的用法，不是「恰当做法」的全部。\n\n📌 关键概念：重构类题目的标准答案骨架永远是「先有测试 → 再改 → 跑测试 → 人工复核差异」。缺了「测试」这一环的选项，无论说得多合理都不完整。\n🔗 依据：GitHub Docs · Copilot 使用场景（refactoring）","s":"原创-基于官方考纲 D5.T1"},{"id":"D5-08","d":5,"t":"single","q":"Copilot 给出的「安全/性能改进建议」应如何对待？","o":[{"l":"A","t":"直接全部应用，无需判断"},{"l":"B","t":"作为参考线索，结合项目实际与安全/性能测试评估后再采纳"},{"l":"C","t":"完全忽略"},{"l":"D","t":"仅用于生成注释"}],"a":["B"],"e":"✅ 正确：Copilot 提出的安全与性能建议属于线索而非结论——它可能指出真实风险，也可能误报、或给出看似优化实则破坏语义的改法。正确做法是逐条评估：结合项目实际、用扫描工具验证、跑基准测试对比，确认收益大于风险再采纳。\n\n❌ A：全部应用等于把安全决策交给概率模型，可能引入新漏洞或破坏兼容性。\n❌ C：完全忽略放弃了高价值的初筛来源。\n❌ D：把它只当注释生成器，浪费了本域最有实用价值的用法之一。\n\n📌 关键概念：本域所有「Copilot 给建议」的题目共用一个立场——建议要经过验证才成为改动。验证手段按类型分：安全建议用 SAST／依赖扫描，性能建议用基准测试，兼容性用回归测试。\n🔗 依据：GitHub Docs · Copilot 使用场景（security and performance suggestions）","s":"原创-基于官方考纲 D5.T2"},{"id":"D5-09","t":"single","q":"Copilot 生成了 12 个单元测试，全部展示为绿色（生成时未报错）。提交前最必要的一步是？","o":[{"l":"A","t":"实际执行这批测试并检查断言是否真的在验证行为，而不是只生成了不会失败的断言"},{"l":"B","t":"直接提交，因为它没有报错"},{"l":"C","t":"把测试数量再扩到 30 个以提高覆盖率"},{"l":"D","t":"删除测试，避免以后维护成本"}],"a":["A"],"e":"✅ 正确：生成的测试必须真的跑一遍。常见问题包括——测试根本没被框架收集、断言恒真（如只断言不为空）、为了通过而把期望值写成实际值、缺少被测代码的执行路径。只有运行并检查断言质量，才谈得上验证。\n\n❌ B：生成时不报错只说明代码语法上没问题，不代表测试有效。\n❌ C：无效测试再多也不提升覆盖率，反而增加维护负担与虚假安全感。\n❌ D：删除等于放弃回归保护，与使用 Copilot 的初衷相反。\n\n📌 关键概念：判断测试是否有效的三个问题——它会被执行吗、断言在验证什么、故意改坏被测代码后它会不会红。第三个问题（变异检验）是识别「假测试」最有效的手段。\n🔗 依据：GitHub Docs · Using GitHub Copilot for testing","d":5,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D5-10","t":"single","q":"一个解析金额字符串的函数已有三个正常用例测试。想补足容易漏的测试场景，最有效的提示方式是？","o":[{"l":"A","t":"要求它列出这个函数可能失败的所有输入类型（空值、超长、负号、千分位、多币种符号、科学计数法），再据此生成用例"},{"l":"B","t":"让它再多生成十个和现有用例相似的正常场景"},{"l":"C","t":"让它把现有测试的期望值改成实际运行结果"},{"l":"D","t":"让它为函数添加更多日志输出"}],"a":["A"],"e":"✅ 正确：先「穷举失败模式」再「按模式生成用例」，是补齐边界覆盖最有效的方式——让模型从攻击者视角列出可能的输入类别，人再筛掉不适用于业务的，最后才生成测试。这样补出的是人容易漏的边界，而不是重复已有场景。\n\n❌ B：继续堆相似的正向场景，覆盖率提升有限，属于数量堆砌。\n❌ C：把期望值改成实际结果等于让测试永远通过，是反模式。\n❌ D：加日志有助于排查，但不构成测试覆盖。\n\n📌 关键概念：边界用例的常见类别清单——空与 null、极值与溢出、格式异常（前后空格、多符号）、编码与字符集、并发与顺序、时区与精度。让模型按类别逐项过一遍，比让它「想想还有什么」可靠得多。\n🔗 依据：GitHub Docs · Copilot 使用场景（identifying edge cases）","d":5,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D5-11","t":"single","q":"新人用 Copilot 解释一段陌生的加密工具代码，得到的说明看起来很通顺。他应如何对待这段解释？","o":[{"l":"A","t":"作为理解起点，但与源码、官方文档或原作者交叉核对，尤其是算法选择、参数含义与安全假设"},{"l":"B","t":"直接采信，因为解释读起来逻辑自洽"},{"l":"C","t":"完全不看，解释没有参考价值"},{"l":"D","t":"把解释直接贴进代码注释作为文档"}],"a":["A"],"e":"✅ 正确：解释类输出同样可能出错，而且错误更隐蔽——它会用自信、通顺的语言描述一个并不存在的设计意图。安全敏感领域（加密、鉴权、计费）尤其要与源码、官方文档、原始设计者交叉核对，因为这里的理解偏差会直接变成实现漏洞。\n\n❌ B：「读起来通顺」正是幻觉的典型特征，流畅度不能作为正确性证据。\n❌ C：完全不用放弃了低成本的理解加速手段，过度保守。\n❌ D：把未核对的解释写进注释，会把错误固化成团队认知，危害更大。\n\n📌 关键概念：解释类工具的正确用法是「加速形成假设」，验证仍要回到一手材料。风险等级越高（安全、资金、合规），交叉核对的必要性越强。\n🔗 依据：GitHub Docs · Responsible use of GitHub Copilot features","d":5,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D5-12","t":"single","q":"在 VS Code 中，关于内联建议的键盘操作，下列哪组对应关系正确？","o":[{"l":"A","t":"Tab 接受建议、Esc 拒绝建议、Alt+] 查看下一条建议"},{"l":"B","t":"Tab 拒绝建议、Esc 接受建议、Alt+] 关闭 Copilot"},{"l":"C","t":"Enter 接受建议、Tab 拒绝建议、Alt+] 重启扩展"},{"l":"D","t":"只能鼠标点击接受，键盘无法操作"}],"a":["A"],"e":"✅ 正确：常见操作是——Tab 接受当前建议；Esc 拒绝并关闭该建议；Alt+] / Alt+[（Windows/Linux，macOS 为 Option+] / Option+[）切换到下一条或上一条建议；Alt+\\（macOS 为 Option+\\）手动触发建议。\n\n❌ B：Tab 是接受而非拒绝，Esc 是拒绝而非接受，两者说反了。\n❌ C：Enter 通常是确认换行而非接受建议，Alt+] 也不是重启扩展。\n❌ D：内联建议完全支持键盘操作，这是它设计的核心交互方式。\n\n📌 关键概念：接受建议的粒度值得注意——在 VS Code 中可按单词或按行逐段接受（取决于编辑器的接受快捷键配置），而不是只能整段接受或整段拒绝。掌握这一点能让内联补全从「全盘接受」变成「选择性采纳」，是降低返工的关键习惯。\n🔗 依据：GitHub Docs · Getting code suggestions in your IDE with GitHub Copilot","d":5,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D6-01","d":6,"t":"single","q":"关于内容排除（content exclusions），正确的是？","o":[{"l":"A","t":"指定 Copilot 不读取哪些文件或路径作为上下文"},{"l":"B","t":"让 Copilot 只读取敏感文件"},{"l":"C","t":"仅影响输出文本的字体格式"},{"l":"D","t":"仅个体版可用、企业版不可用"}],"a":["A"],"e":"✅ 正确：内容排除（content exclusion）是输入侧的上下文门控——在仓库、组织或企业层级指定路径，Copilot 在生成建议或回答问题时不把这些文件当作上下文。它降低的是「敏感内容被读进提示」的风险。\n\n❌ B：方向完全相反，它是让 Copilot 不读，不是只读。\n❌ C：与字体格式无关，属于明显的无关项。\n❌ D：反过来——内容排除是 Copilot Business 与 Enterprise 的组织级治理能力，个人计划无法使用组织级排除。\n\n📌 关键概念：必须记住它的**作用边界**（高频考点）——内容排除对 IDE 内联补全、IDE 内 Chat、代码评审生效；对 Copilot CLI、Copilot 云代理（cloud agent）、IDE 的 Agent Mode **不生效**。也就是说，指望「排除掉了，所以 Agent 也读不到」是错误假设，Agent 场景必须靠仓库权限与目录隔离来兜底。\n🔗 依据：GitHub Docs · Excluding content from GitHub Copilot（含上述不适用范围的原文说明）","s":"原创-基于官方考纲 D6.T1"},{"id":"D6-02","d":6,"t":"single","q":"启用「suggestions matching public code filtering（公共代码匹配过滤）」的主要作用是？","o":[{"l":"A","t":"抑制与公开代码高度匹配的建议，降低许可风险"},{"l":"B","t":"提高建议的生成速度"},{"l":"C","t":"增加建议数量"},{"l":"D","t":"关闭所有内容排除"}],"a":["A"],"e":"✅ 正确：公共代码匹配过滤（suggestions matching public code）是输出侧的知识产权过滤——当建议与公开代码高度匹配时予以抑制，避免把开源代码无意中引入闭源项目造成许可风险。它也是 IP 赔偿生效的必要条件之一。\n\n❌ B：它不改变生成速度，只决定「这条建议是否放行」。\n❌ C：它的作用是减少而非增加可用建议数量。\n❌ D：它和内容排除作用在不同侧（输出 vs 输入），既不会开启也不会关闭内容排除。\n\n📌 关键概念：这对概念必须分清——**内容排除管输入**（什么不许被读）、**公共代码匹配过滤管输出**（什么不许被给）。两者解决的是完全不同的问题，考试最爱把它们互相冒充。另一个细节：过滤器只是抑制匹配建议，若所有候选都匹配，你会得到「没有建议」而不是报错。\n🔗 依据：GitHub Docs · Configuring suggestions matching public code","s":"原创-基于官方考纲 D6.T2"},{"id":"D6-03","d":6,"t":"single","q":"企业要在全部仓库统一屏蔽 `secrets/` 目录与所有 `.env` 文件，避免被 Copilot 当作上下文，且要求各团队无法自行取消。应配置在哪一层？","o":[{"l":"A","t":"企业级内容排除：优先级最高，可覆盖组织级与仓库级设置"},{"l":"B","t":"只能在每个仓库逐个配置，企业层无法统一"},{"l":"C","t":"只能由每位开发者在本地 IDE 中各自设置"},{"l":"D","t":"只能通过修改模型来从源头禁止读取"}],"a":["A"],"e":"✅ 正确：内容排除支持仓库、组织、企业三级，且企业级优先于组织级与仓库级，下级无法覆盖上级。要「全企业统一且团队不能自行取消」，只有企业级这一层能做到。\n\n❌ B：仓库级只是最细的一层，企业层完全可以统一配置并向下覆盖。\n❌ C：不存在「个人级内容排除」——个人开发者没有可配置的排除入口，本地只能靠 `.gitignore` 之类的间接手段，且那不是内容排除。\n❌ D：排除规则是平台侧配置，与模型无关。\n\n📌 关键概念：三层优先级要记牢——企业 > 组织 > 仓库。权限上还有一条细节：仓库的 Maintain 角色只能查看排除设置、不能编辑，编辑需要仓库管理员或组织/企业所有者。变更生效最多约 30 分钟，重启 IDE 可立即生效。\n🔗 依据：GitHub Docs · Excluding content from GitHub Copilot（repository / organization / enterprise levels）","s":"原创-基于官方考纲 D6.T1"},{"id":"D6-04","d":6,"t":"single","q":"管理员在组织的内容排除里填写了 `*.env`、`/secrets/**`、`secret*` 三种写法，配置按预期生效。关于这类路径写法，正确的是？","o":[{"l":"A","t":"使用 fnmatch 风格的通配模式，可匹配文件名或目录层级，模式不区分大小写"},{"l":"B","t":"必须写出每个文件的绝对路径，通配符不被支持"},{"l":"C","t":"一次只能排除一个文件，无法排除整个目录"},{"l":"D","t":"必须先对文件内容计算哈希，再按哈希值填写"}],"a":["A"],"e":"✅ 正确：内容排除的路径采用 fnmatch 风格的通配写法——`*` 匹配同层任意字符，`**` 可跨目录层级，`/path/` 表示仓库内绝对路径，`#` 开头是注释。模式匹配不区分大小写，因此 `*.ENV` 与 `*.env` 等效。\n\n❌ B：通配符正是主要用法，逐条写绝对路径既不可行也无法覆盖新增文件。\n❌ C：`/scripts/**` 就是排除整个目录及其下所有内容的写法。\n❌ D：按内容哈希排除不是内容排除的机制，它基于路径模式而非内容指纹。\n\n📌 关键概念：仓库外的文件排除要用 `*:` 前缀，例如 `*:/Users/name/.ssh/**`；组织级配置还可引用仓库（多种协议写法均可匹配已克隆到本地的仓库）。写规则时优先用通配（如 `*.env`、`secret*`）而不是枚举具体文件，否则新加的密钥文件就漏了。\n🔗 依据：GitHub Docs · Excluding content from GitHub Copilot（path pattern 语法）","s":"原创-基于官方考纲 D6.T1"},{"id":"D6-05","d":6,"t":"single","q":"关于「公共代码匹配过滤」的启用位置，正确的是？","o":[{"l":"A","t":"仅在考试时可临时开启"},{"l":"B","t":"在 Copilot 设置/组织策略中可开启，用于降低许可风险"},{"l":"C","t":"无法关闭也无法开启，系统固定"},{"l":"D","t":"只有通过修改源码才能启用"}],"a":["B"],"e":"✅ 正确：公共代码匹配过滤可以在两个位置控制——个人账号的 Copilot 设置中为本人开启，以及组织/企业的 Copilot 策略中为成员统一设定。降低许可风险是它存在的全部理由，同时也是 IP 赔偿生效的前提之一。\n\n❌ A：它不是考试专用开关，考试环境与产品功能无关。\n❌ C：它可以被开关与配置，不是系统固定的行为。\n❌ D：它属于平台配置，与修改源码无关。\n\n📌 关键概念：注意一个容易忽略的治理细节——组织统一开启后，个人不宜随意关闭，否则该成员的产出与 IP 赔偿条件都可能不再成立，采购与合规评审时这是必查项。\n🔗 依据：GitHub Docs · Configuring suggestions matching public code（个人设置与组织策略）","s":"原创-基于官方考纲 D6.T2"},{"id":"D6-06","d":6,"t":"single","q":"关于 AI 生成代码的所有权，正确的是？","o":[{"l":"A","t":"代码所有权一律归 GitHub 所有"},{"l":"B","t":"用户对其使用 Copilot 生成的代码通常拥有所有权，但仍需遵守许可与合规要求"},{"l":"C","t":"任何 AI 生成代码都不能被拥有"},{"l":"D","t":"所有权仅在付费后转移"}],"a":["B"],"e":"✅ 正确：你使用 Copilot 生成并纳入代码库的内容，所有权归你（或你的组织），GitHub 不对其主张所有权。但「拥有」不等于「无约束」——仍须遵守开源许可、第三方权利、公司合规要求与合同约定。\n\n❌ A：GitHub 不主张对生成代码的所有权，这与它的服务条款相反。\n❌ C：「AI 生成代码不能被拥有」在多数司法辖区并不成立，企业采购最关心的恰恰是权利归属能否落地。\n❌ D：所有权不因付费而「转移」，付费计划提供的是更高保障（如 IP 赔偿），不是所有权开关。\n\n📌 关键概念：把「所有权」「IP 赔偿」「许可合规」三件事分开——所有权＝权利归你；IP 赔偿＝出事时谁出律师费（付费计划、有前置条件）；许可合规＝你不能把别人的开源代码洗成自己的。三者常被同一道题混着考。\n🔗 依据：GitHub Docs · GitHub Copilot 条款与责任使用指引","s":"原创-基于官方考纲 D6.T3"},{"id":"D6-07","d":6,"t":"multiple","q":"当 Copilot 建议不出现或异常时，推荐的排障步骤包括？（多选）","o":[{"l":"A","t":"检查内容排除规则是否误伤了相关文件"},{"l":"B","t":"确认 Copilot 扩展/订阅状态是否正常"},{"l":"C","t":"检查网络/代理与登录状态"},{"l":"D","t":"直接重装操作系统"}],"a":["A","B","C"],"e":"✅ 正确 A：首先排查内容排除是否误伤——把需要 Copilot 协助的目录／文件类型加进了排除列表，是最常见的「毫无建议」原因，且症状表现为「整个目录都不出建议」。\n✅ 正确 B：确认扩展是否安装启用、账号登录是否有效、订阅/席位是否仍然分配，权限被撤销也会直接静默失效。\n✅ 正确 C：企业网络代理、证书拦截、防火墙会阻断与 Copilot 服务的连接，表现为超时或建议始终不出现。\n\n❌ D：重装操作系统属于与问题无关的极端操作，排障应按「配置 → 账号/席位 → 网络」由近及远。\n\n📌 关键概念：再加两条实操细节——内容排除变更最多约 30 分钟生效，重启 IDE 可立即生效；若只是某类文件不出建议，先查该语言的启用开关（如 `github.copilot.enable` 按语言设置）而不是怀疑服务故障。\n🔗 依据：GitHub Docs · Troubleshooting GitHub Copilot；Configuring content exclusion","s":"原创-基于官方考纲 D6.T4"},{"id":"D6-08","d":6,"t":"single","q":"企业版相较个人版在隐私/合规上的主要增强是？","o":[{"l":"A","t":"无任何增强"},{"l":"B","t":"更强的数据保护、组织级排除/策略与审计能力"},{"l":"C","t":"反而更弱以便模型训练"},{"l":"D","t":"仅界面颜色不同"}],"a":["B"],"e":"✅ 正确：企业版相较个人版的核心增强都在治理面——更严格的数据保护（默认不用客户代码训练、交互数据不留存）、组织级内容排除与策略、审计日志、集中席位管理与用量指标，以及有条件提供的 IP 赔偿。这些正是企业敢把私有代码库接进来的原因。\n\n❌ A：说「无任何增强」与事实相反。\n❌ C：「反而更弱以便训练」把方向说反了，企业版才是数据保护最强的一档。\n❌ D：差异不在界面，而在数据、策略、审计与法律保障。\n\n📌 关键概念：企业版价值可用四个词概括——数据（不用你代码训练）、策略（统一管控）、审计（谁改了什么）、赔偿（有条件）。评估任何「企业版有什么用」的题目，从这四个维度找答案。\n🔗 依据：GitHub Docs · GitHub Copilot plans and features","s":"原创-基于官方考纲 D6.T1"},{"id":"D6-09","t":"single","q":"组织已在企业级内容排除中屏蔽 `secrets/` 目录。开发者改用 Copilot CLI 与 IDE 的 Agent Mode 操作同一仓库。对这些文件的实际保护情况是？","o":[{"l":"A","t":"内容排除对 Copilot CLI 与 Agent Mode 不生效，这两个界面仍可能读取这些文件"},{"l":"B","t":"两者同样受内容排除约束，行为与内联补全完全一致"},{"l":"C","t":"只有 CLI 不受约束，Agent Mode 受约束"},{"l":"D","t":"只有 Agent Mode 不受约束，CLI 受约束"}],"a":["A"],"e":"✅ 正确：这是 GH-300 最容易被忽略、也最常被考的边界——内容排除只对 IDE 内联补全、IDE 内 Chat 与代码评审生效；对 Copilot CLI、Copilot 云代理（cloud agent）以及 IDE 中的 Agent Mode 不生效。也就是说，排除规则不能作为这些界面的兜底防线。\n\n❌ B：说「行为完全一致」正是本题要破除的错误假设。\n❌ C：CLI 与 Agent Mode 都不受内容约束，说「只有 CLI 不受」漏掉了一半。\n❌ D：同理，「只有 Agent Mode 不受」也不成立，两者都不在覆盖范围内。\n\n📌 关键概念：Agent 场景的兜底要靠另外三件事——仓库与目录的访问权限、把敏感文件移出工作区或独立仓库、在 agent 侧限制可访问路径与工具权限。考试若出现「排除了就安全了」的表述，一律为错。\n🔗 依据：GitHub Docs · Excluding content from GitHub Copilot（明确说明 CLI 与 IDE Agent Mode 不支持内容排除）","d":6,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D6-10","t":"single","q":"管理员刚在组织设置中新增了一条内容排除规则，但开发者的 IDE 仍在读取被排除的文件。最合理的解释与做法是？","o":[{"l":"A","t":"规则变更最多约 30 分钟才生效；重启 IDE 可立即应用，随后再验证效果"},{"l":"B","t":"规则写错了，必须删除重建"},{"l":"C","t":"内容排除永远不生效，只是声明性配置"},{"l":"D","t":"必须重装 Copilot 扩展才能让规则生效"}],"a":["A"],"e":"✅ 正确：内容排除的变更存在传播延迟，通常最长约 30 分钟；重启 IDE 可以立即拉起新配置。所以「刚改完没生效」多半不是配置错误，而是还没到生效时间。\n\n❌ B：在传播窗口内反复删改规则，会造成配置混乱且无法定位问题。\n❌ C：内容排除确实生效，只是作用于输入侧且覆盖面有限（CLI 与 Agent Mode 不受约束），不是纯声明。\n❌ D：重装扩展不是生效的必要条件，重启即可触发拉取。\n\n📌 关键概念：验证排除是否生效的标准做法——先确认规则层级（企业 > 组织 > 仓库，上级覆盖下级）、再等传播窗口或重启 IDE、最后用一个明确在排除列表内的文件测试「问它这是什么文件」。三步都过才能判定规则无效。\n🔗 依据：GitHub Docs · Excluding content from GitHub Copilot（生效时间说明）","d":6,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"},{"id":"D6-11","t":"single","q":"关于内容排除的可用范围与权限，以下哪项正确？","o":[{"l":"A","t":"需要 Copilot Business 或 Enterprise 计划；仓库的 Maintain 角色只能查看、不能编辑排除设置"},{"l":"B","t":"个人计划也能配置组织级内容排除，权限不限"},{"l":"C","t":"任何能读仓库的人都可以修改排除规则"},{"l":"D","t":"排除规则只能由 GitHub 官方客服代为设置"}],"a":["A"],"e":"✅ 正确：内容排除是 Copilot Business 与 Enterprise 的组织级治理能力；配置权限属于仓库管理员、组织所有者、企业所有者，仓库的 Maintain 角色可以查看但不能编辑。这条权限设计保证排除规则不会被随意改动。\n\n❌ B：个人计划没有组织级排除配置入口。\n❌ C：只读权限的人员不能修改，否则治理形同虚设。\n❌ D：由管理员在仓库/组织/企业设置中自行配置，不需要官方代办。\n\n📌 关键概念：内容排除的四条事实要成套记住——计划门槛（Business+）、层级（仓库/组织/企业，企业优先）、权限（Maintain 只读）、生效（≤30 分钟，重启立即）。考试常把其中一条换成错误表述作为干扰项。\n🔗 依据：GitHub Docs · Excluding content from GitHub Copilot（Who can use this feature）","d":6,"s":"Microsoft Learn · GH-300 官方考纲（2026-08-07 版）"}];
+</script>
+<script>
+
+/* ================================================================
+   ===================== 题库数据（构建注入 QUIZ_META + QUIZ_QUESTIONS） ================
+   ================================================================ */
+const QUESTIONS = QUIZ_QUESTIONS;
+const META = (typeof QUIZ_META !== 'undefined' && QUIZ_META) ? QUIZ_META : {};
+const EXAM = META.exam || 'QUIZ';
+const LS_PREFIX = META.lsPrefix || EXAM.toLowerCase();
+
+const GLOSSARY = META.glossary || {};
+
+function getGlossaryForQuestion(q) {
+  const texts = [q.q];
+  if(q.o && Array.isArray(q.o)) q.o.forEach(o => texts.push(o.t));
+  if(q.e) texts.push(q.e);
+  const fullText = texts.join(' ');
+  const found = [];
+  const sorted = Object.keys(GLOSSARY).sort((a,b) => b.length - a.length);
+  for(const term of sorted) {
+    if(fullText.includes(term)) found.push({term, def: GLOSSARY[term]});
+  }
+  return found;
+}
+
+/* ================================================================
+   ===================== 术语高亮 + 弹定义 ================
+   ================================================================ */
+// 长词优先排序，独立 token 边界匹配，避免 EBS 误标 Amazon EBS 中的 EBS 等
+function getGlossarySortedKeys() {
+  return Object.keys(GLOSSARY).sort((a,b) => b.length - a.length);
+}
+
+// 判断术语在文本中是否为独立出现（前后非字母/数字）
+function isIndependentToken(text, idx, term) {
+  const before = text[idx-1];
+  const after = text[idx + term.length];
+  const isLetter = c => c && /[A-Za-z0-9]/.test(c);
+  return !isLetter(before) && !isLetter(after);
+}
+
+// 将解析正文中的术语高亮为可点击 span，返回 HTML
+function fmtExp(s){ let t=(s===undefined||s===null)?'':String(s); t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); t=t.replace(/\n/g,'<br>'); t=t.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>'); return t; }
+function highlightGlossaryTerms(text) {
+  if(!text) return text;
+  const sortedKeys = getGlossarySortedKeys();
+  let result = '';
+  let i = 0;
+  while(i < text.length) {
+    let matched = false;
+    for(const term of sortedKeys) {
+      if(!term) continue;
+      const idx = text.indexOf(term, i);
+      if(idx === i && isIndependentToken(text, idx, term)) {
+        const def = GLOSSARY[term] || '（暂无定义）';
+        const termEsc = term.replace(/\\/g,'\\\\').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        const defEsc = def.replace(/\\/g,'\\\\').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        result += `<span class="gloss-term" onclick="showGlossTip(event,'${termEsc}','${defEsc}')">${term}</span>`;
+        i += term.length;
+        matched = true;
+        break;
+      }
+    }
+    if(!matched) {
+      // 中文等宽字符直接输出，保持原文本
+      result += text[i];
+      i++;
+    }
+  }
+  return result;
+}
+
+// 点击术语弹出定义浮层
+function showGlossTip(e, term, def) {
+  e.stopPropagation();
+  const tip = document.getElementById('glossTip');
+  document.getElementById('glossTipTerm').textContent = term;
+  document.getElementById('glossTipDef').textContent = def || '（暂无定义）';
+  tip.style.display = 'block';
+  // 定位：优先在点击位置下方，避免超出视口
+  const pad = 12;
+  let left = e.clientX + pad;
+  let top = e.clientY + pad;
+  // 先渲染再量尺寸
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  if(left + tw > window.innerWidth - 8) left = e.clientX - tw - pad;
+  if(top + th > window.innerHeight - 8) top = e.clientY - th - pad;
+  if(left < 8) left = 8;
+  if(top < 8) top = 8;
+  tip.style.left = left + 'px';
+  tip.style.top = top + 'px';
+}
+
+function closeGlossTip() {
+  document.getElementById('glossTip').style.display = 'none';
+}
+
+// 点击页面其它区域关闭浮层
+document.addEventListener('click', function(e) {
+  const tip = document.getElementById('glossTip');
+  if(tip && tip.style.display === 'block' && !tip.contains(e.target)) {
+    closeGlossTip();
+  }
+});
+
+// 按 Esc 关闭浮层
+document.addEventListener('keydown', function(e) {
+  if(e.key === 'Escape') closeGlossTip();
+});
+
+/* ================================================================
+   ===================== localStorage 操作 =========================
+   ================================================================ */
+const LS_ANSWERS = LS_PREFIX + '_answers';
+const LS_WRONG   = LS_PREFIX + '_wrong';
+const LS_PROGRESS = LS_PREFIX + '_progress';
+
+function getAnswers() { return JSON.parse(localStorage.getItem(LS_ANSWERS)||'[]'); }
+function setAnswers(a) { localStorage.setItem(LS_ANSWERS,JSON.stringify(a)); }
+function getWrong() { return JSON.parse(localStorage.getItem(LS_WRONG)||'[]'); }
+function setWrong(w) { localStorage.setItem(LS_WRONG,JSON.stringify(w)); }
+function getProgress() { return JSON.parse(localStorage.getItem(LS_PROGRESS)||'{}'); }
+function setProgress(p) { localStorage.setItem(LS_PROGRESS,JSON.stringify(p)); }
+
+/* ----------------------------------------------------------------
+   作答记录：会话态 / 累计统计态分离（修复）
+   旧缺陷：模拟考核误读全局 localStorage 历史 → 进场即显示「已答对/曾答错」、
+   题号导航提前染色、成绩单把练习与往场算进本次（实测正确数>题数、未答为负、
+   分数超满分、正确率>100%）。
+   三态口径：
+     · sessionResults()       本场逐题作答（quizState.results）＝「本次」唯一真源
+     · sessionScopedAnswers() 视图用作答集：考核=仅本场；练习模式=全局历史（原行为）
+     · recordAnswer()         仍写全局 store → 错题集与统计口径不变
+   ---------------------------------------------------------------- */
+function sessionResults() {
+  const r = (quizState && quizState.results) || {};
+  return Object.keys(r).map(id => ({id, ua:r[id].ua, ok:r[id].ok, ts:r[id].ts}));
+}
+function sessionScopedAnswers() {
+  return (quizState && quizState.mode === 'exam') ? sessionResults() : getAnswers();
+}
+
+function recordAnswer(qId, userAnswer, isCorrect) {
+  const answers = getAnswers();
+  answers.push({id:qId,ua:userAnswer,ok:isCorrect,ts:Date.now()});
+  setAnswers(answers);
+  const wrong = getWrong();
+  const idx = wrong.findIndex(w=>w.id===qId);
+  if(!isCorrect) {
+    if(idx>=0) { wrong[idx].count++; wrong[idx].last=Date.now(); }
+    else { wrong.push({id:qId,count:1,last:Date.now(),mastered:false}); }
+  }
+  setWrong(wrong);
+}
+
+function markMastered(qId) {
+  const wrong = getWrong();
+  const w = wrong.find(x=>x.id===qId);
+  if(w) w.mastered=true;
+  setWrong(wrong);
+}
+function unmarkMastered(qId) {
+  const wrong = getWrong();
+  const w = wrong.find(x=>x.id===qId);
+  if(w) w.mastered=false;
+  setWrong(wrong);
+}
+function removeWrong(qId) {
+  setWrong(getWrong().filter(x=>x.id!==qId));
+}
+
+/* ================================================================
+   ===================== 辅助函数 =================================
+   ================================================================ */
+const DOMAIN_NAMES = META.domains || {};
+const DOMAIN_WEIGHTS = META.weights || {};
+const DOMAIN_KEYS = Object.keys(DOMAIN_NAMES).map(Number).sort((a,b)=>a-b);
+const EXAM_P = META.examParams || {};
+const EXAM_COUNT = EXAM_P.count || 50;
+const EXAM_MIN = EXAM_P.minutes || 60;
+const EXAM_PASS = EXAM_P.pass || 700;
+const TYPE_NAMES = {single:'单选题',multiple:'多选题',hot:'拖拽题'};
+
+function getQById(id) { return QUESTIONS.find(q=>q.id===id); }
+function shuffle(arr) { const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a; }
+
+function generateShuffledOptions(questions) {
+  const opts = {};
+  const newAnswers = {};
+  questions.forEach(q => {
+    if(q.t==='single'||q.t==='multiple') {
+      const shuffled = shuffle([...q.o]);
+      const labels = 'ABCDEFGHIJ';
+      const relabeled = shuffled.map((item, i) => ({l: labels[i], t: item.t}));
+      opts[q.id] = relabeled;
+      const contentToNewLabel = {};
+      relabeled.forEach(item => { contentToNewLabel[item.t] = item.l; });
+      newAnswers[q.id] = q.a.map(oldL => {
+        const oldItem = q.o.find(o => o.l === oldL);
+        return oldItem ? contentToNewLabel[oldItem.t] : oldL;
+      });
+    }
+  });
+  return { opts, newAnswers };
+}
+
+function getStats() {
+  const answers = getAnswers();
+  const wrong = getWrong();
+  const totalCorrect = answers.filter(a=>a.ok).length;
+  const totalAnswered = answers.length;
+  const acc = totalAnswered ? Math.round(totalCorrect/totalAnswered*100) : 0;
+  const doneIds = [...new Set(answers.map(a=>a.id))];
+  const completion = Math.round(doneIds.length/QUESTIONS.length*100);
+  const domainStats = {};
+  for(const d of DOMAIN_KEYS) {
+    const dQIds = QUESTIONS.filter(q=>q.d===d).map(q=>q.id);
+    const dAnswers = answers.filter(a=>dQIds.includes(a.id));
+    const dCorrect = dAnswers.filter(a=>a.ok).length;
+    const dTotal = dAnswers.length;
+    domainStats[d] = {
+      total:dQIds.length, answered:dTotal, correct:dCorrect,
+      acc: dTotal ? Math.round(dCorrect/dTotal*100) : 0
+    };
+  }
+  const typeStats = {};
+  for(const t of ['single','multiple']) {
+    const tQIds = QUESTIONS.filter(q=>q.t===t).map(q=>q.id);
+    const tAnswers = answers.filter(a=>tQIds.includes(a.id));
+    const tCorrect = tAnswers.filter(a=>a.ok).length;
+    const tTotal = tAnswers.length;
+    typeStats[t] = { answered:tTotal, correct:tCorrect, acc: tTotal ? Math.round(tCorrect/tTotal*100) : 0 };
+  }
+  const recentWrong = wrong.filter(w=>!w.mastered).sort((a,b)=>b.last-a.last).slice(0,5);
+  const recent = answers.slice(-20).reverse();
+  let streak = 0;
+  for(const a of recent) { if(a.ok) streak++; else break; }
+  return {totalCorrect,totalAnswered,acc,completion,domainStats,typeStats,recentWrong,streak,doneIds:doneIds.length};
+}
+
+/* ================================================================
+   ===================== 页面渲染 =================================
+   ================================================================ */
+let currentPage = 'dashboard';
+let quizState = null;
+
+function navigate(page) {
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const el = document.getElementById('page-'+page);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.page===page));
+  if(page==='dashboard') renderDashboard();
+  else if(page==='quiz') renderQuiz();
+  else if(page==='wrongbook') renderWrongBook();
+  else if(page==='stats') renderStats();
+  else if(page==='settings') renderSettings();
+}
+
+function renderDashboard() {
+  const s = getStats();
+  const el = document.getElementById('page-dashboard');
+  let html = `<div class="header"><h1>${EXAM} 刷题工具</h1><button class="theme-btn" onclick="toggleTheme()">${document.getElementById('quizView').classList.contains('dark')?'☀️':'🌙'}</button></div>`;
+  html += `<div class="stats-grid">
+    <div class="stat-card"><div class="stat-num">${s.doneIds}/${QUESTIONS.length}</div><div class="stat-label">已做题量</div></div>
+    <div class="stat-card"><div class="stat-num">${s.acc}%</div><div class="stat-label">总正确率</div></div>
+    <div class="stat-card"><div class="stat-num">${s.completion}%</div><div class="stat-label">完成度</div></div>
+    <div class="stat-card"><div class="stat-num">${s.streak}</div><div class="stat-label">连续正确</div></div>
+  </div>`;
+  html += `<div class="domain-grid">`;
+  for(const d of DOMAIN_KEYS) {
+    const ds = s.domainStats[d];
+    html += `<div class="domain-card" onclick="startDomain(${d})">
+      <div class="d-name">Domain ${d}: ${DOMAIN_NAMES[d]}</div>
+      <div class="d-weight">权重 ${DOMAIN_WEIGHTS[d]} | 共${ds.total}题</div>
+      <div class="d-bar"><div class="d-bar-fill" style="width:${ds.acc}%"></div></div>
+      <div class="d-pct">${ds.answered?ds.acc+'%正确率':'未作答'}</div>
+    </div>`;
+  }
+  html += `</div>`;
+  html += `<div class="action-btns">
+    <button class="btn-primary" onclick="startContinue()">📝 继续练习</button>
+    <button class="btn-primary" onclick="startWrongReview()" style="background:var(--wrong)">🔄 错题重练 (${s.recentWrong.length}题待复习)</button>
+    <button class="btn-primary" onclick="startExam()" style="background:var(--correct);color:#fff">📋 模拟考核（${EXAM_COUNT}题/${EXAM_MIN}分钟/${EXAM_PASS}分及格）</button>
+  </div>`;
+  if(s.recentWrong.length) {
+    html += `<div class="recent-wrong"><h3>❌ 最近错题</h3><ul>`;
+    s.recentWrong.forEach(w=>{
+      const q = getQById(w.id);
+      if(q) html += `<li onclick="startSingle('${w.id}')">Domain ${q.d} | ${q.q.slice(0,30)}… | 答错${w.count}次</li>`;
+    });
+    html += `</ul></div>`;
+  }
+  html += `<div class="footer-note">${META.footerNote || '题库来源：第三方中文整理，以 AWS 官方材料为准'}</div>`;
+  el.innerHTML = html;
+}
+
+function renderQuiz() {
+  const el = document.getElementById('page-quiz');
+  if(!quizState || !quizState.questions.length) {
+    el.innerHTML = `<div class="header"><button class="back-btn" onclick="navigate('dashboard')">←</button><h1>刷题</h1></div>
+    <p style="text-align:center;margin-top:60px;color:var(--text2)">暂无题目，请从仪表盘选择模式开始练习</p>`;
+    return;
+  }
+  const q = quizState.questions[quizState.currentIdx];
+  const isHot = q.t === 'hot';
+  const isLast = quizState.currentIdx === quizState.questions.length-1;
+  // 考核=仅本场作答；练习模式=全局历史（含本场）——防练习记录串进考核视图
+  const answers = sessionScopedAnswers();
+  const prevAnswers = answers.filter(a=>a.id===q.id);
+  const everCorrect = prevAnswers.some(a=>a.ok);
+  const everWrong = prevAnswers.some(a=>!a.ok);
+  const answered = quizState.answered || {};
+  let userAns = answered[q.id];
+  const finished = quizState.submitted && quizState.submitted[q.id];
+  const correct = finished && isAnswerCorrect(q, userAns);
+
+  let modeLabel = quizState.mode==='exam'?'📋 模拟考核':quizState.mode==='wrong'?'❌ 错题重练':quizState.mode==='domain'?'📖 章节练习':quizState.mode==='single'?'📝 单题练习':'📝 顺序练习';
+
+  let html = `<div class="quiz-header">
+    <button class="back-btn" onclick="exitQuiz()">←</button>
+    <span style="font-weight:600;font-size:15px">${modeLabel}</span>
+    ${quizState.mode==='exam'?`<span class="timer" id="quizTimer"></span>`:''}
+    <span class="quiz-progress">${quizState.currentIdx+1}/${quizState.questions.length}</span>
+  </div>`;
+  html += `<div class="quiz-meta">
+    <span class="domain-tag">Domain ${q.d}</span>
+    <span>${DOMAIN_NAMES[q.d]}</span>
+    <span>${TYPE_NAMES[q.t]}</span>
+    ${everCorrect?'<span style="background:rgba(6,214,160,.15);color:var(--correct)">已答对</span>':''}
+    ${everWrong?'<span style="background:rgba(239,71,111,.15);color:var(--wrong)">曾答错</span>':''}
+  </div>`;
+  html += `<div class="question-text">${q.q}</div>`;
+
+  const renderOpts = getOptionsHTML(q, userAns, finished, correct, getShuffledAnswer(q));
+  html += renderOpts;
+
+  if(isHot) {
+    html += `<div class="quiz-buttons">
+      <button class="btn-secondary" onclick="prevQuestion()" ${quizState.currentIdx===0?'disabled':''}>◀ 上一题</button>
+      <button class="btn-primary" onclick="nextQuestion()">${isLast?'▶ 完成返回':'▶ 下一题'}</button>
+    </div>`;
+  } else if(!finished) {
+    html += `<div class="quiz-buttons">
+      <button class="btn-secondary" onclick="prevQuestion()" ${quizState.currentIdx===0?'disabled':''}>◀ 上一题</button>
+      <button class="btn-primary" id="submitBtn" onclick="submitAnswer()" disabled>✅ 确认</button>
+    </div>`;
+  } else {
+    html += `<div class="quiz-buttons">
+      <button class="btn-secondary" onclick="prevQuestion()" ${quizState.currentIdx===0?'disabled':''}>◀ 上一题</button>
+      <button class="btn-primary" onclick="nextQuestion()">${isLast?(quizState.mode==='exam'?'📊 交卷查看成绩':'▶ 完成返回'):'▶ 下一题'}</button>
+    </div>`;
+  }
+
+  if(finished) {
+    const badge = correct ? '✅ 回答正确!' : '❌ 回答错误';
+    const cls = correct ? 'correct' : 'wrong';
+    const gItems = getGlossaryForQuestion(q);
+    let gHtml = '';
+    if(gItems.length) {
+      gHtml = '<div class="glossary"><div class="glossary-title">词汇附录</div>';
+      gItems.forEach(g => {
+        gHtml += '<div class="glossary-item"><span class="glossary-term">' + g.term + '</span><span class="glossary-def">\u00a0\u2014\u00a0' + g.def.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span></div>';
+      });
+      gHtml += '</div>';
+    }
+    html += `<div class="explanation show">
+      <div class="result-badge ${cls}">${badge}</div>
+      <div class="exp-text"><strong>正确答案：</strong>${formatAnswer(q)}</div>
+      <div class="exp-text" style="margin-top:8px"><strong>解析：</strong>${highlightGlossaryTerms(fmtExp(q.e))}</div>
+      ${q.s?`<div class="exp-source">来源：${q.s}</div>`:''}
+      ${gHtml}
+    </div>`;
+  }
+
+  html += `<div class="qnav"><h4>题号导航</h4><div class="qnav-grid">`;
+  quizState.questions.forEach((qq, i) => {
+    const qAnswers = answers.filter(a=>a.id===qq.id);
+    const qCor = qAnswers.some(a=>a.ok);
+    const qWro = qAnswers.some(a=>!a.ok);
+    let cls = '';
+    if(i===quizState.currentIdx) cls='current';
+    else if(qCor) cls='done-correct';
+    else if(qWro) cls='done-wrong';
+    html += `<div class="qnav-item ${cls}" onclick="jumpToQuestion(${i})">${i+1}</div>`;
+  });
+  html += `</div></div>`;
+  el.innerHTML = html;
+  if(!finished) updateSubmitButton();
+}
+
+function getOptionsHTML(q, userAns, finished, correct, shuffledAns) {
+  let html = '';
+  const qtype = q.t;
+  if(qtype === 'hot') {
+    html += `<div class="options-list" style="background:var(--bg);border:1px dashed var(--border);border-radius:12px;padding:16px">
+      <div style="font-weight:600;color:var(--primary);margin-bottom:8px">🖱 本题为拖拽/操作题（HOTSPOT）</div>
+      <div style="font-size:13px;line-height:1.7;color:var(--text2)">本题无标准 A/B/C/D 选项，答题形式为图形拖拽/区域选择。题目与图形见源 PDF 原图，答案请参照源文件。</div>`;
+    if(q.e) {
+      html += `<div style="margin-top:10px;font-size:13px;line-height:1.7;color:var(--text2);border-top:1px solid var(--border);padding-top:10px"><strong>解析/提示：</strong><br>${highlightGlossaryTerms(fmtExp(q.e))}</div>`;
+    }
+    html += `</div>`;
+    return html;
+  }
+  if(qtype === 'single' || qtype === 'multiple') {
+    const isMulti = qtype === 'multiple';
+    html += `<div class="options-list">`;
+    const opts = quizState.shuffledOptions && quizState.shuffledOptions[q.id] ? quizState.shuffledOptions[q.id] : q.o;
+    opts.forEach(o => {
+      const isSelected = userAns && userAns.includes(o.l);
+      let cls = 'option-item';
+      if(isMulti) cls += ' multi';
+      if(isSelected && !finished) cls += ' selected';
+      if(finished) {
+        if(shuffledAns.includes(o.l)) cls += ' correct';
+        else if(isSelected) cls += ' wrong';
+      }
+      const onclick = finished ? '' : `toggleOption('${o.l}')`;
+      html += `<div class="${cls}" onclick="${onclick}">
+        <span class="opt-label">${o.l}</span>
+        <span>${o.t}</span>
+      </div>`;
+    });
+    html += `</div>`;
+    if(isMulti && !finished) html += `<div style="font-size:13px;color:var(--text2);margin-top:-12px;margin-bottom:16px">多选——请选择所有正确答案后提交（至少选 2 项）</div>`;
+  }
+  return html;
+}
+
+/* ================================================================
+   ===================== 交互逻辑 =================================
+   ================================================================ */
+
+function toggleOption(label) {
+  const q = quizState.questions[quizState.currentIdx];
+  if(!quizState.answered) quizState.answered = {};
+  if(q.t==='single') {
+    quizState.answered[q.id] = [label];
+  } else {
+    const arr = quizState.answered[q.id] || [];
+    const idx = arr.indexOf(label);
+    if(idx>=0) arr.splice(idx,1);
+    else arr.push(label);
+    quizState.answered[q.id] = arr;
+  }
+  renderQuiz();
+}
+
+function updateSubmitButton() {
+  const q = quizState.questions[quizState.currentIdx];
+  if(q.t === 'hot') return;
+  const ans = quizState.answered && quizState.answered[q.id];
+  const btn = document.getElementById('submitBtn');
+  if(!btn) return;
+  if(q.t==='single') btn.disabled = !ans || !ans.length;
+  else if(q.t==='multiple') btn.disabled = !ans || ans.length < 2;
+}
+
+function getShuffledAnswer(q) {
+  if(quizState && quizState.shuffledAnswers && quizState.shuffledAnswers[q.id]) {
+    return quizState.shuffledAnswers[q.id];
+  }
+  return q.a;
+}
+
+function isAnswerCorrect(q, userAns) {
+  if(!userAns) return false;
+  const ca = getShuffledAnswer(q);
+  if(q.t==='single') return userAns[0]===ca[0];
+  if(q.t==='multiple') { const a=[...userAns].sort(); const b=[...ca].sort(); return JSON.stringify(a)===JSON.stringify(b); }
+  return false;
+}
+
+function formatAnswer(q) {
+  const ca = getShuffledAnswer(q);
+  if(q.t==='single'||q.t==='multiple') return ca.join(', ');
+  if(q.t==='hot') return '本题为拖拽/操作题，答案为图形区域匹配，见源 PDF 原图';
+  return '';
+}
+
+function submitAnswer() {
+  const q = quizState.questions[quizState.currentIdx];
+  let userAns = quizState.answered && quizState.answered[q.id];
+  if(!userAns) return;
+  if(q.t==='multiple' && userAns.length < 2) {
+    alert('多选题至少选择 2 个答案，当前只选了' + userAns.length + '个');
+    return;
+  }
+  const correct = isAnswerCorrect(q, userAns);
+  if(!quizState.submitted) quizState.submitted={};
+  quizState.submitted[q.id]=true;
+  // 本场作答留痕（考核判分唯一依据；不与全局统计混用）
+  if(!quizState.results) quizState.results={};
+  quizState.results[q.id]={ua:[...userAns], ok:correct, ts:Date.now()};
+  recordAnswer(q.id, userAns, correct);
+  renderQuiz();
+  updateSubmitButton();
+}
+
+function prevQuestion() {
+  if(quizState.currentIdx > 0) { quizState.currentIdx--; renderQuiz(); }
+}
+function nextQuestion() {
+  const isLast = quizState.currentIdx === quizState.questions.length-1;
+  if(isLast) {
+    if(quizState.mode==='exam') renderExamResult();
+    else navigate('dashboard');
+  } else {
+    quizState.currentIdx++;
+    renderQuiz();
+  }
+}
+function jumpToQuestion(idx) {
+  quizState.currentIdx = idx;
+  renderQuiz();
+}
+function exitQuiz() {
+  // 考核中途退出必须停表：否则过期计时器归零时会把之后的练习页改写成「考核成绩单」
+  if(quizState && quizState.mode==='exam') stopExamTimer();
+  if(quizState && quizState.mode!=='exam') {
+    setProgress({mode:quizState.mode,domain:quizState.domain||null,idx:quizState.currentIdx,time:Date.now()});
+  }
+  quizState = null;
+  navigate('dashboard');
+}
+
+/* ================================================================
+   ===================== 刷题模式启动 ==============================
+   ================================================================ */
+function startDomain(d) {
+  const qs = QUESTIONS.filter(q=>q.d===d);
+  const _sr=generateShuffledOptions(qs);
+  quizState = {mode:'domain',domain:d,questions:qs,currentIdx:0,answered:{},submitted:{},shuffledOptions:_sr.opts,shuffledAnswers:_sr.newAnswers};
+  navigate('quiz');
+}
+function startContinue() {
+  const p = getProgress();
+  if(p.mode && p.mode!=='exam') {
+    if(p.mode==='domain' && p.domain) {
+      const qs = QUESTIONS.filter(q=>q.d===p.domain);
+      const _sr=generateShuffledOptions(qs);
+      quizState = {mode:'domain',domain:p.domain,questions:qs,currentIdx:p.idx||0,answered:{},submitted:{},shuffledOptions:_sr.opts,shuffledAnswers:_sr.newAnswers};
+    } else {
+      const _sr=generateShuffledOptions([...QUESTIONS]);
+      quizState = {mode:'sequential',domain:null,questions:[...QUESTIONS],currentIdx:p.idx||0,answered:{},submitted:{},shuffledOptions:_sr.opts,shuffledAnswers:_sr.newAnswers};
+    }
+  } else {
+    const _sr=generateShuffledOptions([...QUESTIONS]);
+    quizState = {mode:'sequential',domain:null,questions:[...QUESTIONS],currentIdx:0,answered:{},submitted:{},shuffledOptions:_sr.opts,shuffledAnswers:_sr.newAnswers};
+  }
+  navigate('quiz');
+}
+function startWrongReview() {
+  const wrong = getWrong().filter(w=>!w.mastered);
+  if(!wrong.length) { alert('暂无错题需要复习！'); return; }
+  const qs = wrong.map(w=>getQById(w.id)).filter(Boolean);
+  const _sr=generateShuffledOptions(qs);
+  quizState = {mode:'wrong',domain:null,questions:qs,currentIdx:0,answered:{},submitted:{},shuffledOptions:_sr.opts,shuffledAnswers:_sr.newAnswers};
+  navigate('quiz');
+}
+function startSingle(id) {
+  const q = getQById(id);
+  if(!q) return;
+  const _sr=generateShuffledOptions([q]);
+  quizState = {mode:'single',domain:null,questions:[q],currentIdx:0,answered:{},submitted:{},shuffledOptions:_sr.opts,shuffledAnswers:_sr.newAnswers};
+  navigate('quiz');
+}
+function startExam() {
+  // 模拟考核：按 meta 权重 × meta 题数分配各域配额（最大余数法，保证总和=EXAM_COUNT）
+  const counts = {};
+  let sumInt = 0;
+  const raw = {}, rem = {};
+  DOMAIN_KEYS.forEach(k => {
+    const w = parseFloat(String(DOMAIN_WEIGHTS[k]||'0').replace('%',''))/100;
+    raw[k] = w * EXAM_COUNT;
+    counts[k] = Math.floor(raw[k]);
+    rem[k] = raw[k] - counts[k];
+    sumInt += counts[k];
+  });
+  let deficit = EXAM_COUNT - sumInt;
+  const order = [...DOMAIN_KEYS].sort((a,b)=>rem[b]-rem[a]);
+  let i = 0;
+  while(deficit > 0) { counts[order[i % order.length]]++; deficit--; i++; }
+  let selected = [];
+  DOMAIN_KEYS.forEach(d => {
+    const pool = shuffle(QUESTIONS.filter(q=>q.d===d && q.t!=='hot'));
+    selected.push(...pool.slice(0, counts[d]));
+  });
+  selected = shuffle(selected);
+  const _exam = generateShuffledOptions(selected);
+  quizState = {mode:'exam',domain:null,questions:selected,currentIdx:0,answered:{},submitted:{},results:{},shuffledOptions:_exam.opts,shuffledAnswers:_exam.newAnswers};
+  quizState.examStartTime = Date.now();
+  quizState.examDuration = EXAM_MIN * 60;
+  // 场次标识：计时回调据此判定「本场是否仍在进行」，防过期计时器串场
+  quizState.examToken = 'ex-' + Date.now() + '-' + Math.random().toString(36).slice(2,8);
+  navigate('quiz');
+  startExamTimer();
+}
+
+let examTimerInterval = null;
+function stopExamTimer() {
+  if(examTimerInterval) { clearInterval(examTimerInterval); examTimerInterval = null; }
+}
+function startExamTimer() {
+  let secs = quizState.examDuration;
+  const token = quizState.examToken;
+  const timerEl = document.getElementById('quizTimer');
+  if(!timerEl) return;
+  stopExamTimer();
+  examTimerInterval = setInterval(() => {
+    // 场次校验：已退出或已换场（新 token）立即自毁
+    if(!quizState || quizState.mode!=='exam' || quizState.examToken!==token) { stopExamTimer(); return; }
+    secs--;
+    const m = Math.floor(secs/60), s = secs%60;
+    const el = document.getElementById('quizTimer');
+    if(el) el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+    if(secs<=60 && el) el.classList.add('warning');
+    if(secs<=0) { stopExamTimer(); finishExam(token); }
+  }, 1000);
+}
+
+function finishExam(token) {
+  stopExamTimer();
+  // 只对「发起本场计时」的考核会话生效
+  if(quizState && quizState.mode==='exam' && (token===undefined || quizState.examToken===token)) renderExamResult();
+}
+
+function renderExamResult() {
+  if(!quizState) return;
+  stopExamTimer();
+  const qs = quizState.questions;
+  const results = quizState.results || {};
+  const total = qs.length;
+  // 逐题按本场作答判分；全局历史与往场作答一律不计
+  let correct = 0, wrong = 0, unanswered = 0;
+  const domStat = {};
+  DOMAIN_KEYS.forEach(d => domStat[d] = {n:0, cor:0});
+  qs.forEach(q => {
+    if(!domStat[q.d]) domStat[q.d] = {n:0, cor:0};
+    domStat[q.d].n++;
+    const r = results[q.id];
+    if(!r) unanswered++;
+    else if(r.ok) { correct++; domStat[q.d].cor++; }
+    else wrong++;
+  });
+  // 不变量自校验：正确 + 错误 + 未答 必须等于试卷题数
+  if(correct + wrong + unanswered !== total) console.warn('[exam] 判分不变量异常', {correct, wrong, unanswered, total});
+  const el = document.getElementById('page-quiz');
+  const pct = total ? Math.round(correct/total*100) : 0;
+  // 1000-point scale, 700 to pass
+  const scaledScore = total ? Math.round(correct/total*1000) : 0;
+  const passed = scaledScore >= EXAM_PASS;
+  // Time used
+  const timeUsed = quizState.examStartTime ? Math.round((Date.now()-quizState.examStartTime)/1000) : 0;
+  const timeM = Math.floor(timeUsed/60), timeS = timeUsed%60;
+
+  // Domain breakdown
+  let domainHtml = '';
+  for(const d of DOMAIN_KEYS) {
+    const dd = domStat[d] || {n:0, cor:0};
+    const dPct = dd.n ? Math.round(dd.cor/dd.n*100) : 0;
+    domainHtml += `<tr><td>Domain ${d}: ${DOMAIN_NAMES[d]}</td><td>${dd.n}</td><td>${dd.cor}</td><td style="color:${dPct>=70?'var(--correct)':'var(--wrong)'}">${dPct}%</td></tr>`;
+  }
+
+  el.innerHTML = `<div class="header"><button class="back-btn" onclick="exitExam()">←</button><h1>📋 考核成绩单</h1></div>
+  <div style="text-align:center;padding:30px 20px">
+    <div style="font-size:48px;font-weight:700;color:${passed?'var(--correct)':'var(--wrong)'}">${scaledScore}</div>
+    <div style="font-size:14px;color:var(--text2);margin:4px 0">满分 1000 分 | 及格线 ${EXAM_PASS} 分</div>
+    <div style="font-size:16px;color:var(--text);margin:12px 0;font-weight:600">${passed?'✅ 通过！':'❌ 未通过'}</div>
+    <div style="display:flex;justify-content:center;gap:20px;margin:16px 0;flex-wrap:wrap">
+      <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--correct)">${correct}</div><div style="font-size:12px;color:var(--text2)">正确</div></div>
+      <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--wrong)">${wrong}</div><div style="font-size:12px;color:var(--text2)">错误</div></div>
+      <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--text2)">${unanswered}</div><div style="font-size:12px;color:var(--text2)">未答</div></div>
+      <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--primary)">${pct}%</div><div style="font-size:12px;color:var(--text2)">正确率</div></div>
+      <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--text)">${timeM}分${timeS.toString().padStart(2,'0')}秒</div><div style="font-size:12px;color:var(--text2)">用时</div></div>
+    </div>
+  </div>
+  <div class="stats-chart">
+    <h3>各章节成绩</h3>
+    <table class="stats-table"><thead><tr><th>章节</th><th>题数</th><th>正确</th><th>正确率</th></tr></thead><tbody>
+    ${domainHtml}
+    </tbody></table>
+  </div>
+  <div style="text-align:center;padding:20px">
+    <div style="margin-top:16px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-secondary" onclick="exitExam()" style="width:auto">返回首页</button>
+      <button class="btn-primary" onclick="startExam()" style="width:auto;flex:none">再考一次</button>
+    </div>
+  </div>`;
+  quizState = null;
+}
+
+function exitExam() {
+  quizState = null;
+  navigate('dashboard');
+}
+
+/* ================================================================
+   ===================== 错题集页面 ================================
+   ================================================================ */
+let wrongFilter = 0;
+
+function renderWrongBook() {
+  const wrong = getWrong().filter(w=>!w.mastered);
+  const mastered = getWrong().filter(w=>w.mastered);
+  const el = document.getElementById('page-wrongbook');
+  let html = `<div class="header"><h1>❌ 错题集</h1></div>`;
+  html += `<div class="wrong-stats">
+    <div class="stat-card"><div class="stat-num">${wrong.length}</div><div class="stat-label">待复习</div></div>
+    <div class="stat-card"><div class="stat-num">${mastered.length}</div><div class="stat-label">已掌握</div></div>
+    <div class="stat-card"><div class="stat-num">${wrong.length+mastered.length}</div><div class="stat-label">共错题</div></div>
+  </div>`;
+  html += `<div class="wrong-tabs">
+    <button class="wrong-tab ${wrongFilter===0?'active':''}" onclick="wrongFilter=0;renderWrongBook()">全部</button>`;
+  for(const d of DOMAIN_KEYS) {
+    html += `<button class="wrong-tab ${wrongFilter===d?'active':''}" onclick="wrongFilter=${d};renderWrongBook()">${DOMAIN_NAMES[d]}</button>`;
+  }
+  html += `</div>`;
+  let items = wrongFilter ? wrong.filter(w=>{const q=getQById(w.id);return q&&q.d===wrongFilter}) : wrong;
+  items.sort((a,b)=>b.count-a.count);
+  if(!items.length) {
+    html += `<p style="text-align:center;margin-top:40px;color:var(--text2)">🎉 暂无错题！</p>`;
+  } else {
+    items.forEach(w=>{
+      const q = getQById(w.id);
+      if(!q) return;
+      html += `<div class="wrong-item">
+        <div class="wi-header">
+          <span><strong>Domain ${q.d}</strong> | ${TYPE_NAMES[q.t]}</span>
+          <span style="color:var(--wrong)">答错${w.count}次</span>
+        </div>
+        <div style="font-size:14px;margin-bottom:6px">${q.q.slice(0,60)}${q.q.length>60?'…':''}</div>
+        <div style="font-size:12px;color:var(--text2)">最近答错：${new Date(w.last).toLocaleString()}</div>
+        <div class="wi-actions">
+          <button onclick="startSingle('${w.id}')">📝 重练本题</button>
+          <button onclick="markMastered('${w.id}');renderWrongBook()">✅ 标记已掌握</button>
+          <button onclick="removeWrong('${w.id}');renderWrongBook()">🗑️ 移除</button>
+        </div>
+      </div>`;
+    });
+  }
+  if(mastered.length) {
+    html += `<div style="margin-top:20px"><h3 style="font-size:14px;margin-bottom:8px;color:var(--text2)">已掌握 (${mastered.length})</h3>`;
+    html += `<button class="btn-secondary" onclick="if(confirm('确定清空所有已掌握的错题吗？')){setWrong(getWrong().filter(w=>!w.mastered));renderWrongBook();}" style="width:auto">清空已掌握</button></div>`;
+  }
+  el.innerHTML = html;
+}
+
+/* ================================================================
+   ===================== 统计页面 ==================================
+   ================================================================ */
+function renderStats() {
+  const s = getStats();
+  const el = document.getElementById('page-stats');
+  let html = `<div class="header"><h1>📊 统计分析</h1></div>`;
+  html += `<div class="stats-chart">
+    <h3>总进度</h3>
+    <div style="height:30px;background:var(--border);border-radius:15px;overflow:hidden">
+      <div style="height:100%;width:${s.completion}%;background:var(--primary);border-radius:15px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600">${s.completion}%</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:13px;color:var(--text2)">
+      <span>已答 ${s.doneIds}/${QUESTIONS.length} 题</span>
+      <span>正确率 ${s.acc}%</span>
+    </div>
+  </div>`;
+  html += `<div class="stats-chart"><h3>各章节正确率</h3><canvas id="chartDomain"></canvas></div>`;
+  html += `<div class="stats-chart"><h3>各题型正确率</h3><canvas id="chartType"></canvas></div>`;
+  html += `<div class="stats-chart"><h3>详细数据</h3>
+    <table class="stats-table"><thead><tr><th>章节</th><th>总题</th><th>已答</th><th>正确</th><th>正确率</th></tr></thead><tbody>`;
+  for(const d of DOMAIN_KEYS) {
+    const ds = s.domainStats[d];
+    html += `<tr><td>Domain ${d}: ${DOMAIN_NAMES[d]}</td><td>${ds.total}</td><td>${ds.answered}</td><td>${ds.correct}</td><td style="color:${ds.acc>=70?'var(--correct)':'var(--wrong)'};font-weight:600">${ds.acc}%</td></tr>`;
+  }
+  html += `</tbody></table></div>`;
+  el.innerHTML = html;
+  setTimeout(() => {
+    drawDomainChart(s);
+    drawTypeChart(s);
+  }, 50);
+}
+
+function drawDomainChart(s) {
+  const c = document.getElementById('chartDomain');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  const W = c.offsetWidth || 600;
+  const H = 200;
+  c.width = W * 2; c.height = H * 2;
+  ctx.scale(2,2);
+  ctx.clearRect(0,0,W,H);
+  const labels = DOMAIN_KEYS.map(k=>'D'+k);
+  const colors = ['#4361ee','#4cc9f0','#06d6a0','#f8961e','#9b5de5'];
+  const barW = (W-80) / (labels.length*1.5);
+  labels.forEach((l,i)=>{
+    const val = s.domainStats[i+1].acc || 0;
+    const x = 40 + barW * (i*1.5 + 0.5);
+    const h = (val/100) * (H-50);
+    ctx.fillStyle = colors[i];
+    ctx.beginPath();
+    ctx.roundRect(x-barW/2+2, H-30-h, barW-4, h, 4);
+    ctx.fill();
+    ctx.fillStyle = getComputedStyle(document.getElementById('quizView')).getPropertyValue('--text').trim();
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(l, x, H-8);
+    ctx.fillStyle = colors[i];
+    ctx.font = 'bold 13px sans-serif';
+    ctx.fillText(val+'%', x, H-35-h);
+  });
+}
+
+function drawTypeChart(s) {
+  const c = document.getElementById('chartType');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  const W = c.offsetWidth || 600;
+  const H = 200;
+  c.width = W * 2; c.height = H * 2;
+  ctx.scale(2,2);
+  ctx.clearRect(0,0,W,H);
+  const labels = ['单选','多选'];
+  const keys = ['single','multiple'];
+  const colors = ['#4361ee','#4cc9f0'];
+  const barW = (W-80) / 4;
+  keys.forEach((k,i)=>{
+    const val = s.typeStats[k].acc || 0;
+    const x = 40 + barW * (i*1.5 + 0.5);
+    const h = (val/100) * (H-50);
+    ctx.fillStyle = colors[i];
+    ctx.beginPath();
+    ctx.roundRect(x-barW/2+2, H-30-h, barW-4, h, 4);
+    ctx.fill();
+    ctx.fillStyle = getComputedStyle(document.getElementById('quizView')).getPropertyValue('--text').trim();
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(labels[i], x, H-8);
+    ctx.fillStyle = colors[i];
+    ctx.font = 'bold 13px sans-serif';
+    ctx.fillText(val+'%', x, H-35-h);
+  });
+}
+
+/* roundRect polyfill */
+if(!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r) {
+    if(r>w/2) r=w/2;
+    if(r>h/2) r=h/2;
+    this.moveTo(x+r,y);
+    this.arcTo(x+w,y,x+w,y+h,r);
+    this.arcTo(x+w,y+h,x,y+h,r);
+    this.arcTo(x,y+h,x,y,r);
+    this.arcTo(x,y,x+w,y,r);
+    return this;
+  };
+}
+
+/* ================================================================
+   ===================== 设置页面 ==================================
+   ================================================================ */
+function renderSettings() {
+  const el = document.getElementById('page-settings');
+  el.innerHTML = `<div class="header"><h1>⚙ 设置</h1></div>
+    <div class="settings-section">
+      <h3>📁 数据管理</h3>
+      <button class="setting-btn" onclick="exportData()">📥 导出数据 (JSON)</button>
+      <button class="setting-btn" onclick="importData()">📤 导入数据</button>
+      <button class="setting-btn danger" onclick="resetData()">🗑️ 重置所有数据</button>
+    </div>
+    <div class="settings-section">
+      <h3>🎨 外观</h3>
+      <button class="setting-btn" onclick="toggleTheme()">${document.getElementById('quizView').classList.contains('dark')?'☀️ 切换亮色模式':'🌙 切换暗色模式'}</button>
+    </div>
+    <div class="settings-section">
+      <h3>ℹ️ 关于</h3>
+      <div style="padding:14px;background:var(--card);border-radius:12px;border:1px solid var(--border)">
+        <p style="font-weight:600">${EXAM} 刷题小工具 v1.0</p>
+        <p style="font-size:13px;color:var(--text2);margin-top:4px">题库：${QUESTIONS.length} 题（${DOMAIN_KEYS.length} 个 Domain）</p>
+        <p style="font-size:13px;color:var(--text2)">存储：浏览器本地 (localStorage)</p>
+        <p style="font-size:13px;color:var(--text2);margin-top:4px">题库来源：第三方中文翻译整理，以 AWS 官方学习材料为准</p>
+      </div>
+    </div>`;
+}
+
+/* ================================================================
+   ===================== 工具函数 ==================================
+   ================================================================ */
+function exportData() {
+  const data = {
+    answers: getAnswers(),
+    wrong: getWrong(),
+    progress: getProgress(),
+    exportedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `${LS_PREFIX}-quiz-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if(data.answers) setAnswers(data.answers);
+        if(data.wrong) setWrong(data.wrong);
+        if(data.progress) setProgress(data.progress);
+        alert('数据导入成功！');
+        navigate(currentPage);
+      } catch(err) { alert('数据格式错误，请检查文件。'); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function resetData() {
+  showModal('确认重置', '确定要清除所有答题记录、错题集和进度吗？此操作不可恢复！', () => {
+    localStorage.removeItem(LS_ANSWERS);
+    localStorage.removeItem(LS_WRONG);
+    localStorage.removeItem(LS_PROGRESS);
+    navigate('dashboard');
+  });
+}
+
+/* ================================================================
+   ===================== 模态框 ====================================
+   ================================================================ */
+let modalCallback = null;
+function showModal(title, text, onConfirm) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalText').textContent = text;
+  document.getElementById('modalOverlay').classList.add('show');
+  modalCallback = onConfirm;
+  document.getElementById('modalConfirmBtn').onclick = () => {
+    closeModal();
+    if(modalCallback) modalCallback();
+  };
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+/* ================================================================
+   ===================== 主题切换 ==================================
+   ================================================================ */
+function toggleTheme() {
+  document.getElementById('quizView').classList.toggle('dark');
+  localStorage.setItem(LS_PREFIX+'_theme', document.getElementById('quizView').classList.contains('dark')?'dark':'light');
+  navigate(currentPage);
+}
+
+/* ================================================================
+   ===================== 初始化 ====================================
+   ================================================================ */
+function init() {
+  if(localStorage.getItem(LS_PREFIX+'_theme')==='dark') document.getElementById('quizView').classList.add('dark');
+  const pages = ['dashboard','quiz','wrongbook','stats','settings'];
+  const app = document.getElementById('app');
+  pages.forEach(p => {
+    const div = document.createElement('div');
+    div.id = 'page-'+p;
+    div.className = 'page' + (p==='dashboard'?' active':'');
+    app.appendChild(div);
+  });
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => { if(btn.dataset.page==='learn'){ if(window.kbShowLearnHome) window.kbShowLearnHome(); } else navigate(btn.dataset.page); });
+  });
+  navigate('dashboard');
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+</script>
+<script>
+// 学习数据注入区（构建系统自动注入，勿手改）
+const LEARNING_DATA = {"meta":{"exam":"GH-300","title":"GitHub Copilot 学习与刷题","lang":"zh","updated":"2026-10-10","examInfo":{"quickCards":[{"num":"100","label":"考试时长(分钟)"},{"num":"700/1000","label":"及格分数(scaled)"},{"num":"6","label":"考试域数"},{"num":"Pearson VUE","label":"交付方"},{"num":"Intermediate","label":"级别"},{"num":"$99*","label":"费用(美国区·地区浮动)","sub":"🔴 官方无固定价，以预约页为准；*为第三方估计"}],"domains":[{"code":"D1","name":"负责任地使用 Copilot","weight":"15–20%"},{"code":"D2","name":"使用 Copilot 功能","weight":"25–30%"},{"code":"D3","name":"数据与架构","weight":"10–15%"},{"code":"D4","name":"提示工程与上下文","weight":"10–15%"},{"code":"D5","name":"提升开发生产力","weight":"10–15%"},{"code":"D6","name":"隐私、排除与保障","weight":"10–15%"}],"where":["Pearson VUE 考试中心 / 在线监考（OnVUE），自 2025-07-01 起独家交付","考试语言：英语、西班牙语、葡萄牙语(巴西)、韩语、日语","建议经验：GitHub 基础 + 至少一门编程语言；无强制前置考试","🔴 题数官方未公布（第三方估约 60 计分 + 10–15 预试）；时长 100 分钟"],"steps":[{"n":"① 注册","note":"用个人 Microsoft 账户注册（避免组织账户丢失记录）"},{"n":"② 免费练习","note":"认证页 Practice Assessment + Exam Sandbox"},{"n":"③ 预约","note":"Pearson VUE，最多提前 90 天"},{"n":"④ 备考","note":"Microsoft Learn Copilot Fundamentals Part1&2 + 本教材"}],"faq":[{"q":"考试期间能打开 Microsoft Learn 查资料吗？","a":"不能。GitHub 考试不允许考试期间打开 Learn（不同于 Microsoft 角色型考试），且结束不立即显示通过/未通过，正式成绩在 Exam History 查看。"},{"q":"考不过怎么办？","a":"首次未通过 24 小时后可重考；后续每次间隔按 Microsoft 重考政策（通常 14 天）；12 个月内最多 5 次尝试。"},{"q":"证书有效期多久？如何续期？","a":"🔴 口径冲突：GitHub 历史 2 年，正迁移至 Microsoft 角色型 1 年免费在线续期；过渡期过期凭证获 6 个月宽限。以考生凭证账户记录为准，勿套用 Microsoft 年度规则。"},{"q":"费用是多少？","a":"🔴 按地区浮动，官方无固定价；第三方估美国区约 $99。以 Pearson VUE 预约页为准。"},{"q":"数据以官网为准","a":"以上政策核实自 Microsoft Learn GH-300 Study Guide / Exam Details 与 GitHub Docs（核实日 2026-10-10）；有变更以官方页面为准。"}]},"plan":[{"day":1,"domain":2,"topic":"域2 功能使用·IDE触发 + CLI","focus":"权重最高 25–30%，先打触发方式与 CLI 基础"},{"day":2,"domain":2,"topic":"域2·Agent Mode/MCP/Spaces/指令文件","focus":"2026-08 修订重点，密集命名功能"},{"day":3,"domain":2,"topic":"域2·组织级治理(策略/审计/REST API)","focus":"管理员视角，考试必考"},{"day":4,"domain":1,"topic":"域1 负责任AI·验证与责任运营","focus":"15–20%，判断型题目"},{"day":5,"domain":4,"topic":"域4 提示工程·zero/few-shot","focus":"实操型，配合真实 Copilot 练习"},{"day":6,"domain":3,"topic":"域3 数据与架构·生命周期","focus":"10–15%，理解数据边界"},{"day":7,"domain":6,"topic":"域6 隐私·内容排除/公共代码过滤","focus":"10–15%，配置与排障"},{"day":8,"domain":5,"topic":"域5 生产力·测试与安全","focus":"10–15%，场景匹配"},{"day":9,"domain":0,"topic":"全真模拟 + 错题复盘","focus":"100 分钟/700 分；过 quiz.json 全部题"}],"level":"Intermediate","cnName":"GitHub Copilot 认证"},"chapters":[{"domain":1,"name":"负责任地使用 Copilot","weight":"15–20%","sections":[{"h":"域定位","body":"第二大域（15–20%），考「用得对不对」而非「会不会用」。涵盖负责任 AI 原则、生成式 AI 风险与局限、伦理使用、潜在危害与缓解、AI 产出验证与责任运营。题目偏判断型。"},{"h":"核心要点","body":"- 负责任 AI 原则：公平、可靠安全、隐私、透明、问责。\n- 生成式 AI 局限：训练数据时效、幻觉、概率性不一致。\n- 验证必要性：输出未经运行/测试不可假定正确；人在回路、人负最终责任。\n- 💡 虚构场景：Copilot 生成处理密码的代码未做哈希——责任运营要求改用标准加密库，而非直接合入。"}],"practice":[{"id":"D1-01","q":"为什么 GH-300 强调「必须验证 AI 输出」？","o":[{"l":"A","t":"因为 Copilot 总是返回最优解"},{"l":"B","t":"因为 LLM 是概率性输出，可能产生幻觉或引用已废弃/不存在的 API，未经运行与测试不可假定正确"},{"l":"C","t":"因为 Microsoft 强制要求签署验证声明"},{"l":"D","t":"因为 Copilot 不生成可执行代码"}],"a":"B","e":"✅ LLM 概率性 + 时效局限 → 输出须编译/运行/单测/评审后采用。❌ A/C/D 均错。📌 人在回路是核心。"},{"id":"D1-02","q":"以下哪些属于负责任 AI 的潜在危害缓解措施？（多选）","o":[{"l":"A","t":"人工审查并验证生成代码"},{"l":"B","t":"启用内容排除，防止敏感文件进入上下文"},{"l":"C","t":"直接合入未测试的生成代码以提速"},{"l":"D","t":"建立团队 Copilot 使用规范"}],"a":"A,B,D","e":"✅ A验证/B数据边界/D制度均为缓解手段。❌ C 是高风险的错误做法。"}]},{"domain":2,"name":"使用 Copilot 功能","weight":"25–30%","sections":[{"h":"域定位","body":"最大且最密集的域（25–30%），2026-08-07 修订扩充最多。三子簇：IDE 内使用、Copilot CLI、功能与能力（含组织级治理）。难点在第三簇的 Agent Mode / Sub-Agents / MCP / Spaces / 指令文件与组织治理。"},{"h":"三大子簇","body":"- IDE：启用、触发方式（inline/chat/CLI/agent mode）、内容排除。\n- CLI：gh copilot explain/suggest、安装、交互/会话、生成脚本管理文件。\n- 功能与能力：Agent Mode、Copilot Edits、MCP、Agent Sessions、Sub-Agents、代码评审、Spaces、Spark、PR 摘要、instructions 文件、Copilot Chat 命令与 prompt file 复用；组织策略管理、Code Review 策略、审计日志、REST API 订阅管理。\n- 💡 虚构场景：企业用 copilot-instructions.md 固化规范 + 管理员用审计日志追踪启用情况。"}],"practice":[{"id":"D2-01","q":"在 IDE 中，Copilot Agent Mode 的主要能力是？","o":[{"l":"A","t":"仅做单文件内联补全"},{"l":"B","t":"多文件编辑并访问终端，可将任务委派给 Sub-Agents 以优化上下文使用"},{"l":"C","t":"仅用于解释终端命令"},{"l":"D","t":"仅生成文档字符串"}],"a":"B","e":"✅ Agent Mode = 多文件编辑 + 终端 + 委派 Sub-Agents。❌ A 是 inline；C 是 CLI；D 是文档生成。📌 属 2026-08 修订重点。"},{"id":"D2-03","q":"企业管理员希望统一管控 Copilot 功能可用性与合规，应优先使用？","o":[{"l":"A","t":"仅依赖每位开发者的个人设置"},{"l":"B","t":"组织范围策略管理 + 审计日志事件 + 通过 REST API 管理订阅"},{"l":"C","t":"直接关闭所有 Copilot 功能"},{"l":"D","t":"仅使用内容排除"}],"a":"B","e":"✅ 组织治理三件套 = 策略 + 审计 + REST API。❌ A/C/D 不足。"}]},{"domain":3,"name":"数据与架构","weight":"10–15%","sections":[{"h":"域定位","body":"考 Copilot 如何处理数据：数据流转、输入处理与提示构建、代理过滤与后处理、生命周期与 LLM 局限。与域 6 互为表里，权威源 GitHub Trust Center。"},{"h":"核心要点","body":"- 数据流转：上下文收集 → 提示构建 → 推理 → 代理过滤/后处理 → 呈现；企业/个体在数据共享与 IP 赔偿有差异。\n- 生命周期：触发 → 上下文收集 → 提示构建 → 模型推理 → 代理/后处理 → 呈现 → 接受/拒绝。\n- LLM 局限：概率性、时效、对未打开文件不可见。\n- 💡 虚构场景：Copilot 引用了项目未引入的包——理解生命周期可快速识别「它只看了局部上下文」。"}],"practice":[{"id":"D3-01","q":"关于 Copilot 代码建议生命周期，正确的顺序是？","o":[{"l":"A","t":"触发 → 上下文收集 → 提示构建 → 模型推理 → 代理/后处理 → 呈现建议"},{"l":"B","t":"直接返回训练数据中最常见的片段"},{"l":"C","t":"跳过过滤直接呈现"},{"l":"D","t":"只看当前光标所在的一行"}],"a":"A","e":"✅ 生命周期含上下文收集/提示构建/推理/过滤后处理/呈现。❌ B/C/D 不符合。"}]},{"domain":4,"name":"提示工程与上下文","weight":"10–15%","sections":[{"h":"域定位","body":"考如何把意图说清、帮 Copilot 拿到对的上下文：有效提示（结构/上下文/zero-shot/few-shot/最佳实践）与性能提示（原则/流程/聊天历史）。高度依赖实操。"},{"h":"核心要点","body":"- 有效提示 = 清晰意图 + 充分上下文 + 约束 + 期望格式。\n- 上下文由光标附近代码、打开文件、导入、项目结构决定；可用注释/指令文件主动塑造。\n- zero-shot（直接任务）vs few-shot（给示例模仿格式）。\n- 提示流程：聊天历史构成上下文，合理引用前文、清理无关历史。\n- 💡 虚构场景：Chat 中先说「我们用 FastAPI」，后续无需重复框架背景。"}],"practice":[{"id":"D4-01","q":"以下哪种提示写法最能让 Copilot 给出高质量结果？","o":[{"l":"A","t":"「排序函数」"},{"l":"B","t":"「用 Python 写一个函数，输入用户列表，返回按年龄降序、同龄按姓名升序的列表，要求类型注解」"},{"l":"C","t":"不写任何说明，只给函数名"},{"l":"D","t":"只写变量名不写意图"}],"a":"B","e":"✅ B 提供意图+约束+格式，契合结构化提示。❌ A/C/D 缺乏上下文。"}]},{"domain":5,"name":"提升开发生产力","weight":"10–15%","sections":[{"h":"域定位","body":"考 Copilot 在实际开发中的价值落地：代码生成/重构/文档、加速学习、减少上下文切换、生成样例数据、现代化遗留代码；以及测试与安全支撑（单测/集成测试、边界用例、断言、安全与性能建议）。偏场景匹配。"},{"h":"核心要点","body":"- 生成/重构/文档：内联建议或 Chat 生成函数、重构重复代码、补文档。\n- 加速学习：解释陌生代码/库，少切出去查文档。\n- 现代化遗留代码：造 mock 数据、迁移旧框架。\n- 测试与安全：生成单测/集成测试、边界用例与断言、安全/性能改进建议。\n- 💡 虚构场景：让 Copilot 把 Python2 脚本改写为带类型注解 Python3 并补 pytest。"}],"practice":[{"id":"D5-01","q":"用 Copilot 现代化遗留代码，以下做法恰当的是？","o":[{"l":"A","t":"让它把 Python2 脚本改写为带类型注解的 Python3 并补测试"},{"l":"B","t":"直接合入其输出不验证"},{"l":"C","t":"仅用于生成注释"},{"l":"D","t":"禁止使用 Copilot 处理遗留代码"}],"a":"A","e":"✅ 生成/重构+补测试是认可用法，仍须验证。❌ B 违背验证原则。"}]},{"domain":6,"name":"隐私、排除与保障","weight":"10–15%","sections":[{"h":"域定位","body":"管理员与团队负责人关键域：隐私设置与排除、输出所有权与局限、保障措施与排障。与域 3 互补——域 3 讲 Copilot 怎么处理数据，本域讲你如何控制。"},{"h":"核心要点","body":"- 内容排除：通过配置指定 Copilot 不读取哪些文件/路径作为上下文（各计划能力不同）。\n- 输出所有权与局限：企业版含 IP 赔偿；输出仍须人工审阅。\n- 公共代码匹配过滤：开启后抑制与公开代码高度匹配的建议，降低许可风险。\n- 排障：建议不出现时检查排除规则误伤、扩展状态、网络/代理。\n- 💡 虚构场景：金融仓库将 secrets/、*/.env 加入排除，兼顾隐私与合规。"}],"practice":[{"id":"D6-01","q":"关于内容排除（content exclusions），正确的是？","o":[{"l":"A","t":"指定 Copilot 不读取哪些文件或路径作为上下文"},{"l":"B","t":"让 Copilot 只读取敏感文件"},{"l":"C","t":"仅影响输出文本的字体格式"},{"l":"D","t":"仅个体版可用、企业版不可用"}],"a":"A","e":"✅ 内容排除 = 主动数据边界控制。❌ B 反向；C 无关；D 错。"}]}]};
+const QUIZ_TOTAL = 88;
+</script>
+<script>
+(function(){
+'use strict';
+const DATA = (typeof LEARNING_DATA !== 'undefined' && LEARNING_DATA) ? LEARNING_DATA : null;
+
+// R5: meta.footerNote overrides default footer (AWS default kept when absent)
+if (DATA && DATA.meta && DATA.meta.footerNote) {
+  var fn = document.getElementById('footNote');
+  if (fn) { fn.textContent = DATA.meta.footerNote; }
+}
+
+/* ============ 常量与工具 ============ */
+const EXAM = DATA ? (DATA.meta.exam || 'CERT').toLowerCase() : 'cert';   // clf-c02
+const STORE_KEY = EXAM + '-v2';                                          // 进度键：clf-c02-v2
+const COLORS = ['#4f46e5','#7c3aed','#9333ea','#a855f7'];                // 每章主题色（N 章 N 色，N>4 循环）
+const home = document.getElementById('home');
+const chapBox = document.getElementById('chapters');
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function imgSrcOk(src){ return /^(?:[\w.-]+\/)*[\w.-]+\.(?:png|jpe?g|webp|gif|svg)$/i.test(src); }
+function inlineMd(s){
+  let t = esc(s);
+  t = t.replace(/\n/g,'<br>');
+  t = t.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  t = t.replace(/`([^`]+)`/g,'<code>$1</code>');
+  t = t.replace(/!\[([^\]]*)\]\(([^()\s]+)\)/g, function(m0, alt, src){
+    if(!imgSrcOk(src)) return '<span class="img-bad" title="非法图源">🖼 非法图源：'+src+'</span>';
+    return '<img class="inline-img" loading="lazy" alt="'+alt.replace(/"/g,'&quot;')+'" src="'+src+'">';
+  });
+  return t;
+}
+function isTblSep(ln){ const core = ln.replace(/^\s*\|/,'').replace(/\|\s*$/,''); if(!core.includes('-')) return false; return /^[\s:\-|]+$/.test(ln) && /-/.test(ln); }
+function loadProg(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }catch(e){ return {}; } }
+function saveProg(p){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(p)); }catch(e){} }
+
+/* ============ 块级 md 渲染（段落/引用/表格/列表/图占位符） ============ */
+function renderBlocks(seg, figs, fctr){
+  fctr = fctr || {n:0};
+  const lines = seg.replace(/\r/g,'').split('\n');
+  let html = ''; let i = 0; const n = lines.length;
+  while(i < n){
+    const ln = lines[i]; const s = ln.trim();
+    if(s === ''){ i++; continue; }
+    const fm = s.match(/^\[\[fig:([\w-]+)\]\]$/);
+    if(fm){ const f = (figs||{})[fm[1]]; if(f){ if(fctr) fctr.n++; html += figHtml(f); } i++; continue; }
+    const fp = s.match(/^【图：(.+?)｜(概念图|截图)】$/);
+    if(fp){ fctr.n++; html += '<div class="fig-placeholder" data-figtype="'+fp[2]+'"><span class="fp-num">图 '+fctr.n+'</span><span class="fp-type">'+fp[2]+'</span><span class="fp-alt">'+esc(fp[1])+'</span><span class="fp-note">真图待补</span></div>'; i++; continue; }
+    const ib = s.match(/^!\[([^\]]*)\]\(([^()\s]+)\)$/);
+    if(ib){
+      const ialt = ib[1], isrc = ib[2];
+      if(imgSrcOk(isrc)){ html += '<figure class="fig-img"><img loading="lazy" alt="'+ialt.replace(/"/g,'&quot;')+'" src="'+isrc+'"><figcaption>'+esc(ialt)+'</figcaption></figure>'; }
+      else { html += '<div class="fig-placeholder"><span class="fp-type">非法图源</span><span class="fp-alt">'+esc(ialt)+' ← '+esc(isrc)+'</span><span class="fp-note">检查路径与扩展名</span></div>'; }
+      i++; continue;
+    }
+    if(s.startsWith('|') && i+1 < n && isTblSep(lines[i+1].trim())){
+      let rows = [];
+      while(i < n && lines[i].trim().startsWith('|')){ rows.push(lines[i].trim()); i++; }
+      const heads = rows[0].replace(/^\||\|$/g,'').split('|').map(x=>inlineMd(x.trim()));
+      const data = rows.slice(2).map(r => r.replace(/^\||\|$/g,'').split('|').map(x=>inlineMd(x.trim())));
+      html += '<div class="tbl-wrap"><table><thead><tr>'+heads.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'
+        + data.map(r => '<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('') + '</tbody></table></div>';
+      continue;
+    }
+    if(s.startsWith('>')){
+      let q = [];
+      while(i < n && lines[i].trim().startsWith('>')){ q.push(lines[i].replace(/^\s*>\s?/,'').trim()); i++; }
+      html += '<blockquote>'+inlineMd(q.join(' '))+'</blockquote>'; continue;
+    }
+    if(/^[-*]\s+/.test(s)){
+      let items = [];
+      while(i < n){ const t = lines[i].trim(); if(/^[-*]\s+/.test(t)){ items.push(inlineMd(t.replace(/^[-*]\s+/,''))); i++; } else break; }
+      html += '<ul>'+items.map(x=>'<li>'+x+'</li>').join('')+'</ul>'; continue;
+    }
+    if(/^\d+[.、]\s+/.test(s)){
+      let items = [];
+      while(i < n){ const t = lines[i].trim(); if(/^\d+[.、]\s+/.test(t)){ items.push(inlineMd(t.replace(/^\d+[.、]\s+/,''))); i++; } else break; }
+      html += '<ol>'+items.map(x=>'<li>'+x+'</li>').join('')+'</ol>'; continue;
+    }
+    const hm = s.match(/^(#{1,6})\s+(.+)$/);
+    if(hm){ html += '<h4 class="sec-h">'+inlineMd(hm[2])+'</h4>'; i++; continue; }
+    let para = [];
+    while(i < n){
+      const t = lines[i].trim();
+      if(t === '' || t.startsWith('|') || t.startsWith('>') || /^[-*]\s+/.test(t) || /^\d+[.、]\s+/.test(t) || /^#{1,6}\s/.test(t) || /^\[\[fig:[\w-]+\]\]$/.test(t) || /^【图：[^｜]*｜(?:概念图|截图)】$/.test(t) || /^!\[[^\]]*\]\([^()\s]+\)$/.test(t)) break;
+      para.push(t); i++;
+    }
+    if(para.length) html += '<p>'+inlineMd(para.join(' '))+'</p>';
+  }
+  return html;
+}
+
+/* ===== 节内子块解析与渲染（v6）：#### 知识点块提升为 h3 三级标题（d.n.m 编号+锚点）
+   本节定位=弱化引言、案例/记忆要点=卡片、常见误区与易错点=警示小节——均不占编号。
+   解析与渲染共用 parseSectionBlocks，保证正文 h3 与左侧目录两级条目 1:1。 ===== */
+const SUB_RAW='raw', SUB_LEAD='lead', SUB_KP='kp', SUB_CASE='case', SUB_MIS='mis', SUB_MEM='mem';
+function subTypeOf(title){
+  if(title === '本节定位') return SUB_LEAD;
+  if(title === '案例') return SUB_CASE;
+  if(title === '记忆要点') return SUB_MEM;
+  if(title === '常见误区与易错点') return SUB_MIS;
+  return SUB_KP;
+}
+function parseSectionBlocks(md){
+  const parts = (md||'').replace(/\r/g,'').split(/\n(?=####\s)/);
+  const out = [];
+  parts.forEach(part=>{
+    const m = part.match(/^####\s*(.+?)\s*\n([\s\S]*)$/);
+    if(!m){ const t = part.trim(); if(t) out.push({ type:SUB_RAW, title:'', body:t }); return; }
+    out.push({ type:subTypeOf(m[1].trim()), title:m[1].trim(), body:(m[2]||'').trim() });
+  });
+  return out;
+}
+function countKp(body){ let m=0; parseSectionBlocks(body).forEach(b=>{ if(b.type===SUB_KP) m++; }); return m; }
+function kpListOf(body){
+  const kps=[]; let m=0;
+  parseSectionBlocks(body).forEach(b=>{ if(b.type===SUB_KP){ m++; kps.push({ m:m, title:b.title }); } });
+  return kps;
+}
+function renderSectionBody(md, figs, d, n, fctr){
+  fctr = fctr || {n:0};
+  const blocks = parseSectionBlocks(md);
+  let h = ''; let kp = 0;
+  for(const b of blocks){
+    if(b.type === SUB_RAW){ h += renderBlocks(b.body, figs, fctr); continue; }
+    if(b.type === SUB_KP){
+      kp++;
+      h += '<h3 class="mh3" id="sec-'+d+'-'+n+'-'+kp+'"><span class="h3no">'+d+'.'+n+'.'+kp+'</span><span>'+inlineMd(b.title)+'</span></h3>'
+         + renderBlocks(b.body, figs, fctr);
+      continue;
+    }
+    if(b.type === SUB_CASE){ h += '<div class="case-card"><h4 class="sec-h">案例</h4>'+renderBlocks(b.body, figs, fctr)+'</div>'; continue; }
+    if(b.type === SUB_MEM){ h += '<div class="mem-card"><h4 class="sec-h">记忆要点</h4>'+renderBlocks(b.body, figs, fctr)+'</div>'; continue; }
+    h += '<h4 class="sec-h'+(b.type===SUB_LEAD?' sec-lead-h':'')+'">'+inlineMd(b.title)+'</h4>'+renderBlocks(b.body, figs, fctr);
+  }
+  return h;
+}
+function figsById(fs){ const m={}; (fs||[]).forEach(f=>{ m[f.id]=f; }); return m; }
+function figHtml(f){
+  return '<div class="fig-block"><div class="fig-title">'+esc(f.title)+'</div>'
+    + '<div class="fig-body">'+(f.html||'')+'</div>'
+    + (f.caption ? '<div class="fig-caption">'+esc(f.caption)+'</div>' : '') + '</div>';
+}
+
+/* ============ 首页构建 ============ */
+/* 合体判定：构建注入的 QUIZ_TOTAL（与 LEARNING_DATA 同一脚本前置声明）>0 → 含题库刷题视图 */
+const HAS_QUIZ = (typeof QUIZ_TOTAL === 'number' && QUIZ_TOTAL > 0);
+function baseTitle(){
+  const meta = DATA.meta;
+  return (meta.cnName ? meta.exam + ' ' + meta.cnName : meta.exam) + (HAS_QUIZ ? ' 学习与刷题' : ' 学习材料');
+}
+function buildHome(){
+  const meta = DATA.meta, chapters = DATA.chapters;
+  document.title = baseTitle();
+  document.getElementById('hdrBadge').textContent = (meta.level || 'Foundational') + ' · ' + meta.exam + (meta.cnName ? ' · ' + meta.cnName : '');
+  document.getElementById('hdrTitle').textContent = meta.title || '学习材料';
+  const qTot = chapters.reduce((a,c)=>a+(c.practice||[]).length,0);
+  const _pd = (meta.plan||[]).reduce((m,p)=>Math.max(m, parseInt(p.day,10)||0), 0);
+  document.getElementById('hdrSub').textContent = chapters.length + ' 章节 · ' + qTot + ' 题章末练习' + (HAS_QUIZ ? ' · ' + QUIZ_TOTAL + ' 题完整题库' : '') + (_pd ? ' · ' + _pd + ' 天学习计划' : '');
+
+  /* 统计 3 格 */
+  document.getElementById('ov').innerHTML =
+      '<div class="ov-item"><div class="ov-num">'+chapters.length+'</div><div class="ov-lbl">章节</div></div>'
+    + '<div class="ov-item"><div class="ov-num">'+qTot+'</div><div class="ov-lbl">练习题</div></div>'
+    + '<div class="ov-item"><div class="ov-num" id="ovDone">0</div><div class="ov-lbl">已完成</div></div>';
+
+  /* 章节目录卡 */
+  const grid = document.getElementById('chGrid');
+  let gh = '';
+  chapters.forEach((ch,di)=>{
+    const d = di+1, col = COLORS[di % COLORS.length];
+    const ns = (ch.sections||[]).length, nq = (ch.practice||[]).length;
+    gh += '<div class="ch-card" data-d="'+d+'">'
+      + '<div class="cc-num" style="color:'+col+'">第 '+d+' 章 · D'+d+'</div>'
+      + '<div class="cc-title">'+esc(ch.name||('域 '+d))+'</div>'
+      + '<div class="cc-meta">权重 '+esc(ch.weight||'-')+' · 本章练习 '+nq+' 题 · '+ns+' 节</div>'
+      + '<div class="cc-prog"><div class="pm"><span id="pm-'+d+'">未开始</span><span id="pmn-'+d+'"></span></div>'
+      + '<div class="pbar"><div class="pfill" id="pf-'+d+'" style="width:0%;background:'+col+'"></div></div></div>'
+      + '</div>';
+  });
+  grid.innerHTML = gh;
+  grid.addEventListener('click', e=>{ const card = e.target.closest('.ch-card'); if(card) go(parseInt(card.dataset.d,10)); });
+
+  /* 考试说明卡 */
+  const ei = meta.examInfo;
+  let eh = '<div class="cs-title">📋 考试说明</div>';
+  if(ei && ei.quickCards && ei.quickCards.length){
+    eh += '<div class="exam-quick-grid">';
+    ei.quickCards.forEach(c=>{ eh += '<div class="eq-item"><div class="eq-num">'+esc(c.num)+'</div>'
+      +(c.sub?'<div class="eq-sub">'+esc(c.sub)+'</div>':'')
+      +'<div class="eq-lbl">'+esc(c.label)+'</div></div>'; });
+    eh += '</div>';
+  }
+  eh += '<div class="exam-two-col">';
+  eh += '<div><div class="exam-sub-t">📊 考试领域与权重</div><table class="exam-domain-tbl"><thead><tr><th>域</th><th>内容</th><th>占比</th></tr></thead><tbody>';
+  chapters.forEach((ch,di)=>{
+    const d = di+1;
+    eh += '<tr><td><button class="domain-chip" data-d="'+d+'" style="color:'+COLORS[di%COLORS.length]+';background:#ede9fe">D'+d+'</button></td><td>'+esc(ch.name||'')+'</td><td>'+esc(ch.weight||'-')+'</td></tr>';
+  });
+  eh += '</tbody></table></div><div>';
+  if(ei && ei.where && ei.where.length){
+    eh += '<div class="exam-sub-t">🖥 在哪考</div><ul class="exam-info-list">';
+    ei.where.forEach(w=>{ eh += '<li>'+esc(w)+'</li>'; }); eh += '</ul>';
+  }
+  eh += '</div></div>';
+  /* 📝 报名流程：v6.3 起移出两列右列（原与"在哪考"同列过窄、流程节点挤压变形），
+     置于"领域与权重 | 在哪考"两列区下方全宽展示，紧邻领域权重区块、FAQ 之前 */
+  if(ei && ei.steps && ei.steps.length){
+    eh += '<div class="exam-sub-t">📝 报名流程</div><div class="exam-steps">';
+    ei.steps.forEach((st,i)=>{ if(i>0) eh += '<span class="step-arrow">→</span>';
+      eh += '<div class="step-block"><b>'+esc(st.n)+'</b>'+(st.note?'<span>'+esc(st.note)+'</span>':'')+'</div>'; });
+    eh += '</div>';
+  }
+  if(ei && ei.faq && ei.faq.length){
+    eh += '<details class="exam-faq"><summary>❓ 改期 / 取消 / 考不过 FAQ</summary>';
+    ei.faq.forEach(f=>{ eh += '<p><strong>'+esc(f.q)+'</strong>　'+esc(f.a)+'</p>'; });
+    eh += '</details>';
+  }
+  document.getElementById('examCard').innerHTML = eh;
+  document.getElementById('examCard').addEventListener('click', e=>{
+    const c = e.target.closest('.domain-chip'); if(c) go(parseInt(c.dataset.d,10));
+  });
+
+  /* 学习计划卡（天数按 meta.plan 实际最大 day 推导，勿写死） */
+  const plan = meta.plan || [];
+  const planDays = plan.reduce((m,p)=>Math.max(m, parseInt(p.day,10)||0), 0);
+  let ph = '<div class="cs-title">📅 ' + (planDays ? planDays + ' 天学习计划' : '学习计划') + '</div>';
+  ph += '<div class="tbl-wrap"><table class="ptbl"><thead><tr><th>天</th><th>领域</th><th>学习内容</th><th>重点</th></tr></thead><tbody>';
+  plan.forEach(p=>{
+    const dom = (typeof p.domain === 'number')
+      ? '<button class="chip chip-p" data-d="'+p.domain+'">域 '+p.domain+'</button>'
+      : '综合';
+    ph += '<tr><td><span class="day">Day '+esc(p.day)+'</span></td>'
+      + '<td>'+dom+'</td><td>'+esc(p.topic||'')+'</td><td class="focus">'+esc(p.focus||'')+'</td></tr>';
+  });
+  ph += '</tbody></table></div>';
+  document.getElementById('planCard').innerHTML = ph;
+  document.getElementById('planCard').addEventListener('click', e=>{
+    const c = e.target.closest('.chip'); if(c) go(parseInt(c.dataset.d,10));
+  });
+
+  /* 题库刷题入口卡（合体产物） */
+  if(HAS_QUIZ){
+    const qe = document.getElementById('quizEntry');
+    if(qe){
+      qe.style.display = '';
+      document.getElementById('quizEntryDesc').innerHTML =
+        '完整题库 <b style="color:#4f46e5">' + QUIZ_TOTAL + ' 题</b>（单选 / 多选）· 分域练习 · 错题重练 · 限时模拟考核 · 答题统计。'
+        + '刷题记录与学习进度各自独立保存。';
+      document.getElementById('quizEntryBtn').addEventListener('click', kbShowQuiz);
+    }
+  }
+}
+
+/* ============ 章面板构建（v6：栅格布局 = 左目录槽 .ch-side + 正文列 .ch-main） ============ */
+function buildPanels(){
+  const chapters = DATA.chapters;
+  let all = '';
+  chapters.forEach((ch,di)=>{
+    const d = di+1, col = COLORS[di % COLORS.length];
+    const secs = ch.sections || [];
+    /* 左侧两级目录：节（toc-sec，可开合）▸ 知识点（toc-sub，d.n.m 编号，复用 h3 锚点） */
+    let tocHtml = '<ul class="toc-list">';
+    secs.forEach((s,si)=>{
+      tocHtml += '<li class="toc-sec" data-ds="'+(si+1)+'">'
+        + '<a class="toc-link toc-sec-link" href="#sec-'+d+'-'+(si+1)+'"><span class="tl-id">'+d+'.'+(si+1)+'</span><span class="toc-t">'+esc(s.h)+'</span><span class="toc-ar">▸</span></a>';
+      const kps = kpListOf(s.body || '');
+      if(kps.length){
+        tocHtml += '<ul class="toc-sub">';
+        kps.forEach(k=>{
+          tocHtml += '<li><a class="toc-link toc-sub-link" href="#sec-'+d+'-'+(si+1)+'-'+k.m+'"><span class="tl-id">'+d+'.'+(si+1)+'.'+k.m+'</span><span class="toc-t">'+esc(k.title)+'</span></a></li>';
+        });
+        tocHtml += '</ul>';
+      }
+      tocHtml += '</li>';
+    });
+    /* 目录尾固定练习入口：滚到章末练习区（视作目录内最后一章，v6.2 新增） */
+    tocHtml += '<li class="toc-quiz"><a class="toc-link toc-quiz-link" href="#quiz-d'+d+'"><span class="tl-id">📝</span><span class="toc-t">本章练习</span></a></li>';
+    tocHtml += '</ul>';
+    let h = '<div class="panel" id="panel-d'+d+'">'
+      /* ── 栅格列①：常驻目录槽（窄屏为抽屉） ── */
+      + '<aside class="ch-side" id="side-d'+d+'" data-d="'+d+'" aria-label="本章内容目录">'
+      +   '<div class="ch-toc" id="toc-d'+d+'">'
+      +     '<div class="toc-hd"><span class="th-title">📑 本章内容</span><span class="th-meta" id="tocmeta-d'+d+'"></span>'
+      +       '<button class="side-close" data-close="1" aria-label="关闭目录">✕</button></div>'
+      +     '<div class="toc-body">'+tocHtml+'</div>'
+      +   '</div>'
+      + '</aside>'
+      + '<div class="side-mask" data-mask="1"></div>'
+      /* ── 栅格列②：正文列 ── */
+      + '<div class="ch-main">'
+      +   '<div class="ch-topnav">'
+      +     '<button class="back-btn" data-back="1">← 返回目录</button>'
+      +     '<button class="toc-open-btn" data-open="1" aria-label="打开本章内容目录" aria-expanded="false">☰ 目录</button>'
+      +     '<span class="tn-title">D'+d+' · '+esc(ch.name||'')+'</span>'
+      +     '<span id="readPct-'+d+'">0%</span>'
+      +     '<div class="rd-fill" id="rdFill-'+d+'"></div>'
+      +   '</div>'
+      +   '<div class="ch-hdr" style="background:linear-gradient(135deg,'+col+',#7c3aed)">'
+      +     '<span class="ch-badge">第 '+d+' 章 · D'+d+' · 权重 '+esc(ch.weight||'-')+'</span>'
+      +     '<div class="ch-title">'+esc(ch.name||('域 '+d))+'</div></div>'
+      +   '<div class="card-s" style="border-radius:0 0 12px 12px;border-top:none"><div class="cs-title">🎯 本章学习目标</div><ul class="task-list">';
+    secs.forEach((s,si)=>{
+      h += '<li><a href="#sec-'+d+'-'+(si+1)+'"><span class="tl-id">'+d+'.'+(si+1)+'</span>'+esc(s.h)+'</a></li>';
+    });
+    h += '</ul></div>';
+    const fctr = {n:0};   /* P0 图位占位：章内编号计数器（占位框与成品图统一计数） */
+    /* 章节正文：h2 节 + 节内 h3 知识点块（d.n.m 编号） */
+    h += '<div class="card-s"><div class="cs-title">📖 章节正文</div><div class="mdbody">';
+    secs.forEach((s,si)=>{
+      h += '<section class="sec-block" id="sec-'+d+'-'+(si+1)+'" style="scroll-margin-top:78px">'
+        + '<h2 class="mh2">'+d+'.'+(si+1)+'　'+esc(s.h)+'</h2>'
+        + renderSectionBody(s.body || '', figsById(s.figures), d, si+1, fctr) + '</section>';
+      if(si < secs.length-1) h += '<hr class="panel-hr">';
+    });
+    h += '</div></div>';
+    if(ch.tips){
+      h += '<div class="tips-card"><div class="tc-title">📌 本领域考试重点提示</div>' + renderBlocks(ch.tips.points||'', null, fctr)
+        + '<div class="tc-title" style="margin-top:14px">🔗 关联 AWS 服务</div>' + renderBlocks(ch.tips.services||'', null, fctr) + '</div>';
+    }
+    h += '<div class="quiz-box" id="quiz-d'+d+'"></div>';
+    h += '</div></div>';   /* end ch-main / end panel */
+    all += h;
+  });
+  chapBox.innerHTML = all;
+  /* 目录卡头计数（X 节 · Y 知识点） */
+  chapters.forEach((ch,di)=>{
+    const d = di+1;
+    const tm = document.getElementById('tocmeta-d'+d);
+    if(tm){
+      let kp = 0; (ch.sections||[]).forEach(s=>{ kp += countKp(s.body||''); });
+      tm.textContent = (ch.sections||[]).length + ' 节 · ' + kp + ' 点';
+    }
+  });
+  /* 面板内事件委托：返回/抽屉/遮罩/目录跳转 */
+  chapBox.addEventListener('click', e=>{
+    if(e.target.closest('.back-btn')){ backHome(); return; }
+    const panel = e.target.closest('.panel');
+    const d = panel ? parseInt(panel.id.replace('panel-d',''),10) : 0;
+    if(e.target.closest('.side-mask') || e.target.closest('[data-close="1"]')){ closeSide(); return; }
+    if(e.target.closest('.toc-open-btn')){ openSide(d); return; }
+    const tl = e.target.closest('.toc-link');
+    if(tl){
+      e.preventDefault();
+      const href = tl.getAttribute('href');
+      if(tl.classList.contains('toc-sec-link')){
+        /* 节行：单开手风琴（开当前节收起其它节）+ 滚动到节 */
+        const li = tl.closest('.toc-sec');
+        const wasOpen = li ? li.classList.contains('open') : false;
+        const toc = document.getElementById('toc-d'+d);
+        if(toc) toc.querySelectorAll('.toc-sec.open').forEach(x=>x.classList.remove('open'));
+        if(li && !wasOpen) li.classList.add('open');
+      }
+      const el = document.getElementById(href.slice(1));
+      if(el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+      if(window.matchMedia('(max-width:1199px)').matches) closeSide();
+    }
+  });
+  /* 面板内练习渲染与判分绑定 */
+  chapters.forEach((ch,di)=>{
+    const d = di+1;
+    renderQuiz(d, ch.practice || []);
+  });
+}
+/* 窄屏抽屉开合 */
+function openSide(d){
+  const side = document.getElementById('side-d'+d); if(!side) return;
+  side.classList.add('open');
+  const btn = document.querySelector('#panel-d'+d+' .toc-open-btn');
+  if(btn) btn.setAttribute('aria-expanded','true');
+  const mask = document.querySelector('#panel-d'+d+' .side-mask');
+  if(mask) mask.classList.add('show');
+}
+function closeSide(){
+  document.querySelectorAll('.ch-side.open').forEach(s=>s.classList.remove('open'));
+  document.querySelectorAll('.side-mask.show').forEach(m=>m.classList.remove('show'));
+  document.querySelectorAll('.toc-open-btn[aria-expanded="true"]').forEach(b=>b.setAttribute('aria-expanded','false'));
+}
+
+/* ============ 章内滚动（v6）：几何法 scrollspy + 阅读进度 ============
+   同一 rAF 节流的 scroll 监听做两件事：① 顶部细进度条（#rdFill-d / #readPct-d）
+   ② 高亮"最新越过吸顶线(READ_LINE)的锚点"（.sec-block 节 / .mh3 知识点），并自动单开其节组。 */
+let spyD = 0, spyEls = [], spyTick = null, spyOn = false;
+const READ_LINE = 86;      // 吸顶条下方阅读线
+const ACT_WIN = 160;       // 节/知识点标题进入线下方窗口即视为"当前"（点击跳转后立即生效）
+function setAct(id){
+  if(!id) return;
+  /* 锚点两类：正文节/知识点 sec-域-序号[-序号]，章末练习 quiz-d域 */
+  const mk = id.match(/^(?:sec-|quiz-d)(\d+)/); if(!mk) return;
+  const d = +mk[1];
+  const toc = document.getElementById('toc-d'+d); if(!toc) return;
+  toc.querySelectorAll('.toc-link.act').forEach(a=>a.classList.remove('act'));
+  const link = toc.querySelector('a[href="#'+id+'"]');
+  if(link){
+    link.classList.add('act');
+    const li = link.closest('.toc-sec');
+    if(li && !li.classList.contains('open')){
+      toc.querySelectorAll('.toc-sec.open').forEach(x=>x.classList.remove('open'));
+      li.classList.add('open');
+    } else if(!li){
+      /* 独立条目（练习入口等）：高亮时收起所有展开节组，聚焦本条 */
+      toc.querySelectorAll('.toc-sec.open').forEach(x=>x.classList.remove('open'));
+    }
+  }
+}
+function computeSpy(){
+  const host = document.getElementById('panel-d'+spyD); if(!host) return;
+  /* ① 阅读进度：以当前面板总高扣视口高的滚动行程计百分比（+页脚尾距近似） */
+  const total = host.offsetHeight - window.innerHeight + 110;
+  const p = total > 0 ? Math.max(0, Math.min(100, Math.round(window.scrollY / total * 100))) : 0;
+  const fill = document.getElementById('rdFill-'+spyD); if(fill) fill.style.width = p + '%';
+  const pct = document.getElementById('readPct-'+spyD); if(pct) pct.textContent = p + '%';
+  /* ② 当前锚（三层）：
+     视口内(含阅读线下方窗口)：选最靠上者 → 点击跳转/节首即生效；
+     视口内无锚(读至章末练习/底部)：取最近滚出视口的锚，保持高亮最后小节；
+     首屏未滚：回退最先可见锚 */
+  const hi = READ_LINE + ACT_WIN;
+  let best = null;
+  for(const el of spyEls){
+    const r = el.getBoundingClientRect();
+    if(r.top <= hi && r.bottom >= 0){ if(!best || r.top > best.r.top) best = { el:el, r:r }; }
+  }
+  if(!best){
+    for(const el of spyEls){
+      const r = el.getBoundingClientRect();
+      if(r.bottom < 0){ if(!best || r.bottom > best.r.bottom) best = { el:el, r:r }; }
+    }
+  }
+  if(!best){
+    for(const el of spyEls){
+      const r = el.getBoundingClientRect();
+      if(r.top >= 0 && r.top < window.innerHeight * 0.7){ if(!best || r.top < best.r.top) best = { el:el, r:r }; }
+    }
+    if(!best && spyEls.length) best = { el:spyEls[0], r:null };
+  }
+  if(best && best.el.id) setAct(best.el.id);
+}
+function onSpyScroll(){
+  if(spyTick) return;
+  spyTick = requestAnimationFrame(()=>{ spyTick = null; computeSpy(); });
+}
+function initSpy(d){
+  detachSpy(false);
+  spyD = d;
+  const host = document.getElementById('panel-d'+d); if(!host) return;
+  spyEls = Array.from(host.querySelectorAll('.sec-block, .mh3, .quiz-box'));
+  if(!spyOn){ spyOn = true; window.addEventListener('scroll', onSpyScroll, { passive:true }); }
+  document.body.classList.add('chapView');
+  computeSpy();
+}
+function detachSpy(resetAct){
+  if(spyOn){ window.removeEventListener('scroll', onSpyScroll); spyOn = false; }
+  if(spyTick){ cancelAnimationFrame(spyTick); spyTick = null; }
+  document.body.classList.remove('chapView');
+  spyEls = []; spyD = 0;
+  if(resetAct !== false){
+    document.querySelectorAll('.toc-link.act').forEach(a=>a.classList.remove('act'));
+    document.querySelectorAll('.toc-sec.open').forEach(li=>li.classList.remove('open'));
+  }
+}
+
+/* ============ 章末练习 ============ */
+/* 答案/题型归一化（修复：双科数据格式不一致导致章末练习失效）
+   数据真源存在两种历史格式：
+     CLF  a = ["C"] / ["B","E"]   t = 'single' / 'multiple'
+     AIF  a = "B"   / "AE"        t = '单选' / '多选'
+   原实现把 q.a 经 JSON.stringify+esc 写进 data-ans 属性，esc 不转义双引号 →
+   属性被 HTML 截断（CLF 抛 JSON 解析错→提交无反应；AIF 读出空→恒判错）。
+   现改为：答案只从数据真源按 qid 反查，渲染层统一归一化，不再进 HTML 属性。 */
+function normAns(v){
+  if(v === null || v === undefined) return [];
+  if(Array.isArray(v)) return v.map(x=>String(x).trim().toUpperCase()).filter(x=>/^[A-Z]$/.test(x));
+  const raw = String(v).trim();
+  /* 严格形态：整串只允许字母与分隔符。防从说明文字里误提字母
+     （历史案例：某题答案字段为「⚠️待核（…见源PDF）」→ 误提出 P/D/F） */
+  if(!/^[A-Za-z][A-Za-z,，、;；\s]*$/.test(raw)) return [];
+  return raw.toUpperCase().replace(/[^A-Z]/g, '').split('').filter(Boolean);
+}
+/* 可作答判定：答案可解析 + 至少一个选项。不可作答题不渲染交互（防误判） */
+function isAnswerable(q){ return !!(q && normAns(q.a).length && (q.o || []).length); }
+/* 可答题数（进度分母用，不可作答题不计入） */
+function answerableCount(d){
+  const ch = (DATA && DATA.chapters) ? DATA.chapters[d-1] : null;
+  return ((ch && ch.practice) || []).filter(isAnswerable).length;
+}
+function isMultiQ(q){
+  if(!q) return false;
+  if(q.t === 'multiple' || q.t === 'multi' || q.t === '多选') return true;
+  return normAns(q.a).length > 1;   // 兜底：答案多字母必为多选
+}
+function findQ(d, qid){
+  const ch = (DATA && DATA.chapters) ? DATA.chapters[d-1] : null;
+  const qs = (ch && ch.practice) || [];
+  for(let i=0;i<qs.length;i++){ if(String(qs[i].id) === String(qid)) return qs[i]; }
+  return null;
+}
+function renderQuiz(d, qs){
+  const host = document.getElementById('quiz-d'+d);
+  if(!qs.length){ host.innerHTML = '<div class="quiz-hdr">✅ 本章练习</div><p style="font-size:14px;color:#94a3b8">本章暂无配套练习，可到刷题工具练习。</p>'; return; }
+  const nAns = qs.filter(isAnswerable).length;
+  const naTip = (nAns < qs.length) ? '（另有 '+(qs.length-nAns)+' 题特殊题型待补充）' : '';
+  let h = '<div class="quiz-hdr"><span>✅ 本章练习（'+nAns+' 题）'+naTip+'</span><span class="quiz-score" id="qscore-'+d+'">正确 0/'+nAns+'</span></div>';
+  qs.forEach((q,qi)=>{
+    const multi = isMultiQ(q);
+    /* 不可作答防御：答案或选项缺失时不渲染答题交互，
+       避免学员点击后被误判（历史案例：配对题占位形态） */
+    if(!isAnswerable(q)){
+      h += '<div class="qi qi-na" data-d="'+d+'" data-qid="'+esc(q.id||(d+'-'+qi))+'" data-qi="'+qi+'" data-na="1">'
+        + '<div class="qmeta"><span class="qbadge">第 '+(qi+1)+' 题</span><span class="qtype">特殊题型</span></div>'
+        + '<div class="qstem">'+inlineMd(q.q||'')+'</div>'
+        + '<div class="qrow"><div class="qres show na">⚠️ 本题为配对/特殊题型，暂不支持在线作答（内容待补充）</div></div></div>';
+      return;
+    }
+    h += '<div class="qi" data-d="'+d+'" data-qid="'+esc(q.id||(d+'-'+qi))+'" data-qi="'+qi
+      + '" data-multi="'+(multi?'1':'0')+'">'
+      + '<div class="qmeta"><span class="qbadge">第 '+(qi+1)+' 题</span><span class="qtype '+(multi?'qtype-m':'qtype-s')+'">'+(multi?'多选':'单选')+'</span></div>'
+      + '<div class="qstem">'+inlineMd(q.q||'')+'</div><div class="opts">';
+    (q.o||[]).forEach(op=>{
+      h += '<div class="opt" data-l="'+esc(op.l)+'"><span class="ol">'+esc(op.l)+'.</span><span>'+inlineMd(op.t||'')+'</span></div>';
+    });
+    h += '</div><div class="qexp" style="display:none">'+esc(q.e||'')+'</div>'
+      + '<div class="qrow"><button class="qbtn">确认答案</button><div class="qres"></div></div></div>';
+  });
+  h += '<div class="score-box" id="scorebox-'+d+'"><div class="score-num" id="scorenum-'+d+'"></div><div class="score-lbl"></div>'
+    + '<div class="sb-tip">完整题库与限时模拟考核见首页「题库刷题」入口；未作答的题目在返回目录再进入后仍可继续作答。</div></div>';
+  host.innerHTML = h;
+  /* 恢复已作答状态 */
+  const prog = loadProg();
+  const rec = (prog['quiz_d'+d] && prog['quiz_d'+d].answered) || {};
+  host.querySelectorAll('.qi').forEach(qi=>{
+    const qid = qi.dataset.qid;
+    if(rec[qid] !== undefined){
+      applyResult(qi, rec[qid].right === 1, rec[qid].sel || [], normAns((findQ(d, qid) || {}).a), true);
+    }
+  });
+  host.querySelectorAll('.qi').forEach(qi=>{
+    const qid = qi.dataset.qid; const prog2 = loadProg();
+    const rec2 = (prog2['quiz_d'+d] && prog2['quiz_d'+d].answered) || {};
+    if(rec2[qid] !== undefined) return;   // 已答锁题
+    const optsBox = qi.querySelector('.opts'), btn = qi.querySelector('.qbtn');
+    if(!optsBox || !btn) return;          // 不可作答题（特殊题型占位卡）无交互
+    const multi = qi.dataset.multi === '1';
+    const opts = qi.querySelectorAll('.opt');
+    optsBox.addEventListener('click', e=>{
+      const o = e.target.closest('.opt'); if(!o) return;
+      if(multi){ o.classList.toggle('sel'); }
+      else{ opts.forEach(x=>x.classList.remove('sel')); o.classList.add('sel'); }
+    });
+    btn.addEventListener('click', ()=>{ judge(qi); });
+  });
+  updateScore(d);
+  checkScoreBox(d);
+}
+
+function judge(qi){
+  const d = qi.dataset.d;
+  const ans = normAns((findQ(d, qi.dataset.qid) || {}).a);
+  const sel = Array.from(qi.querySelectorAll('.opt.sel')).map(o=>o.dataset.l);
+  /* 防复发：答案数据异常时大声报错，不得静默判错 */
+  if(!ans.length){
+    const r = qi.querySelector('.qres');
+    r.className = 'qres show err';
+    r.textContent = '⚠️ 本题答案数据异常，无法判定，请反馈管理员';
+    return;
+  }
+  const right = sel.length === ans.length && ans.every(a=>sel.includes(a));
+  applyResult(qi, right, sel, ans, false);
+  /* 持久化 */
+  const prog = loadProg();
+  const key = 'quiz_d'+d;
+  if(!prog[key]) prog[key] = { answered:{} };
+  prog[key].answered[qi.dataset.qid] = { right: right?1:0, sel: sel };
+  saveProg(prog);
+  updateScore(d);
+  refreshProgress();
+  checkScoreBox(d);
+}
+
+function applyResult(qi, right, sel, ans, restored){
+  qi.classList.add('done');
+  const opts = Array.from(qi.querySelectorAll('.opt'));
+  opts.forEach(o=>{
+    const l = o.dataset.l;
+    if(ans.includes(l)) o.classList.add(sel.includes(l) ? 'cor' : 'shc');
+    else if(sel.includes(l)) o.classList.add('wrg');
+  });
+  const qres = qi.querySelector('.qres');
+  qres.className = 'qres show ' + (right ? 'ok' : 'err');
+  const exp = qi.querySelector('.qexp');
+  qres.innerHTML = (right ? '✅ 回答正确' : '❌ 回答错误') + '　<span style="font-weight:400">' + inlineMd(exp ? exp.textContent : '') + '</span>';
+  qi.querySelector('.qbtn').disabled = true;
+  qi.querySelector('.qbtn').textContent = restored ? '已作答' : '已确认';
+}
+
+function updateScore(d){
+  const prog = loadProg();
+  const key = 'quiz_d'+d;
+  const rec = (prog[key] && prog[key].answered) || {};
+  let right = 0;
+  Object.values(rec).forEach(v=>{ if(v.right === 1) right++; });
+  const total = answerableCount(d);   // 分母=可答题数（特殊题型占位卡不计入）
+  const sc = document.getElementById('qscore-'+d);
+  if(sc) sc.textContent = '正确 ' + right + '/' + total;
+}
+
+function checkScoreBox(d){
+  const prog = loadProg();
+  const key = 'quiz_d'+d;
+  const rec = (prog[key] && prog[key].answered) || {};
+  const total = answerableCount(d);
+  if(Object.keys(rec).length >= total && total > 0){
+    let right = 0; Object.values(rec).forEach(v=>{ if(v.right === 1) right++; });
+    const box = document.getElementById('scorebox-'+d);
+    document.getElementById('scorenum-'+d).textContent = right + ' / ' + total;
+    box.querySelector('.score-lbl').textContent = right === total ? '🎉 全对，本章掌握扎实！' : (right >= total*0.7 ? '👍 达到及格线（70%），可进入下一章' : '📖 建议回到正文复习错题对应的知识点');
+    box.classList.add('show');
+  }
+}
+
+/* ============ 视图切换与进度 ============ */
+function go(d){
+  const chapters = DATA.chapters;
+  closeSide();
+  home.style.display = 'none';
+  chapBox.style.display = '';
+  chapBox.querySelectorAll('.panel').forEach(p=>{ p.style.display = (p.id === 'panel-d'+d) ? '' : 'none'; });
+  const prog = loadProg();
+  prog['read_d'+d] = 1;                 // 已读标记
+  saveProg(prog);
+  window.scrollTo(0,0);
+  document.title = baseTitle() + ' · 第 ' + d + ' 章';
+  initSpy(d);                            // 常驻目录/进度条/scrollspy 跟随当前章
+}
+
+function backHome(){
+  detachSpy();
+  closeSide();
+  chapBox.style.display = 'none';
+  home.style.display = '';
+  window.scrollTo(0,0);
+  document.title = baseTitle();
+  refreshProgress();
+}
+
+/* 刷新首页进度看板：统计已完成数 + 章卡状态/进度条 */
+function refreshProgress(){
+  const prog = loadProg();
+  const chapters = DATA.chapters;
+  let doneCnt = 0;
+  chapters.forEach((ch,di)=>{
+    const d = di+1;
+    const total = (ch.practice||[]).length;
+    const rec = (prog['quiz_d'+d] && prog['quiz_d'+d].answered) || {};
+    const nDone = Object.keys(rec).length;
+    const right = Object.values(rec).filter(v=>v.right===1).length;
+    const read = prog['read_d'+d] === 1;
+    const pm = document.getElementById('pm-'+d);
+    const pmn = document.getElementById('pmn-'+d);
+    const pf = document.getElementById('pf-'+d);
+    const card = pm ? pm.closest('.ch-card') : null;
+    if(!pm) return;
+    let state = '未开始', pct = 0;
+    if(nDone >= total && total > 0){ state = '已完成'; doneCnt++; card.classList.add('done'); }
+    else if(read || nDone > 0){ state = nDone > 0 ? '学习中 ' + nDone + '/' + total : '学习中'; }
+    pm.textContent = state;
+    if(card) card.classList.toggle('done', nDone >= total && total > 0);
+    pct = total ? Math.round(nDone/total*100) : 0;
+    if(pf) pf.style.width = pct + '%';
+    if(pmn) pmn.textContent = total ? ('答对 ' + right + '/' + total) : '';
+  });
+  const od = document.getElementById('ovDone');
+  if(od) od.textContent = doneCnt;
+}
+
+/* ============ 启动 ============ */
+if(!DATA){
+  document.body.innerHTML = '<div style="padding:60px 24px;text-align:center;font-size:14px;color:#64748b">学习数据未注入：此模板需经构建脚本注入数据后方可使用。</div>';
+} else {
+  buildHome();
+  buildPanels();
+  refreshProgress();
+}
+
+/* ============ 合体视图切换：学习区 ↔ 题库刷题区 ============
+   quiz-embed 内的「← 返回学习目录」按钮与底部导航「📚 学习」都调用 window.kbShowLearnHome */
+function kbShowQuiz(){
+  detachSpy();
+  closeSide();
+  home.style.display = 'none';
+  chapBox.style.display = 'none';
+  const f = document.querySelector('.footer'); if(f) f.style.display = 'none';
+  // 修复：.wrap 外壳仅藏子元素会残留 padding（24+60px），把题库顶栏顶离顶部 84px
+  // → 外壳自身一并隐藏，保证进入题库视图即贴顶
+  const w = document.querySelector('.wrap'); if(w) w.style.display = 'none';
+  const qv = document.getElementById('quizView');
+  if(qv){
+    qv.style.display = 'block';
+    const tt = document.getElementById('qzTopTitle');
+    if(tt) tt.textContent = (DATA.meta.cnName ? DATA.meta.exam + ' · ' + DATA.meta.cnName : DATA.meta.exam) + ' 题库刷题';
+  }
+  window.scrollTo(0,0);
+  document.title = baseTitle() + ' · 题库刷题';
+}
+function kbShowLearnHome(){
+  detachSpy();
+  closeSide();
+  const qv = document.getElementById('quizView');
+  if(qv) qv.style.display = 'none';
+  const f = document.querySelector('.footer'); if(f) f.style.display = '';
+  home.style.display = '';
+  const w = document.querySelector('.wrap'); if(w) w.style.display = '';
+  window.scrollTo(0,0);
+  document.title = baseTitle();
+  refreshProgress();
+}
+window.kbShowQuiz = kbShowQuiz;
+window.kbShowLearnHome = kbShowLearnHome;
+})();
+</script>
+<script>
+/* 图灯箱（移动适配 P1=A）：正文图当前渲染等效字号 <9.5px 时点击可放大到原始 viewBox 尺寸
+   等效字号 = 图内最小 text 字号 × (当前渲染宽 ÷ viewBox 宽)；桌面可读图不触发，不打断阅读 */
+(function(){
+  'use strict';
+  var box = null, stage = null;
+  function minFontPx(svg){
+    var t = svg.querySelectorAll('text'), mn = Infinity;
+    for (var i = 0; i < t.length; i++){
+      var v = parseFloat(t[i].getAttribute('font-size'));
+      if (isNaN(v)){ var cs = getComputedStyle(t[i]); v = parseFloat(cs.fontSize); }
+      if (!isNaN(v) && v < mn) mn = v;
+    }
+    return isFinite(mn) ? mn : 12;
+  }
+  function effFont(svg){
+    var vb = svg.viewBox && svg.viewBox.baseVal;
+    if (!vb || !vb.width) return 99;                 // 无 viewBox：不介入
+    var w = svg.getBoundingClientRect().width || vb.width;
+    return minFontPx(svg) * (w / vb.width);
+  }
+  function close(){
+    if (box) box.classList.remove('show');
+    document.documentElement.style.overflow = '';
+  }
+  function open(svg){
+    if (!box){
+      box = document.createElement('div');
+      box.className = 'fig-lightbox';
+      box.innerHTML = '<button class="lb-close" aria-label="关闭放大图">✕</button><div class="lb-stage"></div>';
+      document.body.appendChild(box);
+      stage = box.querySelector('.lb-stage');
+      box.querySelector('.lb-close').addEventListener('click', close);
+      box.addEventListener('click', function(e){ if (e.target === box) close(); });
+    }
+    var vb = svg.viewBox.baseVal;
+    var clone = svg.cloneNode(true);
+    clone.style.width = vb.width + 'px';             // 原始 viewBox 尺寸 1:1
+    clone.style.maxWidth = 'none';
+    clone.style.height = 'auto';
+    stage.innerHTML = '';
+    stage.appendChild(clone);
+    box.classList.add('show');
+    document.documentElement.style.overflow = 'hidden';
+    stage.scrollTop = 0; stage.scrollLeft = 0;
+  }
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+  document.addEventListener('click', function(e){
+    var svg = e.target.closest ? e.target.closest('.fig-body svg') : null;
+    if (!svg) return;
+    if (effFont(svg) >= 9.5) return;                 // 当前渲染下可读 → 不打断
+    e.preventDefault();
+    open(svg);
+  });
+})();
+</script>
+</body>
+</html>
