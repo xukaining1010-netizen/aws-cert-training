@@ -30,6 +30,25 @@ h1{font-size:25px;letter-spacing:.3px;font-weight:700}
   font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--dim);
   padding:2px 4px 0;margin-top:4px;
 }
+.grp{margin-top:2px}
+.grp-head{
+  width:100%;min-height:48px;display:flex;align-items:center;gap:10px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:0 14px;font:inherit;font-size:14px;font-weight:700;color:var(--ink);
+  cursor:pointer;text-align:left;
+}
+.grp-head:hover{border-color:var(--brand)}
+.grp-head:focus-visible{outline:3px solid #8fb0ff;outline-offset:2px}
+.grp-head.on{background:#f7faff;border-color:var(--brand)}
+.grp-name{flex:1}
+.grp-meta{font-size:12px;font-weight:400;color:var(--dim);white-space:nowrap}
+.grp-arrow{
+  width:0;height:0;flex:none;border-left:5px solid transparent;
+  border-right:5px solid transparent;border-top:6px solid var(--dim);
+  transition:transform .15s ease;
+}
+.grp-head.on .grp-arrow{transform:rotate(180deg)}
+.grp-body{display:grid;gap:14px;margin-top:10px}
 .card{
   display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;
   padding:18px;text-decoration:none;color:inherit;
@@ -128,10 +147,10 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#93a0b5;line-heigh
     </div>
     <div class="result">共 <b id="count">9</b> 门课程</div>
   </div>
-  <noscript><div class="tip nstip">当前未启用 JavaScript，已显示全部课程；搜索与筛选暂不可用。</div></noscript>
+  <noscript><div class="tip nstip">当前未启用 JavaScript，已展开全部课程；搜索、筛选与分组折叠暂不可用。</div></noscript>
 
   <div class="list" id="list">
-    <div class="pgroup">AWS Certification</div>
+    <div class="pgroup">AWS · 5 门课程</div>
 
     <div class="card" data-search="clf-c02 云从业者认证 aws foundational 入门基础 刚接触云、想先建立 aws 全貌的同事 clf cloud practitioner 云从业者 入门 零基础 云基础" data-vendor="AWS" data-level="Foundational" data-track="入门基础" data-status="">
       <div class="card-head"><span class="tag">CLF-C02</span><span class="badge">Foundational</span></div>
@@ -193,7 +212,7 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#93a0b5;line-heigh
       </div>
     </div>
 
-    <div class="pgroup">Amazon Quick FDE</div>
+    <div class="pgroup">Amazon Quick · 1 门课程</div>
 
     <div class="card" data-search="check ride amazon quick 实施能力认证 amazon quick partner 厂商伙伴 amazon quick 伙伴线的交付与售前 check ride fde 伙伴 交付 售前" data-vendor="Amazon Quick" data-level="Partner" data-track="厂商伙伴" data-status="">
       <div class="card-head"><span class="tag">Check Ride</span><span class="badge">Partner</span></div>
@@ -207,7 +226,7 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#93a0b5;line-heigh
       </div>
     </div>
 
-    <div class="pgroup">Alibaba Cloud Certification</div>
+    <div class="pgroup">阿里云 · 1 门课程</div>
 
     <div class="card" data-search="ali-acp-cloud 阿里云云计算高级工程师认证 阿里云 acp 架构 备考阿里云解决方案架构师的同事 acp 阿里云 acp 阿里云 架构师 云计算" data-vendor="阿里云" data-level="ACP" data-track="架构" data-status="">
       <div class="card-head"><span class="tag">ALI-ACP-CLOUD</span><span class="badge">ACP</span></div>
@@ -221,7 +240,7 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#93a0b5;line-heigh
       </div>
     </div>
 
-    <div class="pgroup">Tencent Cloud Certification</div>
+    <div class="pgroup">腾讯云 · 1 门课程</div>
 
     <div class="card" data-search="tc-fde 腾讯云 adp 前沿部署工程师认证 腾讯云 fde 厂商伙伴 腾讯云 fde 伙伴线交付与售前 tc-fde 腾讯云 fde 腾讯云 伙伴 交付" data-vendor="腾讯云" data-level="FDE" data-track="厂商伙伴" data-status="">
       <div class="card-head"><span class="tag">TC-FDE</span><span class="badge">FDE</span></div>
@@ -235,7 +254,7 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#93a0b5;line-heigh
       </div>
     </div>
 
-    <div class="pgroup">GitHub Certification</div>
+    <div class="pgroup">GitHub · 1 门课程</div>
 
     <div class="card" data-search="gh-300 github copilot 认证 github intermediate 云原生开发 日常用 github copilot 写代码的工程师 gh-300 copilot github copilot 开发效率" data-vendor="GitHub" data-level="Intermediate" data-track="云原生开发" data-status="">
       <div class="card-head"><span class="tag">GH-300</span><span class="badge">Intermediate</span></div>
@@ -272,20 +291,49 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#93a0b5;line-heigh
   var gbs=[].slice.call(document.querySelectorAll('.gb'));
   var active={vendor:[],level:[],track:[],status:[]};
   var groupBy='vendor';
+  var STORE='cert-home-open-v1';
+  var state={};
+  try{state=JSON.parse(localStorage.getItem(STORE)||'{}')||{};}catch(e){state={};}
+  function opened(){return state[groupBy]||(state[groupBy]={});}
+  function save(){try{localStorage.setItem(STORE,JSON.stringify(state));}catch(e){}}
   function val(c,n){return c.getAttribute('data-'+n)||'';}
+  function filtering(){
+    if((q.value||'').trim()) return true;
+    return Object.keys(active).some(function(n){return active[n].length>0;});
+  }
   function regroup(){
-    [].slice.call(list.querySelectorAll('.pgroup')).forEach(function(g){g.remove();});
+    cards.forEach(function(c){if(c.parentNode!==list) list.appendChild(c);});
+    [].slice.call(list.querySelectorAll('.grp,.pgroup')).forEach(function(g){g.remove();});
     var vis=cards.filter(function(c){return !c.hidden;});
     var groups={};
     vis.forEach(function(c){
       var k=val(c,groupBy)||'其他';
       (groups[k]=groups[k]||[]).push(c);
     });
-    Object.keys(groups).sort().forEach(function(k){
-      var g=document.createElement('div');
-      g.className='pgroup';g.textContent=k;
-      list.appendChild(g);
-      groups[k].forEach(function(c){list.appendChild(c);});
+    var auto=filtering();
+    var op=opened();
+    Object.keys(groups).sort().forEach(function(k,i){
+      var sec=document.createElement('section');sec.className='grp';sec.setAttribute('data-key',k);
+      var btn=document.createElement('button');btn.type='button';btn.className='grp-head';
+      btn.setAttribute('aria-controls','grp-'+i);
+      var nm=document.createElement('span');nm.className='grp-name';nm.textContent=k;
+      var mt=document.createElement('span');mt.className='grp-meta';mt.textContent=groups[k].length+' 门课程';
+      var ar=document.createElement('span');ar.className='grp-arrow';
+      btn.appendChild(nm);btn.appendChild(mt);btn.appendChild(ar);
+      var body=document.createElement('div');body.className='grp-body';body.id='grp-'+i;
+      groups[k].forEach(function(c){body.appendChild(c);});
+      var isOpen=auto?true:!!op[k];
+      body.hidden=!isOpen;
+      btn.classList.toggle('on',isOpen);
+      btn.setAttribute('aria-expanded',isOpen?'true':'false');
+      btn.addEventListener('click',function(){
+        var next=body.hidden;
+        body.hidden=!next;
+        btn.classList.toggle('on',next);
+        btn.setAttribute('aria-expanded',next?'true':'false');
+        op[k]=next;save();
+      });
+      sec.appendChild(btn);sec.appendChild(body);list.appendChild(sec);
     });
     cards.filter(function(c){return c.hidden;}).forEach(function(c){list.appendChild(c);});
   }
