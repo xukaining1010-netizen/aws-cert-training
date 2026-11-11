@@ -55,7 +55,34 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#93a0b5;line-heigh
   h1{font-size:22px}
   .name{font-size:17px}
   body{padding-left:14px;padding-right:14px}
+}[hidden]{display:none!important}
+.toolbar{margin:0 0 16px}
+.search{width:100%;min-height:46px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-size:15px}
+.chiprow{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:11px}
+.chiprow .lab{font-size:12px;color:var(--dim);min-width:36px}
+.chip{min-height:40px;padding:0 13px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--dim);font-size:13px;cursor:pointer;font-family:inherit}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip:focus-visible,.search:focus-visible,.btn:focus-visible,.gb:focus-visible{outline:3px solid #8fb0ff;outline-offset:2px}
+.gb{min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--dim);font-size:13px;cursor:pointer;font-family:inherit}
+.gb.on{background:var(--brand-soft);border-color:var(--brand);color:var(--brand);font-weight:700}
+.result{margin-top:11px;font-size:13px;color:var(--dim)}
+.card-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.badge{font-size:11px;font-weight:700;color:#6b5a1e;background:#fff6d8;border-radius:6px;padding:3px 8px}
+.aud{font-size:13px;color:var(--dim);margin-top:8px;line-height:1.6}
+.submeta{font-size:12px;color:#93a0b5;margin-top:8px}
+.retire{margin-top:9px;background:#fff4f4;border:1px solid #f3c9c9;color:#9a2b2b;border-radius:8px;padding:7px 10px;font-size:12px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+.btn{min-height:44px;display:inline-flex;align-items:center;padding:0 15px;border-radius:9px;font-size:14px;font-weight:600;text-decoration:none}
+.btn-p{background:var(--brand);color:#fff}
+.btn-s{background:var(--brand-soft);color:var(--brand)}
+.empty{margin-top:16px;text-align:center;color:var(--dim);font-size:14px}
+.nstip{margin-top:12px}
+@media (max-width:480px){
+  .btn{flex:1;justify-content:center;min-width:120px}
+  .chip{min-height:44px}
+  .gb{min-height:44px}
 }
+
 </style>
 </head>
 <body>
@@ -65,80 +92,164 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#93a0b5;line-heigh
     <p class="sub">选择科目开始学习 · 学完即练，练完即对答案看解析</p>
   </header>
 
-  <div class="list">
+  <div class="toolbar">
+    <input id="q" class="search" type="search" autocomplete="off"
+           placeholder="搜考试代码或名称，例如 DOP、运维、AI" aria-label="搜索课程">
+    <div class="chiprow"><span class="lab">厂商</span>
+      <button type="button" class="chip" data-f="vendor" data-v="AWS">AWS</button>
+      <button type="button" class="chip" data-f="vendor" data-v="Amazon Quick">Amazon Quick</button>
+      <button type="button" class="chip" data-f="vendor" data-v="GitHub">GitHub</button>
+      <button type="button" class="chip" data-f="vendor" data-v="腾讯云">腾讯云</button>
+      <button type="button" class="chip" data-f="vendor" data-v="阿里云">阿里云</button>
+    </div>
+    <div class="chiprow"><span class="lab">级别</span>
+      <button type="button" class="chip" data-f="level" data-v="ACP">ACP</button>
+      <button type="button" class="chip" data-f="level" data-v="FDE">FDE</button>
+      <button type="button" class="chip" data-f="level" data-v="Foundational">Foundational</button>
+      <button type="button" class="chip" data-f="level" data-v="Intermediate">Intermediate</button>
+      <button type="button" class="chip" data-f="level" data-v="Partner">Partner</button>
+      <button type="button" class="chip" data-f="level" data-v="Professional">Professional</button>
+    </div>
+    <div class="chiprow"><span class="lab">方向</span>
+      <button type="button" class="chip" data-f="track" data-v="AI 与数据">AI 与数据</button>
+      <button type="button" class="chip" data-f="track" data-v="云原生开发">云原生开发</button>
+      <button type="button" class="chip" data-f="track" data-v="入门基础">入门基础</button>
+      <button type="button" class="chip" data-f="track" data-v="厂商伙伴">厂商伙伴</button>
+      <button type="button" class="chip" data-f="track" data-v="架构">架构</button>
+      <button type="button" class="chip" data-f="track" data-v="运维">运维</button>
+    </div>
+    <div class="chiprow"><span class="lab">状态</span>
+      <button type="button" class="chip" data-f="status" data-v="已更新">已更新</button>
+    </div>
+    <div class="chiprow"><span class="lab">分组</span>
+      <button type="button" class="gb on" data-g="vendor">按厂商</button>
+      <button type="button" class="gb" data-g="level">按级别</button>
+      <button type="button" class="gb" data-g="track">按方向</button>
+    </div>
+    <div class="result">共 <b id="count">9</b> 门课程</div>
+  </div>
+  <noscript><div class="tip nstip">当前未启用 JavaScript，已显示全部课程；搜索与筛选暂不可用。</div></noscript>
+
+  <div class="list" id="list">
     <div class="pgroup">AWS Certification</div>
 
-    <a class="card" href="./clf-c02/index.html">
-      <span class="tag">CLF-C02</span>
+    <div class="card" data-search="clf-c02 云从业者认证 aws foundational 入门基础 刚接触云、想先建立 aws 全貌的同事 clf cloud practitioner 云从业者 入门 零基础 云基础" data-vendor="AWS" data-level="Foundational" data-track="入门基础" data-status="">
+      <div class="card-head"><span class="tag">CLF-C02</span><span class="badge">Foundational</span></div>
       <div class="name">云从业者认证</div>
       <div class="meta">4 域 19 节 · 5.0 万字讲义 · 719 题题库 + 章末练习</div>
-      <div class="go">进入学习 →</div>
-    </a>
+      <div class="aud">适合谁：刚接触云、想先建立 AWS 全貌的同事</div>
+      <div class="submeta">最近更新 2026-11-11</div>
+      <div class="acts">
+        <a class="btn btn-p" href="./clf-c02/index.html">学讲义</a>
+        <a class="btn btn-s" href="./clf-c02/index.html?view=quiz">去刷题</a>
+      </div>
+    </div>
 
-    <a class="card" href="./aif-c01/index.html">
-      <span class="tag">AIF-C01</span>
+    <div class="card" data-search="aif-c01 ai 从业者认证 aws foundational ai 与数据 不写代码、要判断 ai/genai 方案的业务与售前 aif ai practitioner ai 从业者 ai 生成式 基础" data-vendor="AWS" data-level="Foundational" data-track="AI 与数据" data-status="">
+      <div class="card-head"><span class="tag">AIF-C01</span><span class="badge">Foundational</span></div>
       <div class="name">AI 从业者认证</div>
-      <div class="meta">5 域 14 节 · 4.3 万字讲义 · 415 题题库 + 章末练习</div>
-      <div class="go">进入学习 →</div>
-    </a>
+      <div class="meta">5 域 14 节 · 4.2 万字讲义 · 415 题题库 + 章末练习</div>
+      <div class="aud">适合谁：不写代码、要判断 AI/GenAI 方案的业务与售前</div>
+      <div class="submeta">最近更新 2026-11-11</div>
+      <div class="acts">
+        <a class="btn btn-p" href="./aif-c01/index.html">学讲义</a>
+        <a class="btn btn-s" href="./aif-c01/index.html?view=quiz">去刷题</a>
+      </div>
+    </div>
 
-    <a class="card" href="./aip-c01/index.html">
-      <span class="tag">AIP-C01</span>
+    <div class="card" data-search="aip-c01 生成式 ai 开发者认证 aws professional ai 与数据 设计生成式 ai 应用架构的 sa / 解决方案岗 aip ai engineer ai 工程师 genai bedrock 架构" data-vendor="AWS" data-level="Professional" data-track="AI 与数据" data-status="">
+      <div class="card-head"><span class="tag">AIP-C01</span><span class="badge">Professional</span></div>
       <div class="name">生成式 AI 开发者认证</div>
       <div class="meta">Professional 级 · 5 域 20 节 · 7.0 万字讲义 · 346 题题库 + 章末练习</div>
-      <div class="go">进入学习 →</div>
-    </a>
+      <div class="aud">适合谁：设计生成式 AI 应用架构的 SA / 解决方案岗</div>
+      <div class="submeta">最近更新 2026-11-11</div>
+      <div class="acts">
+        <a class="btn btn-p" href="./aip-c01/index.html">学讲义</a>
+        <a class="btn btn-s" href="./aip-c01/index.html?view=quiz">去刷题</a>
+      </div>
+    </div>
 
-    <a class="card" href="./sap-c02/index.html">
-      <span class="tag">SAP-C02</span>
+    <div class="card" data-search="sap-c02 解决方案架构师专业级认证 aws professional 架构 做云架构设计与选型的架构师 sap solutions architect 解决方案架构师 架构 选型 高可用" data-vendor="AWS" data-level="Professional" data-track="架构" data-status="">
+      <div class="card-head"><span class="tag">SAP-C02</span><span class="badge">Professional</span></div>
       <div class="name">解决方案架构师专业级认证</div>
       <div class="meta">Professional 级 · 4 域 21 节 · 2.9 万字讲义 · 529 题题库 + 章末练习</div>
-      <div class="go">进入学习 →</div>
-    </a>
+      <div class="aud">适合谁：做云架构设计与选型的架构师</div>
+      <div class="submeta">最近更新 2026-09-17</div>
+      <div class="acts">
+        <a class="btn btn-p" href="./sap-c02/index.html">学讲义</a>
+        <a class="btn btn-s" href="./sap-c02/index.html?view=quiz">去刷题</a>
+      </div>
+    </div>
 
-    <a class="card" href="./dop-c02/index.html">
-      <span class="tag">DOP-C02</span>
+    <div class="card" data-search="dop-c02 devops 工程师专业级认证 aws professional 运维 负责 ci/cd、运维自动化与多账号治理的 devops dop devops engineer cloudops 运维 ci/cd 自动化 流水线" data-vendor="AWS" data-level="Professional" data-track="运维" data-status="已更新">
+      <div class="card-head"><span class="tag">DOP-C02</span><span class="badge">Professional</span></div>
       <div class="name">DevOps 工程师专业级认证</div>
       <div class="meta">Professional 级 · 6 域 19 节 · 4.6 万字讲义 · 479 题题库 + 章末练习</div>
-      <div class="go">进入学习 →</div>
-    </a>
+      <div class="aud">适合谁：负责 CI/CD、运维自动化与多账号治理的 DevOps</div>
+      <div class="submeta">最近更新 2026-11-11 · 已更新</div>
+      <div class="acts">
+        <a class="btn btn-p" href="./dop-c02/index.html">学讲义</a>
+        <a class="btn btn-s" href="./dop-c02/index.html?view=quiz">去刷题</a>
+      </div>
+    </div>
 
     <div class="pgroup">Amazon Quick FDE</div>
 
-    <a class="card" href="./quick-check-ride/index.html">
-      <span class="tag">Check Ride</span>
+    <div class="card" data-search="check ride amazon quick 实施能力认证 amazon quick partner 厂商伙伴 amazon quick 伙伴线的交付与售前 check ride fde 伙伴 交付 售前" data-vendor="Amazon Quick" data-level="Partner" data-track="厂商伙伴" data-status="">
+      <div class="card-head"><span class="tag">Check Ride</span><span class="badge">Partner</span></div>
       <div class="name">Amazon Quick 实施能力认证</div>
       <div class="meta">Partner 级 · 4 域 18 节 · 1.6 万字讲义 · 60 题题库 + 章末练习</div>
-      <div class="go">进入学习 →</div>
-    </a>
+      <div class="aud">适合谁：Amazon Quick 伙伴线的交付与售前</div>
+      <div class="submeta">最近更新 2026-09-15</div>
+      <div class="acts">
+        <a class="btn btn-p" href="./quick-check-ride/index.html">学讲义</a>
+        <a class="btn btn-s" href="./quick-check-ride/index.html?view=quiz">去刷题</a>
+      </div>
+    </div>
 
     <div class="pgroup">Alibaba Cloud Certification</div>
 
-    <a class="card" href="./ali-cloud-acp/index.html">
-      <span class="tag">ALI-ACP-CLOUD</span>
+    <div class="card" data-search="ali-acp-cloud 阿里云云计算高级工程师认证 阿里云 acp 架构 备考阿里云解决方案架构师的同事 acp 阿里云 acp 阿里云 架构师 云计算" data-vendor="阿里云" data-level="ACP" data-track="架构" data-status="">
+      <div class="card-head"><span class="tag">ALI-ACP-CLOUD</span><span class="badge">ACP</span></div>
       <div class="name">阿里云云计算高级工程师认证</div>
       <div class="meta">ACP 级 · 4 域 21 节 · 2.7 万字讲义 · 1198 题题库 + 章末练习</div>
-      <div class="go">进入学习 →</div>
-    </a>
+      <div class="aud">适合谁：备考阿里云解决方案架构师的同事</div>
+      <div class="submeta">最近更新 2026-11-11</div>
+      <div class="acts">
+        <a class="btn btn-p" href="./ali-cloud-acp/index.html">学讲义</a>
+        <a class="btn btn-s" href="./ali-cloud-acp/index.html?view=quiz">去刷题</a>
+      </div>
+    </div>
 
     <div class="pgroup">Tencent Cloud Certification</div>
 
-    <a class="card" href="./tencent-fde/index.html">
-      <span class="tag">TC-FDE</span>
+    <div class="card" data-search="tc-fde 腾讯云 adp 前沿部署工程师认证 腾讯云 fde 厂商伙伴 腾讯云 fde 伙伴线交付与售前 tc-fde 腾讯云 fde 腾讯云 伙伴 交付" data-vendor="腾讯云" data-level="FDE" data-track="厂商伙伴" data-status="">
+      <div class="card-head"><span class="tag">TC-FDE</span><span class="badge">FDE</span></div>
       <div class="name">腾讯云 ADP 前沿部署工程师认证</div>
       <div class="meta">FDE 级 · 6 域 23 节 · 7.0 万字讲义 · 300 题题库 + 章末练习</div>
-      <div class="go">进入学习 →</div>
-    </a>
+      <div class="aud">适合谁：腾讯云 FDE 伙伴线交付与售前</div>
+      <div class="submeta">最近更新 2026-09-29</div>
+      <div class="acts">
+        <a class="btn btn-p" href="./tencent-fde/index.html">学讲义</a>
+        <a class="btn btn-s" href="./tencent-fde/index.html?view=quiz">去刷题</a>
+      </div>
+    </div>
 
     <div class="pgroup">GitHub Certification</div>
 
-    <a class="card" href="./gh-300/index.html">
-      <span class="tag">GH-300</span>
+    <div class="card" data-search="gh-300 github copilot 认证 github intermediate 云原生开发 日常用 github copilot 写代码的工程师 gh-300 copilot github copilot 开发效率" data-vendor="GitHub" data-level="Intermediate" data-track="云原生开发" data-status="">
+      <div class="card-head"><span class="tag">GH-300</span><span class="badge">Intermediate</span></div>
       <div class="name">GitHub Copilot 认证</div>
       <div class="meta">6 域 12 节 · 0.1 万字讲义 · 88 题题库 + 章末练习</div>
-      <div class="go">进入学习 →</div>
-    </a>
+      <div class="aud">适合谁：日常用 GitHub Copilot 写代码的工程师</div>
+      <div class="submeta">最近更新 2026-11-11</div>
+      <div class="acts">
+        <a class="btn btn-p" href="./gh-300/index.html">学讲义</a>
+        <a class="btn btn-s" href="./gh-300/index.html?view=quiz">去刷题</a>
+      </div>
+    </div>
   </div>
+  <div class="empty" id="empty" hidden>没有匹配的课程，试试清空筛选或换个关键词。</div>
 
   <div class="tip">
     <b>手机上怎么打开。</b>建议用系统自带浏览器（Safari / Chrome）。若在微信里打开，请点右上角「···」选择「在浏览器打开」，体验最佳。
@@ -146,8 +257,73 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#93a0b5;line-heigh
 
   <footer>
     页面自包含，打开后可离线使用 · 学习进度保存在本机浏览器<br>
-    内容更新：2026-11-09
+    内容更新：2026-11-11
   </footer>
 </div>
+<script>
+(function(){
+  var q=document.getElementById('q');
+  var list=document.getElementById('list');
+  var empty=document.getElementById('empty');
+  var countEl=document.getElementById('count');
+  if(!q||!list) return;
+  var cards=[].slice.call(list.querySelectorAll('.card'));
+  var chips=[].slice.call(document.querySelectorAll('.chip'));
+  var gbs=[].slice.call(document.querySelectorAll('.gb'));
+  var active={vendor:[],level:[],track:[],status:[]};
+  var groupBy='vendor';
+  function val(c,n){return c.getAttribute('data-'+n)||'';}
+  function regroup(){
+    [].slice.call(list.querySelectorAll('.pgroup')).forEach(function(g){g.remove();});
+    var vis=cards.filter(function(c){return !c.hidden;});
+    var groups={};
+    vis.forEach(function(c){
+      var k=val(c,groupBy)||'其他';
+      (groups[k]=groups[k]||[]).push(c);
+    });
+    Object.keys(groups).sort().forEach(function(k){
+      var g=document.createElement('div');
+      g.className='pgroup';g.textContent=k;
+      list.appendChild(g);
+      groups[k].forEach(function(c){list.appendChild(c);});
+    });
+    cards.filter(function(c){return c.hidden;}).forEach(function(c){list.appendChild(c);});
+  }
+  function apply(){
+    var term=(q.value||'').trim().toLowerCase();
+    var shown=0;
+    cards.forEach(function(c){
+      var ok=!term||(val(c,'search').indexOf(term)>=0);
+      Object.keys(active).forEach(function(n){
+        if(!ok||!active[n].length) return;
+        if(active[n].indexOf(val(c,n))<0) ok=false;
+      });
+      c.hidden=!ok;
+      if(ok) shown++;
+    });
+    regroup();
+    if(countEl) countEl.textContent=shown;
+    if(empty) empty.hidden=shown>0;
+  }
+  q.addEventListener('input',apply);
+  chips.forEach(function(ch){
+    ch.addEventListener('click',function(){
+      var f=ch.getAttribute('data-f'),v=ch.getAttribute('data-v');
+      var arr=active[f],i=arr.indexOf(v);
+      if(i>=0){arr.splice(i,1);ch.classList.remove('on');}
+      else{arr.push(v);ch.classList.add('on');}
+      apply();
+    });
+  });
+  gbs.forEach(function(gb){
+    gb.addEventListener('click',function(){
+      groupBy=gb.getAttribute('data-g');
+      gbs.forEach(function(x){x.classList.toggle('on',x===gb);});
+      regroup();
+    });
+  });
+  apply();
+})();
+</script>
 </body>
 </html>

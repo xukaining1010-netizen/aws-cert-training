@@ -1520,11 +1520,11 @@ function renderBlocks(seg, figs, fctr){
 }
 
 /* ===== 节内子块解析与渲染（v6）：#### 知识点块提升为 h3 三级标题（d.n.m 编号+锚点）
-   本节定位=弱化引言、案例/记忆要点=卡片、常见误区与易错点=警示小节——均不占编号。
+   这一节学什么（旧值「本节定位」仍兼容）=弱化引言、案例/记忆要点=卡片、常见误区与易错点=警示小节——均不占编号。
    解析与渲染共用 parseSectionBlocks，保证正文 h3 与左侧目录两级条目 1:1。 ===== */
 const SUB_RAW='raw', SUB_LEAD='lead', SUB_KP='kp', SUB_CASE='case', SUB_MIS='mis', SUB_MEM='mem';
 function subTypeOf(title){
-  if(title === '本节定位') return SUB_LEAD;
+  if(title === '这一节学什么' || title === '本节定位') return SUB_LEAD;
   if(title === '案例') return SUB_CASE;
   if(title === '记忆要点') return SUB_MEM;
   if(title === '常见误区与易错点') return SUB_MIS;
