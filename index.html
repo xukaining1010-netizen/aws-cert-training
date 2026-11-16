@@ -79,7 +79,7 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#93a0b5;line-heigh
 .search{width:100%;min-height:46px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-size:15px}
 .chiprow{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:11px}
 .chiprow .lab{font-size:12px;color:var(--dim);min-width:36px}
-.chip{min-height:40px;padding:0 13px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--dim);font-size:13px;cursor:pointer;font-family:inherit}
+.chip{min-height:40px;padding:0 13px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--dim);font-size:13px;cursor:pointer;font-family:inherit}
 .chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
 .chip:focus-visible,.search:focus-visible,.btn:focus-visible,.gb:focus-visible{outline:3px solid #8fb0ff;outline-offset:2px}
 .gb{min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--dim);font-size:13px;cursor:pointer;font-family:inherit}
@@ -141,9 +141,6 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#93a0b5;line-heigh
       <button type="button" class="chip" data-f="track" data-v="厂商伙伴">厂商伙伴</button>
       <button type="button" class="chip" data-f="track" data-v="架构">架构</button>
       <button type="button" class="chip" data-f="track" data-v="运维">运维</button>
-    </div>
-    <div class="chiprow"><span class="lab">状态</span>
-      <button type="button" class="chip" data-f="status" data-v="已更新">已更新</button>
     </div>
     <div class="chiprow"><span class="lab">分组</span>
       <button type="button" class="gb on" data-g="vendor">按产品</button>
@@ -320,7 +317,7 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:#93a0b5;line-heigh
   var cards=[].slice.call(list.querySelectorAll('.card'));
   var chips=[].slice.call(document.querySelectorAll('.chip'));
   var gbs=[].slice.call(document.querySelectorAll('.gb'));
-  var active={vendor:[],level:[],track:[],status:[]};
+  var active={vendor:[],level:[],track:[]};
   var groupBy='vendor';
   var STORE='cert-home-open-v1';
   var state={};
