@@ -993,6 +993,10 @@ function startSingle(id) {
 }
 function startExam() {
   // 模拟考核：按 meta 权重 × meta 题数分配各域配额（最大余数法，保证总和=EXAM_COUNT）
+  // 回退规则（11-19 定案）：练习池不足承诺题数（EXAM_COUNT）时，模拟考核改从模考池出卷。
+  // 口径：仍按整卷计分（mode:'exam'，与全真模考的官方计分结构不同）；模考错题入错题集为既有设计。
+  // 存量科目练习池均充足或无模考池，此分支不触发，行为零变化（soa-c03 为首门触发科目）。
+  const srcPool = (QUESTIONS.length < EXAM_COUNT && MOCK_QUESTIONS.length >= EXAM_COUNT) ? MOCK_QUESTIONS : QUESTIONS;
   const counts = {};
   let sumInt = 0;
   const raw = {}, rem = {};
@@ -1009,9 +1013,15 @@ function startExam() {
   while(deficit > 0) { counts[order[i % order.length]]++; deficit--; i++; }
   let selected = [];
   DOMAIN_KEYS.forEach(d => {
-    const pool = shuffle(QUESTIONS.filter(q=>q.d===d && q.t!=='hot'));
+    const pool = shuffle(srcPool.filter(q=>q.d===d && q.t!=='hot'));
     selected.push(...pool.slice(0, counts[d]));
   });
+  // 安全网：个别域可用题数不足以覆盖配额时，从剩余可用题补齐（正常 blueprint 下不触发）
+  if (selected.length < EXAM_COUNT) {
+    const used = new Set(selected.map(q=>q.id));
+    const rest = shuffle(srcPool.filter(q=>q.t!=='hot' && !used.has(q.id)));
+    selected.push(...rest.slice(0, EXAM_COUNT - selected.length));
+  }
   selected = shuffle(selected);
   const _exam = generateShuffledOptions(selected);
   quizState = {mode:'exam',domain:null,questions:selected,currentIdx:0,answered:{},submitted:{},results:{},shuffledOptions:_exam.opts,shuffledAnswers:_exam.newAnswers};
